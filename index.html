@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Soil Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Smart Soil Analyzer</h1>
+    <p>Enter your soil NPK, pH, temperature, and moisture to get plant recommendations.</p>
+  </header>
+
+  <main class="app-main">
+    <section class="card">
+      <h2>Soil Data</h2>
+      <form id="soilForm">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="temp">Temperature (°C)</label>
+            <input type="number" id="temp" step="0.1" required />
+          </div>
+          <div class="form-field">
+            <label for="moisture">Moisture (%)</label>
+            <input type="number" id="moisture" step="0.1" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="ph">pH (0–14)</label>
+            <input type="number" id="ph" step="0.1" min="0" max="14" required />
+          </div>
+          <div class="form-field">
+            <label for="n">Nitrogen (N)</label>
+            <input type="number" id="n" step="1" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="p">Phosphorus (P)</label>
+            <input type="number" id="p" step="1" required />
+          </div>
+          <div class="form-field">
+            <label for="k">Potassium (K)</label>
+            <input type="number" id="k" step="1" required />
+          </div>
+        </div>
+
+        <button type="button" id="analyzeBtn">Analyze Soil</button>
+        <button type="button" id="mockBtn" class="secondary">Use Example Values</button>
+      </form>
+    </section>
+
+    <section id="resultsSection" class="card hidden">
+      <h2>Results</h2>
+
+      <div id="statusBox" class="status-box">
+        <!-- Status text inserted here -->
+      </div>
+
+      <h3>Measured Values</h3>
+      <div id="valuesGrid" class="values-grid">
+        <!-- Cards with the numbers -->
+      </div>
+
+      <h3>Best Plants for this Soil</h3>
+      <div id="suitableList" class="plants-list">
+        <!-- Suitable plants -->
+      </div>
+
+      <h3>Plants that are not suitable now</h3>
+      <div id="unsuitableList" class="plants-list">
+        <!-- Unsuitable plants -->
+      </div>
+
+      <h3>General Soil Tips</h3>
+      <ul id="tipsList" class="tips-list">
+        <!-- General tips -->
+      </ul>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Smart Soil Analyzer – demo website</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
