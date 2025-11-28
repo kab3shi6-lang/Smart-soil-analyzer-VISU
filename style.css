@@ -293,6 +293,77 @@ button {
   background: #e5e7eb;
 }
 
+.result-actions {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.print-btn:hover {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.share-btn:hover {
+  border-color: #2f9e44;
+  background: rgba(47, 158, 68, 0.1);
+  color: #2f9e44;
+}
+
+.btn-action:active {
+  transform: scale(0.98);
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+  }
+  
+  .app-header {
+    border-bottom: 2px solid #2f9e44;
+    margin-bottom: 20px;
+  }
+  
+  .lang-toggle,
+  .result-actions,
+  .btn-back,
+  #backFromAutoBtn,
+  #backFromManualBtn,
+  #mockBtn {
+    display: none;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+  
+  .plant-card {
+    page-break-inside: avoid;
+  }
+}
+
 .button-row {
   display: flex;
   flex-wrap: wrap;

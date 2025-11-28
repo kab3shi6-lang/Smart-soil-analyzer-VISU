@@ -231,6 +231,38 @@ function setupEventListeners() {
   document.getElementById("backFromAutoBtn").addEventListener("click", backToModeSelection);
   document.getElementById("backFromManualBtn").addEventListener("click", backToModeSelection);
   document.getElementById("backFromResultsBtn").addEventListener("click", backToModeSelection);
+  
+  // أزرار النتائج الجديدة
+  const printBtn = document.getElementById("printResultsBtn");
+  const shareBtn = document.getElementById("shareResultsBtn");
+  
+  if (printBtn) printBtn.addEventListener("click", printResults);
+  if (shareBtn) shareBtn.addEventListener("click", shareResults);
+}
+
+function printResults() {
+  window.print();
+}
+
+function shareResults() {
+  const lang = i18n.currentLang;
+  const text = lang === 'ar' 
+    ? `تحليل التربة الذكي - لقد حللت تربتي وحصلت على نتائج مثيرة!`
+    : `Smart Soil Analyzer - I analyzed my soil and got amazing results!`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'محلل التربة الذكي | Smart Soil Analyzer',
+      text: text,
+      url: window.location.href
+    }).catch(err => console.log('Sharing failed:', err));
+  } else {
+    // fallback - copy to clipboard
+    const url = window.location.href;
+    navigator.clipboard.writeText(`${text}\n${url}`).then(() => {
+      alert(lang === 'ar' ? '✓ تم نسخ الرابط!' : '✓ Link copied!');
+    });
+  }
 }
 
 function switchToAutoMode() {
