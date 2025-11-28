@@ -209,11 +209,12 @@ const i18n = {
 
   setupToggleButton() {
     const toggleBtn = document.getElementById('langToggle');
-    if (toggleBtn) {
-      toggleBtn.textContent = this.currentLang === 'ar' ? 'English' : 'العربية';
+    const langText = toggleBtn?.querySelector('.lang-text');
+    if (toggleBtn && langText) {
+      langText.textContent = this.currentLang === 'ar' ? 'English' : 'العربية';
       toggleBtn.addEventListener('click', () => {
         this.toggle();
-        toggleBtn.textContent = this.currentLang === 'ar' ? 'English' : 'العربية';
+        langText.textContent = this.currentLang === 'ar' ? 'English' : 'العربية';
       });
     }
   },

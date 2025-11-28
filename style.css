@@ -32,6 +32,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  gap: 20px;
 }
 
 .app-header h1 {
@@ -43,21 +44,38 @@ body {
 }
 
 .lang-toggle {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid white;
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  background: linear-gradient(135deg, #fff3cd, #ffe69c);
+  color: #333;
+  border: 2px solid #ffc107;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.lang-icon {
+  font-size: 1.3rem;
+}
+
+.lang-text {
+  display: inline-block;
 }
 
 .lang-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #ffe69c, #ffd966);
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(255, 193, 7, 0.5);
+}
+
+.lang-toggle:active {
+  transform: scale(0.98);
 }
 
 .app-header p {
@@ -260,10 +278,97 @@ button {
 
 /* Plants Selector */
 .plants-selector {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   margin-bottom: 30px;
+}
+
+/* Plant Search */
+.plant-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 15px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.plant-search-input {
+  width: 100%;
+  padding: 14px 16px 14px 45px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.plant-search-input:focus {
+  outline: none;
+  border-color: #2f9e44;
+  box-shadow: 0 0 0 3px rgba(47, 158, 68, 0.1);
+}
+
+.plant-search-input::placeholder {
+  color: #999;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1.2rem;
+  color: #999;
+  pointer-events: none;
+}
+
+[dir="rtl"] .search-icon {
+  left: auto;
+  right: 14px;
+}
+
+.search-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 20px;
+  background: white;
+  color: #666;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  border-color: #2f9e44;
+  color: #2f9e44;
+}
+
+.filter-btn.active {
+  background: linear-gradient(120deg, #2f9e44, #52b788);
+  color: white;
+  border-color: #2f9e44;
+}
+
+/* Plants Grid */
+.plants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 15px;
 }
 
 .plant-btn {
@@ -271,28 +376,68 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 15px;
+  padding: 16px 12px;
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   background: white;
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
-  min-height: 130px;
+  min-height: 140px;
   font-size: 0.9rem;
   font-weight: 600;
   color: #333;
+  position: relative;
+  overflow: hidden;
+}
+
+.plant-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(47, 158, 68, 0.1), rgba(82, 183, 136, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 12px;
 }
 
 .plant-btn:hover {
   border-color: #2f9e44;
   background: #f0fdf4;
-  transform: scale(1.05);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(47, 158, 68, 0.15);
 }
 
-.plant-btn span:first-child {
-  font-size: 2.5rem;
-  margin-bottom: 8px;
+.plant-btn:hover::before {
+  opacity: 1;
+}
+
+.plant-btn.enhanced {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.plant-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.plant-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.plant-category {
+  font-size: 0.75rem;
+  color: #999;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 /* Results */
@@ -529,8 +674,6 @@ button {
 [dir="rtl"] .improvement-section h4 {
   text-align: right;
 }
-
-/* Responsive Design */
 @media (max-width: 768px) {
   .app-header h1 {
     font-size: 1.8rem;
@@ -557,8 +700,8 @@ button {
     margin-right: 0;
   }
 
-  .plants-selector {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  .plants-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   }
 
   .values-grid {
@@ -567,7 +710,7 @@ button {
 
   .header-top {
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
 
   .app-header h1 {
@@ -576,5 +719,163 @@ button {
 
   .lang-toggle {
     align-self: center;
+    padding: 10px 14px;
+    font-size: 0.9rem;
   }
+
+  .lang-icon {
+    font-size: 1.1rem;
+  }
+
+  .search-filters {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filter-btn {
+    width: 100%;
+  }
+
+  .plant-btn {
+    min-height: 120px;
+    padding: 12px 10px;
+  }
+
+  .plant-icon {
+    font-size: 2rem;
+  }
+}
+
+/* Enhanced Visual Effects */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.card {
+  animation: slideUp 0.5s ease-out;
+}
+
+.plant-card {
+  animation: slideInRight 0.4s ease-out;
+}
+
+.value-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Gradient animations */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  animation: gradientShift 8s ease infinite;
+}
+
+/* Better text selection */
+::selection {
+  background: rgba(47, 158, 68, 0.3);
+  color: #222;
+}
+
+::-moz-selection {
+  background: rgba(47, 158, 68, 0.3);
+  color: #222;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Additional enhancements */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Modal-like effects for cards */
+.card {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2f9e44, #52b788);
+}
+
+/* Success and error states */
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-back:active {
+  transform: scale(0.98);
 }
