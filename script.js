@@ -220,8 +220,84 @@ document.addEventListener("DOMContentLoaded", () => {
   
   loadSearchHistory(); // تحميل السجل
   setupEventListeners();
+  setupBluetoothUI(); // إعداد واجهة Bluetooth
   renderPlantSelector();
 });
+
+// إعداد واجهة Bluetooth
+function setupBluetoothUI() {
+  // التحقق من دعم Web Bluetooth
+  if (!ArduinoBluetoothHandler.isSupported()) {
+    console.warn('⚠️ Web Bluetooth غير متاح');
+    return;
+  }
+
+  const bluetoothStatus = document.getElementById("bluetoothStatus");
+  const bluetoothBtn = document.getElementById("bluetoothBtn");
+
+  if (bluetoothStatus) {
+    bluetoothStatus.style.display = 'block';
+  }
+
+  if (bluetoothBtn) {
+    bluetoothBtn.addEventListener('click', async () => {
+      if (!bluetoothHandler.isConnected) {
+        // محاولة الاتصال
+        bluetoothBtn.disabled = true;
+        const success = await bluetoothHandler.connect();
+        bluetoothBtn.disabled = false;
+
+        if (success) {
+          bluetoothBtn.classList.add('connected');
+          bluetoothBtn.innerHTML = '📱 <span class="bt-text" data-ar="متصل ✓" data-en="Connected ✓">متصل ✓</span>';
+          
+          // إظهار إشعار
+          showNotification('✅ تم الاتصال بالأردوينو بنجاح!', 'success');
+        } else {
+          showNotification('❌ فشل الاتصال. تأكد من تشغيل Bluetooth', 'error');
+        }
+      } else {
+        // قطع الاتصال
+        await bluetoothHandler.disconnect();
+        bluetoothBtn.classList.remove('connected');
+        bluetoothBtn.innerHTML = '📱 <span class="bt-text" data-ar="توصيل بالأردوينو" data-en="Connect Arduino">توصيل بالأردوينو</span>';
+        showNotification('⚪ تم قطع الاتصال', 'info');
+      }
+    });
+  }
+
+  // الاستماع للبيانات الواردة من الأردوينو
+  document.addEventListener('arduinoDataReceived', (event) => {
+    const readings = event.detail;
+    showNotification('📨 تم استقبال بيانات من الأردوينو', 'info');
+  });
+}
+
+// إشعار في الشاشة
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    background: ${type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#667eea'};
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  `;
+  
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
 
 function setupEventListeners() {
   document.getElementById("autoModeBtn").addEventListener("click", () => switchToAutoMode());
