@@ -27,10 +27,37 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
 .app-header h1 {
   font-size: 2.2rem;
-  margin-bottom: 8px;
+  margin-bottom: 0;
   font-weight: 700;
+  flex: 1;
+  text-align: center;
+}
+
+.lang-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.lang-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }
 
 .app-header p {
@@ -86,6 +113,11 @@ body {
   margin: 15px 0 10px;
   color: #2f9e44;
   font-weight: 600;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 20px;
 }
 
 /* Mode Selection Screen */
@@ -470,6 +502,34 @@ button {
   display: none;
 }
 
+/* RTL Support */
+[dir="rtl"] .header-top {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .button-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .tips-list {
+  margin-right: 20px;
+  margin-left: 0;
+}
+
+[dir="rtl"] .plant-card {
+  border-left: none;
+  border-right: 4px solid #2f9e44;
+}
+
+[dir="rtl"] .material-item {
+  border-left: none;
+  border-right: 3px solid #2f9e44;
+}
+
+[dir="rtl"] .improvement-section h4 {
+  text-align: right;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .app-header h1 {
@@ -503,5 +563,18 @@ button {
 
   .values-grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .header-top {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .app-header h1 {
+    text-align: center;
+  }
+
+  .lang-toggle {
+    align-self: center;
   }
 }

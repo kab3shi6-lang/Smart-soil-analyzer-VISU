@@ -1,141 +1,145 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>محلل التربة الذكي</title>
+  <title data-ar="محلل التربة الذكي" data-en="Smart Soil Analyzer">محلل التربة الذكي</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="app-header">
-    <h1>🌱 محلل التربة الذكي</h1>
-    <p>حليفك في اختيار النباتات المناسبة لتربتك</p>
+    <div class="header-top">
+      <h1>🌱 <span data-ar="محلل التربة الذكي" data-en="Smart Soil Analyzer">محلل التربة الذكي</span></h1>
+      <button id="langToggle" class="lang-toggle">English</button>
+    </div>
+    <p data-ar="حليفك في اختيار النباتات المناسبة لتربتك" data-en="Your guide to choosing the right plants for your soil">حليفك في اختيار النباتات المناسبة لتربتك</p>
   </header>
 
   <main class="app-main">
     <!-- شاشة اختيار الوضع -->
     <section id="modeSelectionScreen" class="card">
-      <h2>اختر طريقة التحليل</h2>
-      <p style="color: #666; margin-bottom: 20px;">كيف تريد تحليل التربة؟</p>
+      <h2 data-ar="اختر طريقة التحليل" data-en="Choose Analysis Method">اختر طريقة التحليل</h2>
+      <p class="subtitle" data-ar="كيف تريد تحليل التربة؟" data-en="How would you like to analyze your soil?">كيف تريد تحليل التربة؟</p>
       <div class="mode-buttons">
         <button type="button" id="autoModeBtn" class="mode-btn auto-mode">
           <span class="mode-icon">📊</span>
-          <span class="mode-title">التحليل التلقائي</span>
-          <span class="mode-desc">أدخل قيم التربة وسنقترح عليك النباتات المناسبة</span>
+          <span class="mode-title" data-ar="التحليل التلقائي" data-en="Automatic Analysis">التحليل التلقائي</span>
+          <span class="mode-desc" data-ar="أدخل قيم التربة وسنقترح عليك النباتات المناسبة" data-en="Enter soil values and get plant recommendations">أدخل قيم التربة وسنقترح عليك النباتات المناسبة</span>
         </button>
         <button type="button" id="manualModeBtn" class="mode-btn manual-mode">
           <span class="mode-icon">🌿</span>
-          <span class="mode-title">التحديد اليدوي</span>
-          <span class="mode-desc">اختر النبات المفضل لديك وسنتحقق من مدى توافق التربة</span>
+          <span class="mode-title" data-ar="التحديد اليدوي" data-en="Manual Selection">التحديد اليدوي</span>
+          <span class="mode-desc" data-ar="اختر النبات المفضل لديك وسنتحقق من مدى توافق التربة" data-en="Choose your favorite plant and check soil compatibility">اختر النبات المفضل لديك وسنتحقق من مدى توافق التربة</span>
         </button>
       </div>
     </section>
 
     <!-- شاشة التحليل التلقائي -->
     <section id="autoModeScreen" class="card hidden">
-      <h2>التحليل التلقائي - أدخل بيانات التربة</h2>
+      <h2 data-ar="التحليل التلقائي - أدخل بيانات التربة" data-en="Automatic Analysis - Enter Soil Data">التحليل التلقائي - أدخل بيانات التربة</h2>
       <form id="soilForm">
         <div class="form-row">
           <div class="form-field">
-            <label for="temp">درجة الحرارة (°C)</label>
+            <label for="temp" data-ar="درجة الحرارة (°C)" data-en="Temperature (°C)">درجة الحرارة (°C)</label>
             <input type="number" id="temp" step="0.1" required />
           </div>
           <div class="form-field">
-            <label for="moisture">الرطوبة (%)</label>
+            <label for="moisture" data-ar="الرطوبة (%)" data-en="Moisture (%)">الرطوبة (%)</label>
             <input type="number" id="moisture" step="0.1" required />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label for="ph">درجة الحموضة pH (0–14)</label>
+            <label for="ph" data-ar="درجة الحموضة pH (0–14)" data-en="pH Level (0–14)">درجة الحموضة pH (0–14)</label>
             <input type="number" id="ph" step="0.1" min="0" max="14" required />
           </div>
           <div class="form-field">
-            <label for="n">النيتروجين (N)</label>
+            <label for="n" data-ar="النيتروجين (N)" data-en="Nitrogen (N)">النيتروجين (N)</label>
             <input type="number" id="n" step="1" required />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label for="p">الفسفور (P)</label>
+            <label for="p" data-ar="الفسفور (P)" data-en="Phosphorus (P)">الفسفور (P)</label>
             <input type="number" id="p" step="1" required />
           </div>
           <div class="form-field">
-            <label for="k">البوتاسيوم (K)</label>
+            <label for="k" data-ar="البوتاسيوم (K)" data-en="Potassium (K)">البوتاسيوم (K)</label>
             <input type="number" id="k" step="1" required />
           </div>
         </div>
 
         <div class="button-row">
-          <button type="button" id="analyzeBtn" class="btn-primary">تحليل التربة</button>
-          <button type="button" id="mockBtn" class="btn-secondary">استخدم قيم مثال</button>
-          <button type="button" id="backFromAutoBtn" class="btn-back">العودة</button>
+          <button type="button" id="analyzeBtn" class="btn-primary" data-ar="تحليل التربة" data-en="Analyze Soil">تحليل التربة</button>
+          <button type="button" id="mockBtn" class="btn-secondary" data-ar="استخدم قيم مثال" data-en="Use Example Values">استخدم قيم مثال</button>
+          <button type="button" id="backFromAutoBtn" class="btn-back" data-ar="العودة" data-en="Back">العودة</button>
         </div>
       </form>
     </section>
 
     <!-- شاشة التحديد اليدوي -->
     <section id="manualModeScreen" class="card hidden">
-      <h2>التحديد اليدوي - اختر النبات</h2>
+      <h2 data-ar="التحديد اليدوي - اختر النبات" data-en="Manual Selection - Choose Plant">التحديد اليدوي - اختر النبات</h2>
       <div id="plantsSelector" class="plants-selector">
         <!-- سيتم ملؤه بقائمة النباتات -->
       </div>
-      <button type="button" id="backFromManualBtn" class="btn-back">العودة</button>
+      <button type="button" id="backFromManualBtn" class="btn-back" data-ar="العودة" data-en="Back">العودة</button>
     </section>
 
     <!-- شاشة النتائج -->
     <section id="resultsSection" class="card hidden">
-      <h2>نتائج التحليل</h2>
+      <h2 data-ar="نتائج التحليل" data-en="Analysis Results">نتائج التحليل</h2>
 
       <div id="statusBox" class="status-box">
         <!-- حالة التربة -->
       </div>
 
-      <h3>قيم التربة المقاسة</h3>
+      <h3 data-ar="قيم التربة المقاسة" data-en="Measured Soil Values">قيم التربة المقاسة</h3>
       <div id="valuesGrid" class="values-grid">
         <!-- قيم التربة -->
       </div>
 
       <div id="manualResultContainer" class="hidden">
-        <h3>النبات المختار: <span id="selectedPlantName"></span></h3>
-        <h3>توافق التربة</h3>
+        <h3 data-ar="النبات المختار" data-en="Selected Plant">النبات المختار: <span id="selectedPlantName"></span></h3>
+        <h3 data-ar="توافق التربة" data-en="Soil Compatibility">توافق التربة</h3>
         <div id="plantCompatibility" class="plant-compatibility">
           <!-- معلومات التوافق -->
         </div>
       </div>
 
       <div id="autoResultContainer">
-        <h3>أفضل النباتات لهذه التربة</h3>
+        <h3 data-ar="أفضل النباتات لهذه التربة" data-en="Best Plants for This Soil">أفضل النباتات لهذه التربة</h3>
         <div id="suitableList" class="plants-list">
           <!-- النباتات المناسبة -->
         </div>
 
-        <h3>النباتات غير المناسبة حالياً</h3>
+        <h3 data-ar="النباتات غير المناسبة حالياً" data-en="Unsuitable Plants">النباتات غير المناسبة حالياً</h3>
         <div id="unsuitableList" class="plants-list">
           <!-- النباتات غير المناسبة -->
         </div>
       </div>
 
-      <h3>نصائح تحسين التربة</h3>
+      <h3 data-ar="نصائح تحسين التربة" data-en="Soil Improvement Tips">نصائح تحسين التربة</h3>
       <div id="improvementTips" class="improvement-tips">
         <!-- نصائح التحسين -->
       </div>
 
-      <h3>نصائح عامة</h3>
+      <h3 data-ar="نصائح عامة" data-en="General Tips">نصائح عامة</h3>
       <ul id="tipsList" class="tips-list">
         <!-- نصائح عامة -->
       </ul>
 
-      <button type="button" id="backFromResultsBtn" class="btn-back">العودة</button>
+      <button type="button" id="backFromResultsBtn" class="btn-back" data-ar="العودة" data-en="Back">العودة</button>
     </section>
   </main>
 
   <footer class="app-footer">
-    <p>محلل التربة الذكي © 2024</p>
+    <p data-ar="محلل التربة الذكي © 2024" data-en="Smart Soil Analyzer © 2024">محلل التربة الذكي © 2024</p>
   </footer>
 
+  <script src="i18n.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

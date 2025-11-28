@@ -2,7 +2,8 @@
 const plants = [
   {
     id: "tomato",
-    name: "الطماطم",
+    nameAr: "الطماطم",
+    nameEn: "Tomato",
     icon: "🍅",
     tempMin: 18,
     tempMax: 30,
@@ -18,7 +19,8 @@ const plants = [
   },
   {
     id: "potato",
-    name: "البطاطس",
+    nameAr: "البطاطس",
+    nameEn: "Potato",
     icon: "🥔",
     tempMin: 15,
     tempMax: 24,
@@ -34,7 +36,8 @@ const plants = [
   },
   {
     id: "wheat",
-    name: "القمح",
+    nameAr: "القمح",
+    nameEn: "Wheat",
     icon: "🌾",
     tempMin: 10,
     tempMax: 25,
@@ -50,7 +53,8 @@ const plants = [
   },
   {
     id: "beans",
-    name: "الفاصوليا",
+    nameAr: "الفاصوليا",
+    nameEn: "Beans",
     icon: "🫘",
     tempMin: 16,
     tempMax: 27,
@@ -66,7 +70,8 @@ const plants = [
   },
   {
     id: "carrot",
-    name: "الجزر",
+    nameAr: "الجزر",
+    nameEn: "Carrot",
     icon: "🥕",
     tempMin: 10,
     tempMax: 24,
@@ -82,7 +87,8 @@ const plants = [
   },
   {
     id: "lettuce",
-    name: "الخس",
+    nameAr: "الخس",
+    nameEn: "Lettuce",
     icon: "🥬",
     tempMin: 10,
     tempMax: 20,
@@ -98,7 +104,8 @@ const plants = [
   },
   {
     id: "chili",
-    name: "الفلفل الحار",
+    nameAr: "الفلفل الحار",
+    nameEn: "Chili Pepper",
     icon: "🌶️",
     tempMin: 18,
     tempMax: 30,
@@ -114,7 +121,8 @@ const plants = [
   },
   {
     id: "spinach",
-    name: "السبانخ",
+    nameAr: "السبانخ",
+    nameEn: "Spinach",
     icon: "🌿",
     tempMin: 10,
     tempMax: 20,
@@ -130,7 +138,8 @@ const plants = [
   },
   {
     id: "onion",
-    name: "البصل",
+    nameAr: "البصل",
+    nameEn: "Onion",
     icon: "🧅",
     tempMin: 15,
     tempMax: 25,
@@ -146,7 +155,8 @@ const plants = [
   },
   {
     id: "cucumber",
-    name: "الخيار",
+    nameAr: "الخيار",
+    nameEn: "Cucumber",
     icon: "🥒",
     tempMin: 20,
     tempMax: 32,
@@ -162,7 +172,8 @@ const plants = [
   },
   {
     id: "corn",
-    name: "الذرة",
+    nameAr: "الذرة",
+    nameEn: "Corn",
     icon: "🌽",
     tempMin: 18,
     tempMax: 32,
@@ -178,7 +189,8 @@ const plants = [
   },
   {
     id: "strawberry",
-    name: "الفراولة",
+    nameAr: "الفراولة",
+    nameEn: "Strawberry",
     icon: "🍓",
     tempMin: 13,
     tempMax: 24,
@@ -194,7 +206,8 @@ const plants = [
   },
   {
     id: "apple",
-    name: "التفاح",
+    nameAr: "التفاح",
+    nameEn: "Apple",
     icon: "🍎",
     tempMin: 7,
     tempMax: 24,
@@ -213,53 +226,46 @@ const plants = [
 // قاعدة بيانات المواد الطبيعية للتحسين
 const naturalMaterials = {
   nitrogen: [
-    { name: "سماد الدجاج", amount: "1-2 كيلو لكل 10 متر مربع", description: "غني جداً بالنيتروجين" },
-    { name: "سماد البقر", amount: "2-3 كيلو لكل 10 متر مربع", description: "مصدر جيد للنيتروجين والمادة العضوية" },
-    { name: "نبات البرسيم", amount: "نم محاصيل البرسيم بالتناوب", description: "يثبت النيتروجين من الهواء" },
-    { name: "قشريات مطحونة", amount: "500 غرام لكل متر مربع", description: "غنية بالنيتروجين الطبيعي" }
+    { nameAr: "سماد الدجاج", nameEn: "Chicken Manure", amountAr: "1-2 كيلو لكل 10 متر مربع", amountEn: "1-2 kg per 10 sq meters", descAr: "غني جداً بالنيتروجين", descEn: "Very rich in nitrogen" },
+    { nameAr: "سماد البقر", nameEn: "Cow Manure", amountAr: "2-3 كيلو لكل 10 متر مربع", amountEn: "2-3 kg per 10 sq meters", descAr: "مصدر جيد للنيتروجين والمادة العضوية", descEn: "Good source of nitrogen and organic matter" },
+    { nameAr: "نبات البرسيم", nameEn: "Clover", amountAr: "نم محاصيل البرسيم بالتناوب", amountEn: "Grow clover crops in rotation", descAr: "يثبت النيتروجين من الهواء", descEn: "Fixes nitrogen from the air" },
   ],
   phosphorus: [
-    { name: "دقيق العظام", amount: "500-1000 غرام لكل 10 متر مربع", description: "مصدر ممتاز للفسفور" },
-    { name: "رماد الخشب", amount: "1 كيلو لكل 10 متر مربع", description: "يحتوي على فسفور وبوتاسيوم" },
-    { name: "صخر الفسفات الطبيعي", amount: "2 كيلو لكل 10 متر مربع", description: "مصدر طبيعي مباشر للفسفور" }
+    { nameAr: "دقيق العظام", nameEn: "Bone Meal", amountAr: "500-1000 غرام لكل 10 متر مربع", amountEn: "500-1000g per 10 sq meters", descAr: "مصدر ممتاز للفسفور", descEn: "Excellent source of phosphorus" },
+    { nameAr: "رماد الخشب", nameEn: "Wood Ash", amountAr: "1 كيلو لكل 10 متر مربع", amountEn: "1 kg per 10 sq meters", descAr: "يحتوي على فسفور وبوتاسيوم", descEn: "Contains phosphorus and potassium" },
   ],
   potassium: [
-    { name: "رماد الخشب", amount: "1 كيلو لكل 10 متر مربع", description: "غني بالبوتاسيوم والعناصر الأخرى" },
-    { name: "دبس السكر المخفف", amount: "1 لتر في 10 لتر ماء", description: "يحتوي على بوتاسيوم وسكريات" },
-    { name: "قشور الموز", amount: "جفف وطحن - 300 غرام لكل 10 متر مربع", description: "مصدر طبيعي غني للبوتاسيوم" }
+    { nameAr: "رماد الخشب", nameEn: "Wood Ash", amountAr: "1 كيلو لكل 10 متر مربع", amountEn: "1 kg per 10 sq meters", descAr: "غني بالبوتاسيوم والعناصر الأخرى", descEn: "Rich in potassium and other elements" },
+    { nameAr: "قشور الموز", nameEn: "Banana Peels", amountAr: "جفف وطحن - 300 غرام لكل 10 متر مربع", amountEn: "Dried and ground - 300g per 10 sq meters", descAr: "مصدر طبيعي غني للبوتاسيوم", descEn: "Natural rich source of potassium" },
   ],
   calcium: [
-    { name: "قشرة البيض المطحونة", amount: "500 غرام لكل 10 متر مربع", description: "مصدر ممتاز للكالسيوم" },
-    { name: "الجير الزراعي", amount: "1-2 كيلو لكل 10 متر مربع", description: "يرفع درجة الحموضة ويضيف كالسيوم" },
-    { name: "الطباشير المطحون", amount: "1 كيلو لكل 10 متر مربع", description: "مصدر طبيعي للكالسيوم" }
+    { nameAr: "قشرة البيض المطحونة", nameEn: "Crushed Eggshells", amountAr: "500 غرام لكل 10 متر مربع", amountEn: "500g per 10 sq meters", descAr: "مصدر ممتاز للكالسيوم", descEn: "Excellent source of calcium" },
+    { nameAr: "الجير الزراعي", nameEn: "Agricultural Lime", amountAr: "1-2 كيلو لكل 10 متر مربع", amountEn: "1-2 kg per 10 sq meters", descAr: "يرفع درجة الحموضة ويضيف كالسيوم", descEn: "Raises pH and adds calcium" },
   ],
-  magnesium: [
-    { name: "ملح إبسوم (كبريتات الماغنيسيوم)", amount: "15 غرام لكل متر مربع", description: "مصدر سريع الامتصاص" },
-    { name: "دولوميت (جير ماغنيسي)", amount: "1-2 كيلو لكل 10 متر مربع", description: "يوفر كالسيوم وماغنيسيوم معاً" },
-    { name: "أوراق السبانخ المحترقة", amount: "500 غرام لكل 10 متر مربع", description: "غنية بالماغنيسيوم" }
-  ],
-  acidity: [
-    { name: "الجير الزراعي", amount: "1-2 كيلو لكل 10 متر مربع", description: "يرفع درجة الحموضة" },
-    { name: "رماد الخشب", amount: "1 كيلو لكل 10 متر مربع", description: "يرفع الحموضة قليلاً" }
-  ],
-  alkalinity: [
-    { name: "كبريتة العناصر (الكبريت الزراعي)", amount: "500-1000 غرام لكل 10 متر مربع", description: "يخفض درجة الحموضة تدريجياً" },
-    { name: "السماد العضوي", amount: "2-3 كيلو لكل 10 متر مربع", description: "يخفض الحموضة مع وقت" },
-    { name: "تفل القهوة أو الشاي", amount: "1 كيلو لكل 10 متر مربع", description: "حمضية طفيفة وتحسين التربة" }
-  ],
-  moisture: [
-    { name: "المادة العضوية (السماد)", amount: "2-3 كيلو لكل 10 متر مربع", description: "تحسن احتفاظ الرطوبة" },
-    { name: "الكومبوست", amount: "2-3 كيلو لكل 10 متر مربع", description: "تحسن التهوية والرطوبة" },
-    { name: "نشارة الخشب", amount: "1 كيلو لكل 10 متر مربع", description: "طبقة عازلة تحافظ على الرطوبة" }
-  ]
 };
 
 // حالة التطبيق
 let appState = {
-  mode: null, // 'auto' أو 'manual'
+  mode: null,
   soilData: null,
   selectedPlant: null
 };
+
+function getPlantName(plant) {
+  return i18n.currentLang === 'ar' ? plant.nameAr : plant.nameEn;
+}
+
+function getMaterialName(material) {
+  return i18n.currentLang === 'ar' ? material.nameAr : material.nameEn;
+}
+
+function getMaterialAmount(material) {
+  return i18n.currentLang === 'ar' ? material.amountAr : material.amountEn;
+}
+
+function getMaterialDesc(material) {
+  return i18n.currentLang === 'ar' ? material.descAr : material.descEn;
+}
 
 // تهيئة التطبيق
 document.addEventListener("DOMContentLoaded", () => {
@@ -268,15 +274,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function setupEventListeners() {
-  // أزرار تبديل الوضع
   document.getElementById("autoModeBtn").addEventListener("click", () => switchToAutoMode());
   document.getElementById("manualModeBtn").addEventListener("click", () => switchToManualMode());
-  
-  // أزرار التحليل
   document.getElementById("analyzeBtn").addEventListener("click", analyzeSoil);
   document.getElementById("mockBtn").addEventListener("click", useExampleValues);
-  
-  // أزرار العودة
   document.getElementById("backFromAutoBtn").addEventListener("click", backToModeSelection);
   document.getElementById("backFromManualBtn").addEventListener("click", backToModeSelection);
   document.getElementById("backFromResultsBtn").addEventListener("click", backToModeSelection);
@@ -327,7 +328,7 @@ function analyzeSoil() {
   const k = parseFloat(document.getElementById("k").value);
 
   if ([temp, moisture, ph, n, p, k].some((v) => Number.isNaN(v))) {
-    alert("يرجى ملء جميع الحقول برقام صحيحة");
+    alert(i18n.translate('Please fill all fields with valid numbers'));
     return;
   }
 
@@ -342,7 +343,6 @@ function analyzeSoil() {
 
 function analyzeAutoMode() {
   const reading = appState.soilData;
-  
   renderValues(reading);
 
   const suitable = [];
@@ -372,7 +372,7 @@ function analyzeAutoMode() {
 
 function analyzeManualMode() {
   if (!appState.selectedPlant) {
-    alert("يرجى اختيار نبات أولاً");
+    alert(i18n.translate('Please select a plant first'));
     return;
   }
 
@@ -384,7 +384,7 @@ function analyzeManualMode() {
   renderImprovementTips(reading);
   renderStatusBox(result.suitable ? 1 : 0, result.suitable ? 0 : 1);
 
-  document.getElementById("selectedPlantName").textContent = appState.selectedPlant.name;
+  document.getElementById("selectedPlantName").textContent = getPlantName(appState.selectedPlant);
   document.getElementById("autoResultContainer").classList.add("hidden");
   document.getElementById("manualResultContainer").classList.remove("hidden");
   hideAllScreens();
@@ -399,10 +399,9 @@ function renderPlantSelector() {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "plant-btn";
-    btn.innerHTML = `<span style="font-size: 2rem;">${plant.icon}</span><span>${plant.name}</span>`;
+    btn.innerHTML = `<span style="font-size: 2rem;">${plant.icon}</span><span>${getPlantName(plant)}</span>`;
     btn.addEventListener("click", () => {
       appState.selectedPlant = plant;
-      // فتح شاشة إدخال البيانات
       hideAllScreens();
       document.getElementById("autoModeScreen").classList.remove("hidden");
     });
@@ -414,57 +413,117 @@ function checkPlantSuitability(plant, r) {
   const issues = [];
   const tips = new Set();
   const generalTips = new Set();
+  const lang = i18n.currentLang;
 
   if (r.temp < plant.tempMin) {
-    issues.push(`درجة الحرارة منخفضة جداً (الحد الأدنى: ${plant.tempMin}°C)`);
-    tips.add("زراعة النبات في فصل أكثر دفئاً أو استخدام بيت زجاجي.");
-    generalTips.add("درجة الحرارة منخفضة جداً");
+    const msg = lang === 'ar' 
+      ? `درجة الحرارة منخفضة جداً (الحد الأدنى: ${plant.tempMin}°C)`
+      : `Temperature too low (min: ${plant.tempMin}°C)`;
+    issues.push(msg);
+    const tip = lang === 'ar' 
+      ? "زراعة النبات في فصل أكثر دفئاً أو استخدام بيت زجاجي."
+      : "Plant in a warmer season or use a greenhouse.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "درجة الحرارة منخفضة جداً" : "Temperature too low");
   } else if (r.temp > plant.tempMax) {
-    issues.push(`درجة الحرارة مرتفعة جداً (الحد الأقصى: ${plant.tempMax}°C)`);
-    tips.add("توفير الظل والرطوبة للنبات أثناء ذروة الحرارة.");
-    generalTips.add("درجة الحرارة مرتفعة جداً");
+    const msg = lang === 'ar'
+      ? `درجة الحرارة مرتفعة جداً (الحد الأقصى: ${plant.tempMax}°C)`
+      : `Temperature too high (max: ${plant.tempMax}°C)`;
+    issues.push(msg);
+    const tip = lang === 'ar'
+      ? "توفير الظل والرطوبة للنبات أثناء ذروة الحرارة."
+      : "Provide shade and moisture during peak heat.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "درجة الحرارة مرتفعة جداً" : "Temperature too high");
   }
 
   if (r.moisture < plant.moistureMin) {
-    issues.push(`الرطوبة منخفضة جداً (الحد الأدنى: ${plant.moistureMin}%)`);
-    tips.add("زيادة الري والعناية بالنبات وإضافة طبقة من النشارة.");
-    generalTips.add("الرطوبة منخفضة جداً - زد الري");
+    const msg = lang === 'ar'
+      ? `الرطوبة منخفضة جداً (الحد الأدنى: ${plant.moistureMin}%)`
+      : `Moisture too low (min: ${plant.moistureMin}%)`;
+    issues.push(msg);
+    const tip = lang === 'ar'
+      ? "زيادة الري والعناية بالنبات وإضافة طبقة من النشارة."
+      : "Increase watering and add mulch.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "الرطوبة منخفضة جداً - زد الري" : "Moisture too low - increase watering");
   } else if (r.moisture > plant.moistureMax) {
-    issues.push(`الرطوبة مرتفعة جداً (الحد الأقصى: ${plant.moistureMax}%)`);
-    tips.add("تحسين تصريف التربة وتقليل الري.");
-    generalTips.add("الرطوبة مرتفعة جداً - قلل الري وحسّن التصريف");
+    const msg = lang === 'ar'
+      ? `الرطوبة مرتفعة جداً (الحد الأقصى: ${plant.moistureMax}%)`
+      : `Moisture too high (max: ${plant.moistureMax}%)`;
+    issues.push(msg);
+    const tip = lang === 'ar'
+      ? "تحسين تصريف التربة وتقليل الري."
+      : "Improve drainage and reduce watering.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "الرطوبة مرتفعة جداً - قلل الري وحسّن التصريف" : "Moisture too high - reduce watering and improve drainage");
   }
 
   if (r.ph < plant.phMin) {
-    issues.push(`التربة حمضية جداً (الحد الأدنى: ${plant.phMin.toFixed(1)})`);
-    tips.add("إضافة الجير الزراعي لرفع درجة الحموضة.");
-    generalTips.add("التربة حمضية جداً");
+    const msg = lang === 'ar'
+      ? `التربة حمضية جداً (الحد الأدنى: ${plant.phMin.toFixed(1)})`
+      : `pH too low (min: ${plant.phMin.toFixed(1)})`;
+    issues.push(msg);
+    const tip = lang === 'ar'
+      ? "إضافة الجير الزراعي لرفع درجة الحموضة."
+      : "Add agricultural lime to raise pH.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "التربة حمضية جداً" : "Soil is too acidic");
   } else if (r.ph > plant.phMax) {
-    issues.push(`التربة قلوية جداً (الحد الأقصى: ${plant.phMax.toFixed(1)})`);
-    tips.add("إضافة الكبريت الزراعي أو السماد العضوي لخفض الحموضة.");
-    generalTips.add("التربة قلوية جداً");
+    const msg = lang === 'ar'
+      ? `التربة قلوية جداً (الحد الأقصى: ${plant.phMax.toFixed(1)})`
+      : `pH too high (max: ${plant.phMax.toFixed(1)})`;
+    issues.push(msg);
+    const tip = lang === 'ar'
+      ? "إضافة الكبريت الزراعي أو السماد العضوي لخفض الحموضة."
+      : "Add sulfur or organic matter to lower pH.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "التربة قلوية جداً" : "Soil is too alkaline");
   }
 
   if (r.n < plant.nMin) {
-    issues.push("النيتروجين ناقص - سيؤثر على نمو الأوراق");
-    tips.add("استخدام سماد عضوي غني بالنيتروجين.");
-    generalTips.add("النيتروجين منخفض");
+    const msg = lang === 'ar'
+      ? "النيتروجين ناقص - سيؤثر على نمو الأوراق"
+      : "Nitrogen is too low - affects leaf growth";
+    issues.push(msg);
+    const tip = lang === 'ar'
+      ? "استخدام سماد عضوي غني بالنيتروجين."
+      : "Use nitrogen-rich organic fertilizer.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "النيتروجين منخفض" : "Nitrogen is low");
   }
+
   if (r.p < plant.pMin) {
-    issues.push("الفسفور ناقص - سيؤثر على جودة الثمار");
-    tips.add("استخدام دقيق العظام أو سماد فسفوري.");
-    generalTips.add("الفسفور منخفض");
+    const msg = lang === 'ar'
+      ? "الفسفور ناقص - سيؤثر على جودة الثمار"
+      : "Phosphorus is too low - affects fruit quality";
+    issues.push(msg);
+    const tip = lang === 'ar'
+      ? "استخدام دقيق العظام أو سماد فسفوري."
+      : "Use bone meal or phosphorus fertilizer.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "الفسفور منخفض" : "Phosphorus is low");
   }
+
   if (r.k < plant.kMin) {
-    issues.push("البوتاسيوم ناقص - سيؤثر على قوة النبات");
-    tips.add("استخدام رماد الخشب أو قشور الموز المطحونة.");
-    generalTips.add("البوتاسيوم منخفض");
+    const msg = lang === 'ar'
+      ? "البوتاسيوم ناقص - سيؤثر على قوة النبات"
+      : "Potassium is too low - affects plant strength";
+    issues.push(msg);
+    const tip = lang === 'ar'
+      ? "استخدام رماد الخشب أو قشور الموز المطحونة."
+      : "Use wood ash or ground banana peels.";
+    tips.add(tip);
+    generalTips.add(lang === 'ar' ? "البوتاسيوم منخفض" : "Potassium is low");
   }
 
   const suitable = issues.length === 0;
 
   if (suitable) {
-    tips.add("التربة مناسبة تماماً - حافظ على العناية المنتظمة.");
+    const tip = lang === 'ar'
+      ? "التربة مناسبة تماماً - حافظ على العناية المنتظمة."
+      : "Soil is perfect - maintain regular care.";
+    tips.add(tip);
   }
 
   return {
@@ -479,14 +538,15 @@ function checkPlantSuitability(plant, r) {
 function renderValues(r) {
   const grid = document.getElementById("valuesGrid");
   grid.innerHTML = "";
+  const lang = i18n.currentLang;
 
   const entries = [
-    ["درجة الحرارة", `${r.temp.toFixed(1)} °C`],
-    ["الرطوبة", `${r.moisture.toFixed(1)} %`],
-    ["درجة الحموضة", r.ph.toFixed(1)],
-    ["النيتروجين (N)", r.n.toFixed(1)],
-    ["الفسفور (P)", r.p.toFixed(1)],
-    ["البوتاسيوم (K)", r.k.toFixed(1)]
+    [lang === 'ar' ? "درجة الحرارة" : "Temperature", `${r.temp.toFixed(1)} °C`],
+    [lang === 'ar' ? "الرطوبة" : "Moisture", `${r.moisture.toFixed(1)} %`],
+    [lang === 'ar' ? "درجة الحموضة" : "pH", r.ph.toFixed(1)],
+    [lang === 'ar' ? "النيتروجين (N)" : "Nitrogen (N)", r.n.toFixed(1)],
+    [lang === 'ar' ? "الفسفور (P)" : "Phosphorus (P)", r.p.toFixed(1)],
+    [lang === 'ar' ? "البوتاسيوم (K)" : "Potassium (K)", r.k.toFixed(1)]
   ];
 
   entries.forEach(([label, value]) => {
@@ -503,13 +563,13 @@ function renderValues(r) {
 function renderAutoResults(suitable, unsuitable) {
   const suitableList = document.getElementById("suitableList");
   const unsuitableList = document.getElementById("unsuitableList");
+  const lang = i18n.currentLang;
 
   suitableList.innerHTML = "";
   unsuitableList.innerHTML = "";
 
   if (suitable.length === 0) {
-    suitableList.innerHTML =
-      '<p style="color: #666;">لا توجد نباتات مناسبة حالياً. يرجى تحسين التربة.</p>';
+    suitableList.innerHTML = `<p style="color: #666;">${lang === 'ar' ? 'لا توجد نباتات مناسبة حالياً. يرجى تحسين التربة.' : 'No suitable plants found. Please improve the soil.'}</p>`;
   } else {
     suitable.forEach((res) => {
       suitableList.appendChild(createPlantCard(res, true));
@@ -517,7 +577,7 @@ function renderAutoResults(suitable, unsuitable) {
   }
 
   if (unsuitable.length === 0) {
-    unsuitableList.innerHTML = "<p style='color: #666;'>جميع النباتات مناسبة!</p>";
+    unsuitableList.innerHTML = `<p style='color: #666;'>${lang === 'ar' ? 'جميع النباتات مناسبة!' : 'All plants are suitable!'}</p>`;
   } else {
     unsuitable.forEach((res) => {
       unsuitableList.appendChild(createPlantCard(res, false));
@@ -528,11 +588,12 @@ function renderAutoResults(suitable, unsuitable) {
 function renderManualResults(result) {
   const compatibility = document.getElementById("plantCompatibility");
   compatibility.innerHTML = "";
+  const lang = i18n.currentLang;
 
   if (result.suitable) {
-    compatibility.innerHTML = '<div class="status-box status-good" style="margin-bottom: 15px;">✓ التربة مناسبة تماماً لهذا النبات!</div>';
+    compatibility.innerHTML = `<div class="status-box status-good" style="margin-bottom: 15px;">✓ ${lang === 'ar' ? 'التربة مناسبة تماماً لهذا النبات!' : 'Soil is perfect for this plant!'}</div>`;
   } else {
-    compatibility.innerHTML = '<div class="status-box status-poor" style="margin-bottom: 15px;">✗ التربة غير مناسبة للنبات</div>';
+    compatibility.innerHTML = `<div class="status-box status-poor" style="margin-bottom: 15px;">✗ ${lang === 'ar' ? 'التربة غير مناسبة للنبات' : 'Soil is not suitable for this plant'}</div>`;
   }
 
   result.issues.forEach((issue) => {
@@ -553,26 +614,31 @@ function renderManualResults(result) {
 function createPlantCard(result, isGood) {
   const card = document.createElement("div");
   card.className = "plant-card";
+  const lang = i18n.currentLang;
 
   const issuesText =
     result.issues.length === 0
-      ? "لا توجد مشاكل"
+      ? (lang === 'ar' ? "لا توجد مشاكل" : "No issues")
       : result.issues.map((i) => `• ${i}`).join("<br>");
 
   const tipsText =
     result.tips.length === 0
       ? ""
-      : "<br><strong>نصائح:</strong><br>" +
+      : `<br><strong>${lang === 'ar' ? 'نصائح:' : 'Tips:'}</strong><br>` +
         result.tips.map((t) => `• ${t}`).join("<br>");
+
+  const statusTag = isGood
+    ? (lang === 'ar' ? "✓ مناسبة" : "✓ Suitable")
+    : (lang === 'ar' ? "✗ غير مناسبة" : "✗ Not suitable");
 
   card.innerHTML = `
     <div class="plant-header">
       <div>
         <span style="font-size: 1.5rem;">${result.plant.icon}</span>
-        <span class="plant-name"> ${result.plant.name}</span>
+        <span class="plant-name"> ${getPlantName(result.plant)}</span>
       </div>
       <span class="plant-tag ${isGood ? "" : "bad"}">
-        ${isGood ? "✓ مناسبة" : "✗ غير مناسبة"}
+        ${statusTag}
       </span>
     </div>
     <div class="plant-issues">
@@ -586,19 +652,16 @@ function createPlantCard(result, isGood) {
 function renderImprovementTips(reading) {
   const container = document.getElementById("improvementTips");
   container.innerHTML = "";
+  const lang = i18n.currentLang;
 
   const issues = [];
 
-  // تحديد المشاكل
   if (reading.n < 60) issues.push({ type: 'nitrogen', level: 60 - reading.n });
   if (reading.p < 60) issues.push({ type: 'phosphorus', level: 60 - reading.p });
   if (reading.k < 60) issues.push({ type: 'potassium', level: 60 - reading.k });
-  if (reading.ph < 6.0) issues.push({ type: 'acidity' });
-  if (reading.ph > 7.0) issues.push({ type: 'alkalinity' });
-  if (reading.moisture < 50) issues.push({ type: 'moisture' });
 
   if (issues.length === 0) {
-    container.innerHTML = '<p style="color: #666;">التربة في حالة جيدة!</p>';
+    container.innerHTML = `<p style="color: #666;">${lang === 'ar' ? 'التربة في حالة جيدة!' : 'Soil is in good condition!'}</p>`;
     return;
   }
 
@@ -608,22 +671,19 @@ function renderImprovementTips(reading) {
 
     if (issue.type === 'nitrogen') {
       materials = naturalMaterials.nitrogen;
-      title = `تحسين النيتروجين (ناقص بـ ${issue.level.toFixed(0)} وحدة)`;
+      title = lang === 'ar' 
+        ? `تحسين النيتروجين (ناقص بـ ${issue.level.toFixed(0)} وحدة)`
+        : `Improve Nitrogen (deficient by ${issue.level.toFixed(0)} units)`;
     } else if (issue.type === 'phosphorus') {
       materials = naturalMaterials.phosphorus;
-      title = `تحسين الفسفور (ناقص بـ ${issue.level.toFixed(0)} وحدة)`;
+      title = lang === 'ar'
+        ? `تحسين الفسفور (ناقص بـ ${issue.level.toFixed(0)} وحدة)`
+        : `Improve Phosphorus (deficient by ${issue.level.toFixed(0)} units)`;
     } else if (issue.type === 'potassium') {
       materials = naturalMaterials.potassium;
-      title = `تحسين البوتاسيوم (ناقص بـ ${issue.level.toFixed(0)} وحدة)`;
-    } else if (issue.type === 'acidity') {
-      materials = naturalMaterials.acidity;
-      title = 'تقليل حموضة التربة';
-    } else if (issue.type === 'alkalinity') {
-      materials = naturalMaterials.alkalinity;
-      title = 'تقليل قلوية التربة';
-    } else if (issue.type === 'moisture') {
-      materials = naturalMaterials.moisture;
-      title = 'تحسين احتفاظ التربة بالرطوبة';
+      title = lang === 'ar'
+        ? `تحسين البوتاسيوم (ناقص بـ ${issue.level.toFixed(0)} وحدة)`
+        : `Improve Potassium (deficient by ${issue.level.toFixed(0)} units)`;
     }
 
     const section = document.createElement("div");
@@ -634,9 +694,9 @@ function renderImprovementTips(reading) {
       const item = document.createElement("div");
       item.className = "material-item";
       item.innerHTML = `
-        <strong>${material.name}</strong>
-        <p style="font-size: 0.9rem; color: #666; margin: 5px 0;">${material.description}</p>
-        <p style="font-size: 0.85rem; color: #059669;"><strong>الكمية الموصى بها:</strong> ${material.amount}</p>
+        <strong>${getMaterialName(material)}</strong>
+        <p style="font-size: 0.9rem; color: #666; margin: 5px 0;">${getMaterialDesc(material)}</p>
+        <p style="font-size: 0.85rem; color: #059669;"><strong>${lang === 'ar' ? 'الكمية الموصى بها:' : 'Recommended amount:'}</strong> ${getMaterialAmount(material)}</p>
       `;
       section.appendChild(item);
     });
@@ -649,19 +709,26 @@ function renderStatusBox(okCount, badCount) {
   const box = document.getElementById("statusBox");
   let statusClass = "status-good";
   let text = "";
+  const lang = i18n.currentLang;
 
   const total = okCount + badCount;
   const ratio = total === 0 ? 0 : okCount / total;
 
   if (ratio >= 0.6) {
     statusClass = "status-good";
-    text = `✓ حالة التربة: ممتازة - ${okCount} نبات(ات) مناسبة`;
+    text = lang === 'ar'
+      ? `✓ حالة التربة: ممتازة - ${okCount} نبات(ات) مناسبة`
+      : `✓ Soil Status: Excellent - ${okCount} suitable plant(s)`;
   } else if (ratio >= 0.3) {
     statusClass = "status-fair";
-    text = `⚠ حالة التربة: متوسطة - ${okCount} نبات(ات) مناسبة`;
+    text = lang === 'ar'
+      ? `⚠ حالة التربة: متوسطة - ${okCount} نبات(ات) مناسبة`
+      : `⚠ Soil Status: Fair - ${okCount} suitable plant(s)`;
   } else {
     statusClass = "status-poor";
-    text = `✗ حالة التربة: ضعيفة - فقط ${okCount} نبات(ات) مناسبة`;
+    text = lang === 'ar'
+      ? `✗ حالة التربة: ضعيفة - فقط ${okCount} نبات(ات) مناسبة`
+      : `✗ Soil Status: Poor - only ${okCount} suitable plant(s)`;
   }
 
   box.className = `status-box ${statusClass}`;
@@ -671,12 +738,17 @@ function renderStatusBox(okCount, badCount) {
 function renderGeneralTips(tips) {
   const list = document.getElementById("tipsList");
   list.innerHTML = "";
+  const lang = i18n.currentLang;
+  
   if (tips.length === 0) {
     const li = document.createElement("li");
-    li.textContent = "التربة في حالة جيدة. استمر في العناية المنتظمة.";
+    li.textContent = lang === 'ar'
+      ? "التربة في حالة جيدة. استمر في العناية المنتظمة."
+      : "Soil is in good condition. Continue with regular care.";
     list.appendChild(li);
     return;
   }
+  
   tips.forEach((t) => {
     const li = document.createElement("li");
     li.textContent = t;
