@@ -27,6 +27,13 @@
         <span class="bt-text" data-ar="توصيل بالأردوينو" data-en="Connect Arduino">توصيل بالأردوينو</span>
       </button>
     </div>
+    <div class="header-esp01" id="esp01Status">
+      <button id="esp01Btn" class="esp01-btn" title="توصيل بـ ESP-01">
+        <span class="esp-icon">📡</span>
+        <span class="esp-text" data-ar="توصيل WiFi" data-en="Connect WiFi">توصيل WiFi</span>
+      </button>
+      <input type="text" id="esp01Input" class="esp01-input" placeholder="192.168.1.100" style="display: none;" />
+    </div>
   </header>
 
   <main class="app-main">
@@ -171,7 +178,9 @@
   </footer>
 
   <script src="i18n.js"></script>
+  <script src="ai_analyzer.js"></script>
   <script src="bluetooth.js"></script>
+  <script src="esp01.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

@@ -221,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSearchHistory(); // تحميل السجل
   setupEventListeners();
   setupBluetoothUI(); // إعداد واجهة Bluetooth
+  setupESP01UI(); // إعداد واجهة ESP-01
   renderPlantSelector();
 });
 
@@ -270,6 +271,61 @@ function setupBluetoothUI() {
   document.addEventListener('arduinoDataReceived', (event) => {
     const readings = event.detail;
     showNotification('📨 تم استقبال بيانات من الأردوينو', 'info');
+  });
+}
+
+// إعداد واجهة ESP-01 WiFi
+function setupESP01UI() {
+  const esp01Btn = document.getElementById("esp01Btn");
+  const esp01Input = document.getElementById("esp01Input");
+
+  if (esp01Btn) {
+    esp01Btn.addEventListener('click', async () => {
+      if (!esp01Handler.isConnected) {
+        // عرض حقل الإدخال
+        esp01Input.style.display = 'inline-block';
+        esp01Input.focus();
+        
+        // عند الضغط على Enter
+        esp01Input.addEventListener('keypress', async (e) => {
+          if (e.key === 'Enter') {
+            const ip = esp01Input.value || '192.168.1.100';
+            esp01Input.style.display = 'none';
+            
+            // محاولة الاتصال
+            esp01Btn.disabled = true;
+            showNotification('⏳ جاري الاتصال...', 'info');
+            
+            const success = await esp01Handler.connect('http://' + ip);
+            esp01Btn.disabled = false;
+
+            if (success) {
+              esp01Btn.classList.add('connected');
+              esp01Btn.innerHTML = '📡 <span class="esp-text" data-ar="متصل ✓" data-en="Connected ✓">متصل ✓</span>';
+              showNotification('✅ تم الاتصال بـ ESP-01 بنجاح!', 'success');
+              
+              // بدء مراقبة البيانات
+              esp01Handler.startMonitoring(2);
+            } else {
+              showNotification('❌ فشل الاتصال بـ ESP-01. تحقق من IP', 'error');
+            }
+          }
+        });
+      } else {
+        // قطع الاتصال
+        esp01Handler.stopMonitoring();
+        await esp01Handler.disconnect();
+        esp01Btn.classList.remove('connected');
+        esp01Btn.innerHTML = '📡 <span class="esp-text" data-ar="توصيل WiFi" data-en="Connect WiFi">توصيل WiFi</span>';
+        showNotification('⚪ تم قطع الاتصال بـ ESP-01', 'info');
+      }
+    });
+  }
+
+  // الاستماع للبيانات من ESP-01
+  document.addEventListener('espDataReceived', (event) => {
+    const readings = event.detail;
+    showNotification('📨 تم استقبال بيانات من ESP-01', 'info');
   });
 }
 
@@ -449,6 +505,14 @@ function analyzeManualMode() {
   renderValues(reading);
   renderManualResults(result);
   renderImprovementTips(reading);
+  
+  // تحليل ذكي من AI
+  const aiAnalysis = aiAnalyzer.analyzeAndRecommend(reading, appState.selectedPlant);
+  const soilQuality = aiAnalyzer.assessSoilQuality(reading, appState.selectedPlant);
+  const implementationPlan = aiAnalyzer.calculateImplementationPlan(aiAnalysis, i18n.currentLang);
+  
+  renderAdvancedRecommendations(aiAnalysis, soilQuality, implementationPlan);
+  
   renderStatusBox(result.suitable ? 1 : 0, result.suitable ? 0 : 1);
 
   document.getElementById("selectedPlantName").textContent = getPlantName(appState.selectedPlant);
@@ -963,4 +1027,184 @@ function renderGeneralTips(tips) {
     li.textContent = t;
     list.appendChild(li);
   });
+}
+
+/**
+ * 🤖 عرض التوصيات الذكية المتقدمة من AI
+ * Render advanced AI-powered recommendations
+ */
+function renderAdvancedRecommendations(analysis, soilQuality, implementationPlan) {
+  const lang = i18n.currentLang;
+  
+  // إنشاء قسم التوصيات الذكية
+  let advancedRecommendationsHtml = `
+    <div class="ai-recommendations-section">
+      <div class="ai-header">
+        <h3>🤖 ${lang === 'ar' ? 'تحليل ذكي من AI' : 'AI Smart Analysis'}</h3>
+        <span class="urgency-badge urgency-${analysis.urgencyLevel}">
+          ${lang === 'ar' ? 
+            (analysis.urgencyLevel === 'critical' ? '🔴 عاجل جداً' : 
+             analysis.urgencyLevel === 'high' ? '🟠 عاجل' :
+             analysis.urgencyLevel === 'medium' ? '🟡 متوسط' : '🟢 عادي') :
+            (analysis.urgencyLevel === 'critical' ? '🔴 Critical' : 
+             analysis.urgencyLevel === 'high' ? '🟠 High' :
+             analysis.urgencyLevel === 'medium' ? '🟡 Medium' : '🟢 Normal')}
+        </span>
+      </div>
+
+      <!-- جودة التربة الكلية -->
+      <div class="soil-quality-assessment">
+        <div class="quality-score">
+          <span class="score-number">${soilQuality.score}%</span>
+          <div class="score-bar">
+            <div class="score-fill" style="width: ${soilQuality.score}%; background: ${
+              soilQuality.score >= 80 ? '#22c55e' :
+              soilQuality.score >= 60 ? '#eab308' :
+              soilQuality.score >= 40 ? '#f97316' : '#ef4444'
+            };"></div>
+          </div>
+          <p class="score-status">${soilQuality.status}</p>
+        </div>
+        <p class="score-recommendation">${soilQuality.recommendation}</p>
+      </div>
+
+      <!-- النقائص المكتشفة -->
+      ${analysis.deficiencies.length > 0 ? `
+        <div class="deficiencies-section">
+          <h4>${lang === 'ar' ? '⚠️ النقائص المكتشفة:' : '⚠️ Detected Deficiencies:'}</h4>
+          <div class="deficiencies-list">
+            ${analysis.deficiencies.map(def => `
+              <div class="deficiency-item">
+                <div class="deficiency-header">
+                  <span class="deficiency-element">
+                    ${def.element === 'nitrogen' ? '🌱 النيتروجين' : 
+                      def.element === 'phosphorus' ? '🌻 الفسفور' : '💪 البوتاسيوم'}
+                  </span>
+                  <span class="deficiency-level">
+                    ${lang === 'ar' ? 'النقص:' : 'Deficit:'} 
+                    <strong>${def.deficit.toFixed(1)}</strong>
+                  </span>
+                </div>
+                <div class="deficiency-values">
+                  <span>${lang === 'ar' ? 'الحالي:' : 'Current:'} <strong>${def.current.toFixed(1)}</strong></span>
+                  <span>${lang === 'ar' ? 'المطلوب:' : 'Required:'} <strong>${def.required.toFixed(1)}</strong></span>
+                </div>
+                <p class="deficiency-impact">${def.impact}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : `
+        <div class="deficiencies-section good-status">
+          <p>✅ ${lang === 'ar' ? 'جميع العناصر متوازنة بشكل ممتاز!' : 'All elements are perfectly balanced!'}</p>
+        </div>
+      `}
+
+      <!-- التوصيات المحددة -->
+      ${analysis.recommendations.length > 0 ? `
+        <div class="specific-recommendations">
+          <h4>${lang === 'ar' ? '💡 الحلول الموصى بها:' : '💡 Recommended Solutions:'}</h4>
+          ${analysis.recommendations.map((rec, idx) => `
+            <div class="recommendation-card">
+              <div class="rec-header">
+                <h5>
+                  ${rec.element === 'nitrogen' ? '🌱 زيادة النيتروجين' : 
+                    rec.element === 'phosphorus' ? '🌻 تحسين الفسفور' : '💪 تقوية البوتاسيوم'}
+                </h5>
+                <span class="cost-badge cost-${rec.costLevel}">
+                  ${lang === 'ar' ? 
+                    (rec.costLevel === 'high' ? '💰 مرتفع' : rec.costLevel === 'medium' ? '💰 متوسط' : '💰 منخفض') :
+                    (rec.costLevel === 'high' ? '💰 High' : rec.costLevel === 'medium' ? '💰 Medium' : '💰 Low')}
+                </span>
+              </div>
+
+              <!-- المواد الطبيعية المقترحة -->
+              <div class="materials-section">
+                <h6>${lang === 'ar' ? 'المواد الطبيعية المقترحة:' : 'Suggested Natural Materials:'}</h6>
+                <div class="materials-list">
+                  ${rec.materials.map((mat, mIdx) => `
+                    <div class="material-option priority-${mat.priority}">
+                      <div class="material-title">
+                        <span class="priority-badge">
+                          ${lang === 'ar' ? 'الخيار' : 'Option'} ${mat.priority}
+                        </span>
+                        <strong>${mat.nameAr || mat.nameEn}</strong>
+                      </div>
+                      <div class="material-details">
+                        <p><strong>${lang === 'ar' ? '📦 الكمية:' : '📦 Quantity:'}</strong> 
+                          <span class="amount-badge">${Math.round(mat.recommendedGrams)} جرام</span>
+                        </p>
+                        <p><strong>${lang === 'ar' ? '📝 التطبيق:' : '📝 Application:'}</strong> ${mat.applicationAr || mat.applicationEn}</p>
+                        <p><strong>${lang === 'ar' ? '⏱️ التأثير:' : '⏱️ Effect Time:'}</strong> ${mat.daysToEffect || 0} أيام</p>
+                        <p class="material-benefits">
+                          ${lang === 'ar' ? '✨ الفوائد:' : '✨ Benefits:'} 
+                          ${mat.benefits ? mat.benefits.join(', ') : ''}
+                        </p>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <!-- جدول التطبيق الموصى به -->
+                ${rec.applicationSchedule && rec.applicationSchedule.length > 0 ? `
+                  <div class="application-schedule">
+                    <h6>${lang === 'ar' ? '📅 جدول التطبيق:' : '📅 Application Schedule:'}</h6>
+                    <div class="schedule-grid">
+                      ${rec.applicationSchedule.map((schedule, sIdx) => `
+                        <div class="schedule-item">
+                          <div class="schedule-day">اليوم ${schedule.day}</div>
+                          <div class="schedule-desc">${schedule.desc}</div>
+                          <div class="schedule-percent">${schedule.percent}%</div>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+
+              <!-- الكمية الإجمالية المطلوبة -->
+              <div class="total-amount">
+                <strong>${lang === 'ar' ? '📊 الكمية الإجمالية المطلوبة:' : '📊 Total Amount Needed:'}</strong>
+                <span class="total-grams">${rec.gramsNeeded} جرام</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <!-- خطة التنفيذ الزمنية -->
+      <div class="implementation-plan">
+        <h4>${lang === 'ar' ? '⏳ خطة التنفيذ:' : '⏳ Implementation Plan:'}</h4>
+        <div class="plan-details">
+          <p>
+            <strong>${lang === 'ar' ? '⏱️ المدة المتوقعة:' : '⏱️ Expected Duration:'}</strong> 
+            ${implementationPlan.totalDays} ${lang === 'ar' ? 'يوم' : 'days'}
+          </p>
+          <p>
+            <strong>${lang === 'ar' ? '💰 التكلفة المتوقعة:' : '💰 Estimated Cost:'}</strong> 
+            ${implementationPlan.estimatedCost}
+          </p>
+        </div>
+      </div>
+
+      <!-- نصيحة متخصصة حسب نوع النبات -->
+      <div class="plant-specific-advice">
+        <p>${analysis.plantSpecificAdvice}</p>
+      </div>
+    </div>
+  `;
+
+  // إضافة قسم التوصيات الذكية إلى صفحة النتائج
+  const resultsContainer = document.getElementById("manualResultContainer");
+  if (resultsContainer) {
+    // البحث عن قسم موجود أو إنشاء واحد جديد
+    let advancedSection = resultsContainer.querySelector('.ai-recommendations-section');
+    if (!advancedSection) {
+      const div = document.createElement('div');
+      div.innerHTML = advancedRecommendationsHtml;
+      resultsContainer.appendChild(div.firstElementChild);
+    } else {
+      advancedSection.innerHTML = advancedRecommendationsHtml;
+    }
+  }
 }
