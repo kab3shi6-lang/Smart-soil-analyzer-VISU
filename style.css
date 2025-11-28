@@ -81,6 +81,31 @@ body {
 .app-header p {
   font-size: 1rem;
   opacity: 0.95;
+  margin-bottom: 12px;
+}
+
+.header-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.stat-separator {
+  opacity: 0.6;
 }
 
 /* Main layout */

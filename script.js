@@ -108,9 +108,11 @@ function createPlantObject(id, nameAr, nameEn, icon, category) {
     baseNutrients = { min: 40, max: 60 };
   } else if (category === 'fruits') {
     baseMoisture = { min: 60, max: 80 };
+    basePH = { min: 5.8, max: 7.2 };
   } else if (category === 'herbs') {
     baseTemp = { min: 12, max: 24 };
     baseMoisture = { min: 45, max: 65 };
+    basePH = { min: 6.0, max: 7.0 };
   }
   
   // إضافة تنويع عشوائي قليل
@@ -137,7 +139,10 @@ function createPlantObject(id, nameAr, nameEn, icon, category) {
     pMin: baseNutrients.min + Math.floor(Math.random() * 30),
     kMin: baseNutrients.min + Math.floor(Math.random() * 30),
     caMin: 30 + Math.floor(Math.random() * 20),
-    mgMin: 20 + Math.floor(Math.random() * 20)
+    mgMin: 20 + Math.floor(Math.random() * 20),
+    difficulty: ['سهل', 'متوسط', 'صعب'][Math.floor(Math.random() * 3)], // مستوى الصعوبة
+    wateringFreq: ['كل يومين', 'يومياً', 'كل 3 أيام'][Math.floor(Math.random() * 3)], // تكرار الري
+    harvestTime: 60 + Math.floor(Math.random() * 120) // وقت الحصاد بالأيام
   };
 }
 
@@ -206,6 +211,13 @@ function getMaterialDesc(material) {
 // تهيئة التطبيق
 document.addEventListener("DOMContentLoaded", () => {
   generateLargePlantsDatabase(); // إنشاء 1000+ نبات
+  
+  // تحديث عدد النباتات في الهيدر
+  const plantCount = document.getElementById("plantCount");
+  if (plantCount && plants.length > 0) {
+    plantCount.textContent = plants.length.toLocaleString();
+  }
+  
   loadSearchHistory(); // تحميل السجل
   setupEventListeners();
   renderPlantSelector();
