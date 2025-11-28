@@ -765,34 +765,51 @@ function renderImprovementTips(reading) {
   if (reading.k < 60) issues.push({ type: 'potassium', level: 60 - reading.k });
 
   if (issues.length === 0) {
-    container.innerHTML = `<p style="color: #666;">${lang === 'ar' ? 'التربة في حالة جيدة!' : 'Soil is in good condition!'}</p>`;
+    const goodMsg = document.createElement("div");
+    goodMsg.style.padding = "15px";
+    goodMsg.style.background = "linear-gradient(135deg, #dcfce7, #bbf7d0)";
+    goodMsg.style.borderRadius = "10px";
+    goodMsg.style.color = "#166534";
+    goodMsg.style.fontWeight = "600";
+    goodMsg.innerHTML = `<span style="font-size: 1.3rem; margin-right: 8px;">✓</span>${lang === 'ar' ? 'التربة في حالة ممتازة! لا توجد نقائص واضحة.' : 'Soil is in excellent condition! No major deficiencies.'}`;
+    container.appendChild(goodMsg);
     return;
   }
+
+  const title = document.createElement("h4");
+  title.style.marginBottom = "15px";
+  title.style.color = "#2f9e44";
+  title.textContent = lang === 'ar' ? '💡 الحلول الموصى بها:' : '💡 Recommended Solutions:';
+  container.appendChild(title);
 
   issues.forEach((issue) => {
     let materials = [];
     let title = '';
+    let urgency = '';
 
     if (issue.type === 'nitrogen') {
       materials = naturalMaterials.nitrogen;
       title = lang === 'ar' 
-        ? `تحسين النيتروجين (ناقص بـ ${issue.level.toFixed(0)} وحدة)`
-        : `Improve Nitrogen (deficient by ${issue.level.toFixed(0)} units)`;
+        ? `🌱 تحسين النيتروجين`
+        : `🌱 Boost Nitrogen`;
+      urgency = issue.level > 30 ? '🔴 عاجل' : '🟡 متوسط';
     } else if (issue.type === 'phosphorus') {
       materials = naturalMaterials.phosphorus;
       title = lang === 'ar'
-        ? `تحسين الفسفور (ناقص بـ ${issue.level.toFixed(0)} وحدة)`
-        : `Improve Phosphorus (deficient by ${issue.level.toFixed(0)} units)`;
+        ? `🌻 تحسين الفسفور`
+        : `🌻 Boost Phosphorus`;
+      urgency = issue.level > 30 ? '🔴 عاجل' : '🟡 متوسط';
     } else if (issue.type === 'potassium') {
       materials = naturalMaterials.potassium;
       title = lang === 'ar'
-        ? `تحسين البوتاسيوم (ناقص بـ ${issue.level.toFixed(0)} وحدة)`
-        : `Improve Potassium (deficient by ${issue.level.toFixed(0)} units)`;
+        ? `💪 تحسين البوتاسيوم`
+        : `💪 Boost Potassium`;
+      urgency = issue.level > 30 ? '🔴 عاجل' : '🟡 متوسط';
     }
 
     const section = document.createElement("div");
     section.className = "improvement-section";
-    section.innerHTML = `<h4>${title}</h4>`;
+    section.innerHTML = `<h4>${title} <span style="font-size: 0.9rem; margin-right: 8px;">${urgency}</span></h4>`;
 
     materials.forEach((material) => {
       const item = document.createElement("div");
