@@ -1,6 +1,7 @@
 // نظام إدارة اللغات
 const i18n = {
   currentLang: 'ar',
+  supportedLanguages: ['ar', 'en', 'fr', 'es', 'de', 'tr', 'ur', 'hi', 'pt', 'zh'],
   
   translations: {
     ar: {
@@ -180,6 +181,38 @@ const i18n = {
       'Manual Selection - Choose Plant': 'Manual Selection - Choose Plant',
       'Smart Soil Analyzer': 'Smart Soil Analyzer',
       'Your guide to choosing the right plants for your soil': 'Your guide to choosing the right plants for your soil'
+    },
+    fr: {
+      'Choose Analysis Method': 'Choisir la méthode d\'analyse',
+      'Smart Soil Analyzer': 'Analyseur de sol intelligent',
+    },
+    es: {
+      'Choose Analysis Method': 'Elegir método de análisis',
+      'Smart Soil Analyzer': 'Analizador inteligente de suelos',
+    },
+    de: {
+      'Choose Analysis Method': 'Analysemethode wählen',
+      'Smart Soil Analyzer': 'Intelligenter Bodenanalysator',
+    },
+    tr: {
+      'Choose Analysis Method': 'Analiz Yöntemini Seçin',
+      'Smart Soil Analyzer': 'Akıllı Toprak Analiz Cihazı',
+    },
+    ur: {
+      'Choose Analysis Method': 'تجزیہ کا طریقہ منتخب کریں',
+      'Smart Soil Analyzer': 'سمارٹ مٹی کا تجزیہ کار',
+    },
+    hi: {
+      'Choose Analysis Method': 'विश्लेषण विधि चुनें',
+      'Smart Soil Analyzer': 'स्मार्ट मिट्टी विश्लेषक',
+    },
+    pt: {
+      'Choose Analysis Method': 'Escolher método de análise',
+      'Smart Soil Analyzer': 'Analisador Inteligente de Solos',
+    },
+    zh: {
+      'Choose Analysis Method': '选择分析方法',
+      'Smart Soil Analyzer': '智能土壤分析器',
     }
   },
 
@@ -187,35 +220,78 @@ const i18n = {
     const savedLang = localStorage.getItem('language') || 'ar';
     this.setLanguage(savedLang);
     this.setupToggleButton();
+    this.setupLanguageMenu();
   },
 
   setLanguage(lang) {
+    // التحقق من أن اللغة مدعومة
+    if (!this.supportedLanguages.includes(lang)) {
+      lang = 'ar';
+    }
+    
     this.currentLang = lang;
     localStorage.setItem('language', lang);
     document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = lang === 'ar' || lang === 'ur' || lang === 'hi' ? 'rtl' : 'ltr';
     document.documentElement.setAttribute('data-lang', lang);
     this.updateAllElements();
+    this.updateLanguageButtonText();
   },
 
   toggle() {
-    const newLang = this.currentLang === 'ar' ? 'en' : 'ar';
-    this.setLanguage(newLang);
+    const nextLang = this.currentLang === 'ar' ? 'en' : 'ar';
+    this.setLanguage(nextLang);
   },
 
   translate(key) {
-    return this.translations[this.currentLang][key] || key;
+    const translation = this.translations[this.currentLang];
+    if (!translation) {
+      return this.translations.en[key] || key;
+    }
+    return translation[key] || this.translations.en[key] || key;
   },
 
   setupToggleButton() {
     const toggleBtn = document.getElementById('langToggle');
-    const langText = toggleBtn?.querySelector('.lang-text');
-    if (toggleBtn && langText) {
-      langText.textContent = this.currentLang === 'ar' ? 'English' : 'العربية';
+    if (toggleBtn) {
       toggleBtn.addEventListener('click', () => {
-        this.toggle();
-        langText.textContent = this.currentLang === 'ar' ? 'English' : 'العربية';
+        const menu = document.getElementById('languageMenu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
       });
+    }
+  },
+
+  setupLanguageMenu() {
+    const options = document.querySelectorAll('.lang-option');
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        const lang = option.getAttribute('data-lang');
+        this.setLanguage(lang);
+        document.getElementById('languageMenu').style.display = 'none';
+      });
+    });
+  },
+
+  updateLanguageButtonText() {
+    const langNames = {
+      'ar': { text: 'العربية', flag: '🇸🇦' },
+      'en': { text: 'English', flag: '🇺🇸' },
+      'fr': { text: 'Français', flag: '🇫🇷' },
+      'es': { text: 'Español', flag: '🇪🇸' },
+      'de': { text: 'Deutsch', flag: '🇩🇪' },
+      'tr': { text: 'Türkçe', flag: '🇹🇷' },
+      'ur': { text: 'اردو', flag: '🇵🇰' },
+      'hi': { text: 'हिन्दी', flag: '🇮🇳' },
+      'pt': { text: 'Português', flag: '🇧🇷' },
+      'zh': { text: '中文', flag: '🇨🇳' }
+    };
+    
+    const toggleBtn = document.getElementById('langToggle');
+    if (toggleBtn) {
+      const langText = toggleBtn.querySelector('.lang-text');
+      if (langText) {
+        langText.textContent = langNames[this.currentLang]?.text || 'English';
+      }
     }
   },
 
@@ -235,6 +311,15 @@ const i18n = {
     }
   }
 };
+
+// إغلاق قائمة اللغات عند الضغط خارجها
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('languageMenu');
+  const toggle = document.getElementById('langToggle');
+  if (menu && toggle && !toggle.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = 'none';
+  }
+});
 
 // Initialize i18n when DOM is ready
 if (document.readyState === 'loading') {

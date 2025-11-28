@@ -53,7 +53,7 @@ const basePlantsData = [
   { nameAr: "الفلفل الأسود", nameEn: "Black Pepper", icon: "⚫", category: "spices" },
 ];
 
-// دالة لإنشاء 1000+ نبات ديناميكياً
+// دالة لإنشاء 1000+ نبات ديناميكياً بدون تكرار
 function generateLargePlantsDatabase() {
   plants = [];
   const icons = ["🍅", "🥔", "🌾", "🫘", "🥕", "🥬", "🌶️", "🌿", "🧅", "🥒", "🌽", "🍓", "🍎", "🍊", "🍋", "🍌", "🍇"];
@@ -64,32 +64,114 @@ function generateLargePlantsDatabase() {
     plants.push(createPlantObject(id++, base.nameAr, base.nameEn, base.icon, base.category));
   });
   
-  // إضافة نباتات مشتقة بإضافة أصناف مختلفة
+  // إضافة نباتات مشتقة بإضافة أصناف مختلفة (بدون تكرار)
   const varieties = [
     { arSuffix: " (صنف محسّن)", enSuffix: " (Improved Variety)" },
     { arSuffix: " (عضوي)", enSuffix: " (Organic)" },
     { arSuffix: " (هجين)", enSuffix: " (Hybrid)" },
-    { arSuffix: " (مبكر)", enSuffix: " (Early)" },
-    { arSuffix: " (متأخر)", enSuffix: " (Late)" },
+    { arSuffix: " (مبكر النضج)", enSuffix: " (Early Maturity)" },
+    { arSuffix: " (متأخر النضج)", enSuffix: " (Late Maturity)" },
     { arSuffix: " (قزم)", enSuffix: " (Dwarf)" },
-    { arSuffix: " (طويل)", enSuffix: " (Tall)" },
+    { arSuffix: " (طويل الساق)", enSuffix: " (Tall)" },
+    { arSuffix: " (مقاوم للجفاف)", enSuffix: " (Drought Resistant)" },
+    { arSuffix: " (مقاوم للأمراض)", enSuffix: " (Disease Resistant)" },
+    { arSuffix: " (محسّن الجودة)", enSuffix: " (Quality Enhanced)" },
+    { arSuffix: " (عالي الإنتاج)", enSuffix: " (High Yield)" },
+    { arSuffix: " (محسّن النكهة)", enSuffix: " (Flavor Enhanced)" },
+    { arSuffix: " (مبكر جداً)", enSuffix: " (Very Early)" },
+    { arSuffix: " (متوسط المدة)", enSuffix: " (Mid Season)" },
+    { arSuffix: " (محسّن اللون)", enSuffix: " (Color Enhanced)" },
   ];
   
-  // توليد 1000 نبات
-  while (plants.length < 1050) {
-    basePlantsData.forEach((base) => {
-      if (plants.length >= 1050) return;
+  // توليد 1000+ نبات بدون تكرار
+  const usedCombinations = new Set();
+  let targetCount = 1050;
+  
+  // استراتيجية 1: مزج الأصناف مع النباتات الأساسية
+  basePlantsData.forEach((base) => {
+    varieties.forEach((variety) => {
+      if (plants.length >= targetCount) return;
       
-      varieties.forEach((variety) => {
-        if (plants.length >= 1050) return;
+      const combination = `${base.nameAr}|${variety.arSuffix}`;
+      if (!usedCombinations.has(combination)) {
+        usedCombinations.add(combination);
         
         const nameAr = base.nameAr + variety.arSuffix;
         const nameEn = base.nameEn + variety.enSuffix;
-        const icon = icons[Math.floor(Math.random() * icons.length)];
+        const icon = base.icon; // استخدم الأيقونة الأصلية
         
         plants.push(createPlantObject(id++, nameAr, nameEn, icon, base.category));
-      });
+      }
     });
+  });
+  
+  // استراتيجية 2: إضافة نباتات إضافية حقيقية إذا لزم الأمر
+  const additionalPlants = [
+    { nameAr: "اليقطين", nameEn: "Pumpkin", icon: "🎃", category: "vegetables" },
+    { nameAr: "الشمس (عباد الشمس)", nameEn: "Sunflower", icon: "🌻", category: "flowers" },
+    { nameAr: "الزهور", nameEn: "Flowers", icon: "🌸", category: "flowers" },
+    { nameAr: "الورود", nameEn: "Roses", icon: "🌹", category: "flowers" },
+    { nameAr: "الكركديه", nameEn: "Hibiscus", icon: "🌺", category: "flowers" },
+    { nameAr: "التمر", nameEn: "Date", icon: "🔗", category: "fruits" },
+    { nameAr: "التوت", nameEn: "Mulberry", icon: "🫐", category: "fruits" },
+    { nameAr: "الرمان", nameEn: "Pomegranate", icon: "🥭", category: "fruits" },
+    { nameAr: "الجوافة", nameEn: "Guava", icon: "🥝", category: "fruits" },
+    { nameAr: "جوز الهند", nameEn: "Coconut", icon: "🥥", category: "fruits" },
+    { nameAr: "الأفوكادو", nameEn: "Avocado", icon: "🥑", category: "fruits" },
+    { nameAr: "الرز البري", nameEn: "Wild Rice", icon: "🍚", category: "grains" },
+    { nameAr: "العدس الأحمر", nameEn: "Red Lentils", icon: "🟤", category: "legumes" },
+    { nameAr: "العدس الأسود", nameEn: "Black Lentils", icon: "⚫", category: "legumes" },
+    { nameAr: "الفول السوداني", nameEn: "Peanut", icon: "🥜", category: "legumes" },
+    { nameAr: "الحبة السوداء", nameEn: "Black Seed", icon: "⚫", category: "spices" },
+    { nameAr: "الشمر البري", nameEn: "Wild Fennel", icon: "🌿", category: "herbs" },
+    { nameAr: "عرق السوس", nameEn: "Licorice", icon: "🌿", category: "herbs" },
+    { nameAr: "الأقحوان", nameEn: "Marigold", icon: "🌼", category: "flowers" },
+    { nameAr: "البابونج", nameEn: "Chamomile", icon: "🌼", category: "herbs" },
+    { nameAr: "الفلفل البوابيا", nameEn: "Bell Pepper", icon: "🫑", category: "vegetables" },
+    { nameAr: "القرع", nameEn: "Squash", icon: "🟨", category: "vegetables" },
+    { nameAr: "الحمص الأسود", nameEn: "Black Chickpea", icon: "🟤", category: "legumes" },
+    { nameAr: "الشوفان البري", nameEn: "Wild Oats", icon: "🌾", category: "grains" },
+    { nameAr: "السمسم", nameEn: "Sesame", icon: "🤎", category: "spices" },
+    { nameAr: "بذور الكتان", nameEn: "Flax Seeds", icon: "🟤", category: "spices" },
+    { nameAr: "القمح الأسمر", nameEn: "Buckwheat", icon: "🌾", category: "grains" },
+    { nameAr: "الشعير الأسود", nameEn: "Black Barley", icon: "🌾", category: "grains" },
+    { nameAr: "الذرة السوداء", nameEn: "Black Corn", icon: "🌽", category: "grains" },
+    { nameAr: "الأرز البني", nameEn: "Brown Rice", icon: "🍚", category: "grains" },
+  ];
+  
+  // إضافة النباتات الإضافية
+  additionalPlants.forEach((plant) => {
+    if (plants.length >= targetCount) return;
+    
+    plants.push(createPlantObject(id++, plant.nameAr, plant.nameEn, plant.icon, plant.category));
+    
+    // إضافة أصناف للنباتات الإضافية
+    varieties.slice(0, 5).forEach((variety) => {
+      if (plants.length >= targetCount) return;
+      
+      const nameAr = plant.nameAr + variety.arSuffix;
+      const nameEn = plant.nameEn + variety.enSuffix;
+      
+      plants.push(createPlantObject(id++, nameAr, nameEn, plant.icon, plant.category));
+    });
+  });
+  
+  // استراتيجية 3: إضافة نباتات عشوائية متنوعة
+  const randomVariations = ["(مستورد)", "(محلي)", "(بري)", "(مستزرع)", "(قديم)", "(جديد)", "(ذهبي)", "(فضي)"];
+  const randomCategories = ["vegetables", "fruits", "grains", "legumes", "herbs", "spices", "flowers"];
+  
+  while (plants.length < targetCount) {
+    const randomBase = basePlantsData[Math.floor(Math.random() * basePlantsData.length)];
+    const randomVariation = randomVariations[Math.floor(Math.random() * randomVariations.length)];
+    
+    const nameAr = randomBase.nameAr + ` ${randomVariation}`;
+    const nameEn = randomBase.nameEn + ` ${randomVariation}`;
+    
+    // تجنب التكرار
+    const isDuplicate = plants.some(p => p.nameAr === nameAr);
+    if (!isDuplicate) {
+      plants.push(createPlantObject(id++, nameAr, nameEn, randomBase.icon, randomBase.category));
+    }
   }
 }
 

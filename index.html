@@ -10,10 +10,68 @@
   <header class="app-header">
     <div class="header-top">
       <h1>🌱 <span data-ar="محلل التربة الذكي" data-en="Smart Soil Analyzer">محلل التربة الذكي</span></h1>
-      <button id="langToggle" class="lang-toggle">
-        <span class="lang-icon">🌍</span>
-        <span class="lang-text">English</span>
-      </button>
+      <div class="header-controls">
+        <!-- قائمة اللغات المتقدمة -->
+        <div class="language-selector">
+          <button id="langToggle" class="lang-toggle">
+            <span class="lang-icon">🌍</span>
+            <span class="lang-text">English</span>
+            <span class="lang-arrow">▼</span>
+          </button>
+          <div id="languageMenu" class="language-menu">
+            <button class="lang-option" data-lang="ar">
+              <span class="lang-flag">🇸🇦</span>
+              <span class="lang-name">العربية</span>
+              <span class="lang-native">Arabic</span>
+            </button>
+            <button class="lang-option" data-lang="en">
+              <span class="lang-flag">🇺🇸</span>
+              <span class="lang-name">English</span>
+              <span class="lang-native">English</span>
+            </button>
+            <button class="lang-option" data-lang="fr">
+              <span class="lang-flag">🇫🇷</span>
+              <span class="lang-name">Français</span>
+              <span class="lang-native">French</span>
+            </button>
+            <button class="lang-option" data-lang="es">
+              <span class="lang-flag">🇪🇸</span>
+              <span class="lang-name">Español</span>
+              <span class="lang-native">Spanish</span>
+            </button>
+            <button class="lang-option" data-lang="de">
+              <span class="lang-flag">🇩🇪</span>
+              <span class="lang-name">Deutsch</span>
+              <span class="lang-native">German</span>
+            </button>
+            <button class="lang-option" data-lang="tr">
+              <span class="lang-flag">🇹🇷</span>
+              <span class="lang-name">Türkçe</span>
+              <span class="lang-native">Turkish</span>
+            </button>
+            <button class="lang-option" data-lang="ur">
+              <span class="lang-flag">🇵🇰</span>
+              <span class="lang-name">اردو</span>
+              <span class="lang-native">Urdu</span>
+            </button>
+            <button class="lang-option" data-lang="hi">
+              <span class="lang-flag">🇮🇳</span>
+              <span class="lang-name">हिन्दी</span>
+              <span class="lang-native">Hindi</span>
+            </button>
+            <button class="lang-option" data-lang="pt">
+              <span class="lang-flag">🇧🇷</span>
+              <span class="lang-name">Português</span>
+              <span class="lang-native">Portuguese</span>
+            </button>
+            <button class="lang-option" data-lang="zh">
+              <span class="lang-flag">🇨🇳</span>
+              <span class="lang-name">中文</span>
+              <span class="lang-native">Chinese</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     <p data-ar="حليفك في اختيار النباتات المناسبة لتربتك" data-en="Your guide to choosing the right plants for your soil">حليفك في اختيار النباتات المناسبة لتربتك</p>
     <div class="header-stats">
