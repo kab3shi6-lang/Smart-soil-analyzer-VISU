@@ -1,90 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>Smart Soil Analyzer</title>
+  <title>محلل التربة الذكي</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="app-header">
-    <h1>Smart Soil Analyzer</h1>
-    <p>Enter your soil NPK, pH, temperature, and moisture to get plant recommendations.</p>
+    <h1>🌱 محلل التربة الذكي</h1>
+    <p>حليفك في اختيار النباتات المناسبة لتربتك</p>
   </header>
 
   <main class="app-main">
-    <section class="card">
-      <h2>Soil Data</h2>
+    <!-- شاشة اختيار الوضع -->
+    <section id="modeSelectionScreen" class="card">
+      <h2>اختر طريقة التحليل</h2>
+      <p style="color: #666; margin-bottom: 20px;">كيف تريد تحليل التربة؟</p>
+      <div class="mode-buttons">
+        <button type="button" id="autoModeBtn" class="mode-btn auto-mode">
+          <span class="mode-icon">📊</span>
+          <span class="mode-title">التحليل التلقائي</span>
+          <span class="mode-desc">أدخل قيم التربة وسنقترح عليك النباتات المناسبة</span>
+        </button>
+        <button type="button" id="manualModeBtn" class="mode-btn manual-mode">
+          <span class="mode-icon">🌿</span>
+          <span class="mode-title">التحديد اليدوي</span>
+          <span class="mode-desc">اختر النبات المفضل لديك وسنتحقق من مدى توافق التربة</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- شاشة التحليل التلقائي -->
+    <section id="autoModeScreen" class="card hidden">
+      <h2>التحليل التلقائي - أدخل بيانات التربة</h2>
       <form id="soilForm">
         <div class="form-row">
           <div class="form-field">
-            <label for="temp">Temperature (�C)</label>
+            <label for="temp">درجة الحرارة (°C)</label>
             <input type="number" id="temp" step="0.1" required />
           </div>
           <div class="form-field">
-            <label for="moisture">Moisture (%)</label>
+            <label for="moisture">الرطوبة (%)</label>
             <input type="number" id="moisture" step="0.1" required />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label for="ph">pH (0�14)</label>
+            <label for="ph">درجة الحموضة pH (0–14)</label>
             <input type="number" id="ph" step="0.1" min="0" max="14" required />
           </div>
           <div class="form-field">
-            <label for="n">Nitrogen (N)</label>
+            <label for="n">النيتروجين (N)</label>
             <input type="number" id="n" step="1" required />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label for="p">Phosphorus (P)</label>
+            <label for="p">الفسفور (P)</label>
             <input type="number" id="p" step="1" required />
           </div>
           <div class="form-field">
-            <label for="k">Potassium (K)</label>
+            <label for="k">البوتاسيوم (K)</label>
             <input type="number" id="k" step="1" required />
           </div>
         </div>
 
-        <button type="button" id="analyzeBtn">Analyze Soil</button>
-        <button type="button" id="mockBtn" class="secondary">Use Example Values</button>
+        <div class="button-row">
+          <button type="button" id="analyzeBtn" class="btn-primary">تحليل التربة</button>
+          <button type="button" id="mockBtn" class="btn-secondary">استخدم قيم مثال</button>
+          <button type="button" id="backFromAutoBtn" class="btn-back">العودة</button>
+        </div>
       </form>
     </section>
 
+    <!-- شاشة التحديد اليدوي -->
+    <section id="manualModeScreen" class="card hidden">
+      <h2>التحديد اليدوي - اختر النبات</h2>
+      <div id="plantsSelector" class="plants-selector">
+        <!-- سيتم ملؤه بقائمة النباتات -->
+      </div>
+      <button type="button" id="backFromManualBtn" class="btn-back">العودة</button>
+    </section>
+
+    <!-- شاشة النتائج -->
     <section id="resultsSection" class="card hidden">
-      <h2>Results</h2>
+      <h2>نتائج التحليل</h2>
 
       <div id="statusBox" class="status-box">
-        <!-- Status text inserted here -->
+        <!-- حالة التربة -->
       </div>
 
-      <h3>Measured Values</h3>
+      <h3>قيم التربة المقاسة</h3>
       <div id="valuesGrid" class="values-grid">
-        <!-- Cards with the numbers -->
+        <!-- قيم التربة -->
       </div>
 
-      <h3>Best Plants for this Soil</h3>
-      <div id="suitableList" class="plants-list">
-        <!-- Suitable plants -->
+      <div id="manualResultContainer" class="hidden">
+        <h3>النبات المختار: <span id="selectedPlantName"></span></h3>
+        <h3>توافق التربة</h3>
+        <div id="plantCompatibility" class="plant-compatibility">
+          <!-- معلومات التوافق -->
+        </div>
       </div>
 
-      <h3>Plants that are not suitable now</h3>
-      <div id="unsuitableList" class="plants-list">
-        <!-- Unsuitable plants -->
+      <div id="autoResultContainer">
+        <h3>أفضل النباتات لهذه التربة</h3>
+        <div id="suitableList" class="plants-list">
+          <!-- النباتات المناسبة -->
+        </div>
+
+        <h3>النباتات غير المناسبة حالياً</h3>
+        <div id="unsuitableList" class="plants-list">
+          <!-- النباتات غير المناسبة -->
+        </div>
       </div>
 
-      <h3>General Soil Tips</h3>
+      <h3>نصائح تحسين التربة</h3>
+      <div id="improvementTips" class="improvement-tips">
+        <!-- نصائح التحسين -->
+      </div>
+
+      <h3>نصائح عامة</h3>
       <ul id="tipsList" class="tips-list">
-        <!-- General tips -->
+        <!-- نصائح عامة -->
       </ul>
+
+      <button type="button" id="backFromResultsBtn" class="btn-back">العودة</button>
     </section>
   </main>
 
   <footer class="app-footer">
-    <p>Smart Soil Analyzer � demo website</p>
+    <p>محلل التربة الذكي © 2024</p>
   </footer>
 
   <script src="script.js"></script>
