@@ -811,32 +811,44 @@ function renderImprovementTips(reading) {
 
 function renderStatusBox(okCount, badCount) {
   const box = document.getElementById("statusBox");
+  const qualityBar = document.getElementById("qualityBar");
   let statusClass = "status-good";
   let text = "";
   const lang = i18n.currentLang;
 
   const total = okCount + badCount;
   const ratio = total === 0 ? 0 : okCount / total;
+  const percentage = Math.round(ratio * 100);
 
-  if (ratio >= 0.6) {
+  if (ratio >= 0.7) {
     statusClass = "status-good";
     text = lang === 'ar'
-      ? `✓ حالة التربة: ممتازة - ${okCount} نبات(ات) مناسبة`
-      : `✓ Soil Status: Excellent - ${okCount} suitable plant(s)`;
+      ? `✓ حالة التربة: ممتازة جداً (${percentage}%) - ${okCount} نبات(ات) مناسبة`
+      : `✓ Soil Status: Excellent (${percentage}%) - ${okCount} suitable plant(s)`;
+  } else if (ratio >= 0.5) {
+    statusClass = "status-good";
+    text = lang === 'ar'
+      ? `✓ حالة التربة: جيدة جداً (${percentage}%) - ${okCount} نبات(ات) مناسبة`
+      : `✓ Soil Status: Very Good (${percentage}%) - ${okCount} suitable plant(s)`;
   } else if (ratio >= 0.3) {
     statusClass = "status-fair";
     text = lang === 'ar'
-      ? `⚠ حالة التربة: متوسطة - ${okCount} نبات(ات) مناسبة`
-      : `⚠ Soil Status: Fair - ${okCount} suitable plant(s)`;
+      ? `⚠ حالة التربة: متوسطة (${percentage}%) - ${okCount} نبات(ات) مناسبة`
+      : `⚠ Soil Status: Fair (${percentage}%) - ${okCount} suitable plant(s)`;
   } else {
     statusClass = "status-poor";
     text = lang === 'ar'
-      ? `✗ حالة التربة: ضعيفة - فقط ${okCount} نبات(ات) مناسبة`
-      : `✗ Soil Status: Poor - only ${okCount} suitable plant(s)`;
+      ? `✗ حالة التربة: ضعيفة (${percentage}%) - فقط ${okCount} نبات(ات) مناسبة`
+      : `✗ Soil Status: Poor (${percentage}%) - only ${okCount} suitable plant(s)`;
   }
 
   box.className = `status-box ${statusClass}`;
   box.textContent = text;
+  
+  // تحديث شريط الجودة
+  if (qualityBar) {
+    qualityBar.style.width = percentage + '%';
+  }
 }
 
 function renderGeneralTips(tips) {
