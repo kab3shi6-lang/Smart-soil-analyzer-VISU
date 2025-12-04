@@ -95,16 +95,19 @@
   </header>
 
   <main class="app-main">
+
     <!-- شاشة اختيار الوضع -->
     <section id="modeSelectionScreen" class="card">
       <h2 data-ar="اختر طريقة التحليل" data-en="Choose Analysis Method">اختر طريقة التحليل</h2>
       <p class="subtitle" data-ar="كيف تريد تحليل التربة؟" data-en="How would you like to analyze your soil?">كيف تريد تحليل التربة؟</p>
+
       <div class="mode-buttons">
         <button type="button" id="autoModeBtn" class="mode-btn auto-mode">
           <span class="mode-icon">📊</span>
           <span class="mode-title" data-ar="التحليل التلقائي" data-en="Automatic Analysis">التحليل التلقائي</span>
           <span class="mode-desc" data-ar="أدخل قيم التربة وسنقترح عليك النباتات المناسبة" data-en="Enter soil values and get plant recommendations">أدخل قيم التربة وسنقترح عليك النباتات المناسبة</span>
         </button>
+
         <button type="button" id="manualModeBtn" class="mode-btn manual-mode">
           <span class="mode-icon">🌿</span>
           <span class="mode-title" data-ar="التحديد اليدوي" data-en="Manual Selection">التحديد اليدوي</span>
@@ -235,10 +238,31 @@
     <p data-ar="محلل التربة الذكي © 2024" data-en="Smart Soil Analyzer © 2024">محلل التربة الذكي © 2024</p>
   </footer>
 
+  <!-- ملفات السكربت -->
   <script src="i18n.js"></script>
   <script src="ai_analyzer.js"></script>
   <script src="bluetooth.js"></script>
   <script src="esp01.js"></script>
   <script src="script.js"></script>
+
+  <!-- الجسر الجديد للبلوتوث (أُضيف الآن) -->
+  <script>
+    const btSocket = new WebSocket("ws://localhost:8080");
+
+    btSocket.onopen = () => console.log("Connected to Bluetooth Bridge");
+
+    btSocket.onmessage = (event) => {
+      console.log("Bluetooth → Website:", event.data);
+    };
+
+    btSocket.onerror = (err) => console.log("Bluetooth WebSocket Error:", err);
+
+    btSocket.onclose = () => console.log("Bluetooth bridge disconnected");
+
+    function sendToBluetooth(msg) {
+      btSocket.send(msg);
+    }
+  </script>
+
 </body>
 </html>

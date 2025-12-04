@@ -1,3 +1,70 @@
+// -------------------------------
+// 🚀 Bluetooth Bridge WebSocket
+// -------------------------------
+
+let btSocket = null;
+let isBtConnected = false;
+
+/**
+ * الاتصال بجسر البلوتوث (Node.js bridge.js)
+ * يعمل عبر ws://localhost:8080
+ */
+function startBluetoothBridge() {
+  try {
+    btSocket = new WebSocket("ws://localhost:8080");
+
+    btSocket.onopen = () => {
+      console.log("🌐 Connected to Bluetooth Bridge");
+      isBtConnected = true;
+
+      const box = document.getElementById("btDataBox");
+      if (box) box.style.display = "block";
+    };
+
+    btSocket.onmessage = (event) => {
+      const msg = event.data.trim();
+      console.log("📥 Received from Arduino:", msg);
+
+      const span = document.getElementById("btDataValue");
+      if (span) span.textContent = msg;
+
+      // معالجة قيم التربة إذا أرسلها الأردوينو
+      if (msg.includes("=")) {
+        const obj = {};
+        msg.split(",").forEach(pair => {
+          const [k, v] = pair.split("=");
+          if (k && v) obj[k.trim()] = parseFloat(v);
+        });
+
+        // ملء الحقول تلقائياً إذا وجدت
+        if (obj.temp) document.getElementById("temp").value = obj.temp;
+        if (obj.moist) document.getElementById("moisture").value = obj.moist;
+        if (obj.pH) document.getElementById("ph").value = obj.pH;
+        if (obj.N) document.getElementById("n").value = obj.N;
+        if (obj.P) document.getElementById("p").value = obj.P;
+        if (obj.K) document.getElementById("k").value = obj.K;
+      }
+    };
+
+    btSocket.onerror = (err) => {
+      console.warn("⚠ WebSocket Error:", err);
+    };
+
+    btSocket.onclose = () => {
+      console.log("⚪ Bluetooth bridge disconnected");
+      isBtConnected = false;
+    };
+
+  } catch (e) {
+    console.error("WebSocket exception:", e);
+  }
+}
+
+// تشغيل الاتصال تلقائياً عند فتح الموقع
+window.addEventListener("load", () => {
+  startBluetoothBridge();
+});
+
 // قاعدة بيانات شاملة للنباتات مع 1000+ نبات
 let plants = [];
 
