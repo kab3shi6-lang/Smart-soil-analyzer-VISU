@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌱 محلل التربة الذكي - Smart Soil Analyzer</title>
+  <link rel="stylesheet" href="style_new.css">
+</head>
+<body>
+  <!-- Header with Bridge Connection -->
+  <header class="header">
+    <div class="header-container">
+      <h1>🌱 محلل التربة الذكي</h1>
+      <div class="bridge-status">
+        <button id="bridgeConnectBtn" class="bridge-btn">🔴 جسر Bluetooth غير متصل</button>
+        <span id="bridgeStatus" class="status-text">❌ غير متصل</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Main Selection Screen -->
+    <div id="modeSelectionScreen" class="screen">
+      <h2>اختر طريقة التحليل</h2>
+      <div class="mode-buttons">
+        <button id="autoModeBtn" class="mode-btn auto-mode-btn">
+          <span class="icon">🤖</span>
+          <span>الوضع التلقائي</span>
+          <small>اختبر إمكانية النبات</small>
+        </button>
+        <button id="manualModeBtn" class="mode-btn manual-mode-btn">
+          <span class="icon">✍️</span>
+          <span>الوضع اليدوي</span>
+          <small>اختر النبات و حلل التربة</small>
+        </button>
+      </div>
+    </div>
+
+    <!-- Automatic Mode Screen -->
+    <div id="autoModeScreen" class="screen hidden">
+      <h2>🤖 الوضع التلقائي - اختبر إمكانية التربة</h2>
+      
+      <div class="input-group">
+        <label for="temp">🌡️ درجة الحرارة (°C)</label>
+        <input type="number" id="temp" placeholder="مثال: 22" step="0.1" min="0" max="50">
+      </div>
+
+      <div class="input-group">
+        <label for="moisture">💧 الرطوبة (%)</label>
+        <input type="number" id="moisture" placeholder="مثال: 70" step="0.1" min="0" max="100">
+      </div>
+
+      <div class="input-group">
+        <label for="ph">🧪 درجة الحموضة (pH)</label>
+        <input type="number" id="ph" placeholder="مثال: 6.5" step="0.1" min="0" max="14">
+      </div>
+
+      <div class="input-group">
+        <label for="n">🟢 النيتروجين (N)</label>
+        <input type="number" id="n" placeholder="مثال: 50" step="1" min="0" max="100">
+      </div>
+
+      <div class="input-group">
+        <label for="p">🔵 الفسفور (P)</label>
+        <input type="number" id="p" placeholder="مثال: 40" step="1" min="0" max="100">
+      </div>
+
+      <div class="input-group">
+        <label for="k">🟣 البوتاسيوم (K)</label>
+        <input type="number" id="k" placeholder="مثال: 45" step="1" min="0" max="100">
+      </div>
+
+      <div class="button-group">
+        <button id="mockBtn" class="secondary-btn">📋 ملء البيانات الافتراضية</button>
+        <button id="analyzeBtn" class="primary-btn">🔍 تحليل التربة</button>
+      </div>
+
+      <button id="backFromAutoBtn" class="back-btn">← رجوع</button>
+    </div>
+
+    <!-- Manual Mode Screen -->
+    <div id="manualModeScreen" class="screen hidden">
+      <h2>✍️ الوضع اليدوي - أدخل بيانات التربة</h2>
+
+      <div class="manual-inputs-section">
+        <h3>📊 بيانات التربة</h3>
+        
+        <div class="input-group">
+          <label for="manualTemp">🌡️ درجة الحرارة (°C)</label>
+          <input type="number" id="manualTemp" placeholder="مثال: 22" step="0.1" min="0" max="50">
+        </div>
+
+        <div class="input-group">
+          <label for="manualMoisture">💧 الرطوبة (%)</label>
+          <input type="number" id="manualMoisture" placeholder="مثال: 70" step="0.1" min="0" max="100">
+        </div>
+
+        <div class="input-group">
+          <label for="manualPh">🧪 درجة الحموضة (pH)</label>
+          <input type="number" id="manualPh" placeholder="مثال: 6.5" step="0.1" min="0" max="14">
+        </div>
+
+        <div class="input-group">
+          <label for="manualN">🟢 النيتروجين (N)</label>
+          <input type="number" id="manualN" placeholder="مثال: 50" step="1" min="0" max="100">
+        </div>
+
+        <div class="input-group">
+          <label for="manualP">🔵 الفسفور (P)</label>
+          <input type="number" id="manualP" placeholder="مثال: 40" step="1" min="0" max="100">
+        </div>
+
+        <div class="input-group">
+          <label for="manualK">🟣 البوتاسيوم (K)</label>
+          <input type="number" id="manualK" placeholder="مثال: 45" step="1" min="0" max="100">
+        </div>
+      </div>
+
+      <div class="plants-section">
+        <h3>🌱 اختر نبات</h3>
+        <div id="plantsSelector" class="plants-grid"></div>
+      </div>
+
+      <button id="backFromManualBtn" class="back-btn">← رجوع</button>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="screen hidden">
+      <h2>📊 نتائج التحليل</h2>
+      
+      <div class="quality-bar-container">
+        <span>جودة التربة:</span>
+        <div class="quality-bar">
+          <div id="qualityBar" class="quality-fill"></div>
+        </div>
+        <span id="qualityText">0%</span>
+      </div>
+
+      <div id="autoResultContainer" class="results-container"></div>
+      <div id="manualResultContainer" class="results-container"></div>
+
+      <button class="back-btn" onclick="location.reload()">🏠 إعادة تحميل</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="plants-database.js"></script>
+  <script src="app-new.js"></script>
+</body>
+</html>

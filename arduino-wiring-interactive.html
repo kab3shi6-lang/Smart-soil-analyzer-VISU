@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رسم توصيلات Arduino | Arduino Wiring Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .wiring-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .wiring-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sensor-pin {
+            display: inline-block;
+            padding: 8px 12px;
+            background: #e3f2fd;
+            border-radius: 5px;
+            color: #1976D2;
+            font-weight: bold;
+            margin: 5px;
+            font-size: 12px;
+        }
+
+        .arduino-pin {
+            display: inline-block;
+            padding: 8px 12px;
+            background: #f3e5f5;
+            border-radius: 5px;
+            color: #7B1FA2;
+            font-weight: bold;
+            margin: 5px;
+            font-size: 12px;
+        }
+
+        .connection {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .connection-left {
+            flex: 1;
+            text-align: right;
+        }
+
+        .connection-arrow {
+            color: #667eea;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .connection-right {
+            flex: 1;
+        }
+
+        .ascii-diagram {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre;
+            line-height: 1.4;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box strong {
+            color: #856404;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success-box strong {
+            color: #155724;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: right;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-left: 4px solid #4CAF50;
+            border-radius: 5px;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            font-weight: bold;
+            color: #4CAF50;
+            margin-right: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔌 رسم توصيلات Arduino</h1>
+    <p class="subtitle">Arduino Complete Wiring Diagram</p>
+
+    <!-- التبويبات -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('overview')">📋 نظرة عامة</button>
+        <button class="tab-btn" onclick="showTab('dht11')">🌡️ DHT11</button>
+        <button class="tab-btn" onclick="showTab('sensors')">📊 المستشعرات</button>
+        <button class="tab-btn" onclick="showTab('bluetooth')">🔗 Bluetooth</button>
+        <button class="tab-btn" onclick="showTab('power')">⚡ الطاقة</button>
+        <button class="tab-btn" onclick="showTab('checklist')">✅ قائمة</button>
+    </div>
+
+    <!-- النظرة العامة -->
+    <div id="overview" class="tab-content active">
+        <div class="wiring-section">
+            <h2>📋 جدول التوصيلات الرئيسية</h2>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المستشعر</th>
+                            <th>VCC</th>
+                            <th>GND</th>
+                            <th>Signal</th>
+                            <th>Arduino Pin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>DHT11</td>
+                            <td>5V</td>
+                            <td>GND</td>
+                            <td>DATA</td>
+                            <td>Pin 2</td>
+                        </tr>
+                        <tr>
+                            <td>Soil Moisture</td>
+                            <td>5V</td>
+                            <td>GND</td>
+                            <td>AO</td>
+                            <td>A0</td>
+                        </tr>
+                        <tr>
+                            <td>PH Sensor</td>
+                            <td>5V</td>
+                            <td>GND</td>
+                            <td>PO</td>
+                            <td>A1</td>
+                        </tr>
+                        <tr>
+                            <td>NPK - N</td>
+                            <td>5V</td>
+                            <td>GND</td>
+                            <td>N</td>
+                            <td>A2</td>
+                        </tr>
+                        <tr>
+                            <td>NPK - P</td>
+                            <td>5V</td>
+                            <td>GND</td>
+                            <td>P</td>
+                            <td>A3</td>
+                        </tr>
+                        <tr>
+                            <td>NPK - K</td>
+                            <td>5V</td>
+                            <td>GND</td>
+                            <td>K</td>
+                            <td>A4</td>
+                        </tr>
+                        <tr>
+                            <td>HC-05 TX</td>
+                            <td>5V</td>
+                            <td>GND</td>
+                            <td>TX</td>
+                            <td>Pin 11</td>
+                        </tr>
+                        <tr>
+                            <td>HC-05 RX</td>
+                            <td>5V</td>
+                            <td>GND</td>
+                            <td>RX</td>
+                            <td>Pin 10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="ascii-diagram">
+                     Arduino Uno
+              ┌─────────────────────────┐
+         5V ─┤ 5V                       │
+        GND ─┤ GND                      │
+              │                         │
+     DHT11 ──┤ Pin 2                   │
+    HC-05 ───┤ Pin 10 (RX)            │
+    HC-05 ───┤ Pin 11 (TX)            │
+              │                         │
+  Soil Mst ──┤ A0                      │
+  PH Sensor ─┤ A1                      │
+  NPK N ─────┤ A2                      │
+  NPK P ─────┤ A3                      │
+  NPK K ─────┤ A4                      │
+              │                         │
+              └─────────────────────────┘
+            </div>
+        </div>
+    </div>
+
+    <!-- DHT11 -->
+    <div id="dht11" class="tab-content">
+        <div class="wiring-section">
+            <h2>🌡️ DHT11 (درجة الحرارة والرطوبة)</h2>
+
+            <div class="ascii-diagram">
+DHT11
+  Pin 1 (VCC) ─────────→ 5V
+  Pin 2 (DATA) ──┬─────→ Arduino Pin 2
+                 │
+                [4.7kΩ] ─→ 5V (Pull-up)
+                 │
+                 └──────→ GND
+  Pin 4 (GND) ─────────→ GND
+            </div>
+
+            <div class="connection">
+                <div class="connection-left">
+                    <span class="sensor-pin">DHT11 VCC</span>
+                </div>
+                <div class="connection-arrow">→</div>
+                <div class="connection-right">
+                    <span class="arduino-pin">5V</span>
+                </div>
+            </div>
+
+            <div class="connection">
+                <div class="connection-left">
+                    <span class="sensor-pin">DHT11 GND</span>
+                </div>
+                <div class="connection-arrow">→</div>
+                <div class="connection-right">
+                    <span class="arduino-pin">GND</span>
+                </div>
+            </div>
+
+            <div class="connection">
+                <div class="connection-left">
+                    <span class="sensor-pin">DHT11 DATA</span>
+                </div>
+                <div class="connection-arrow">→</div>
+                <div class="connection-right">
+                    <span class="arduino-pin">Pin 2</span>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ مهم:</strong> يجب إضافة مقاومة pull-up بقيمة 4.7kΩ بين Pin 2 و 5V
+            </div>
+
+            <div class="success-box">
+                <strong>✅ النتيجة:</strong> قراءة درجة الحرارة من -40 إلى 80°C والرطوبة من 20% إلى 95%
+            </div>
+        </div>
+    </div>
+
+    <!-- المستشعرات التناظرية -->
+    <div id="sensors" class="tab-content">
+        <div class="wiring-section">
+            <h2>📊 مستشعرات التناظرية (Analog)</h2>
+
+            <div class="ascii-diagram">
+Soil Moisture Sensor
+  VCC ─────→ 5V
+  GND ─────→ GND
+  AO ──────→ Arduino A0
+
+PH Sensor
+  VCC ─────→ 5V
+  GND ─────→ GND
+  PO ──────→ Arduino A1
+
+NPK Sensor
+  VCC ─────→ 5V
+  GND ─────→ GND
+  N ───────→ Arduino A2
+  P ───────→ Arduino A3
+  K ───────→ Arduino A4
+            </div>
+
+            <div class="grid-2">
+                <div class="wiring-section">
+                    <h3>🌱 رطوبة التربة</h3>
+                    <div class="connection">
+                        <div class="connection-left">AO</div>
+                        <div class="connection-arrow">→</div>
+                        <div class="connection-right">A0</div>
+                    </div>
+                    <p style="margin-top: 10px; color: #666; font-size: 13px;">
+                        القراءة: 0-1023 (0-100%)
+                    </p>
+                </div>
+
+                <div class="wiring-section">
+                    <h3>🧪 الـ pH</h3>
+                    <div class="connection">
+                        <div class="connection-left">PO</div>
+                        <div class="connection-arrow">→</div>
+                        <div class="connection-right">A1</div>
+                    </div>
+                    <p style="margin-top: 10px; color: #666; font-size: 13px;">
+                        المدى: 0-14 (0-1023)
+                    </p>
+                </div>
+
+                <div class="wiring-section">
+                    <h3>🥗 النيتروجين (N)</h3>
+                    <div class="connection">
+                        <div class="connection-left">N</div>
+                        <div class="connection-arrow">→</div>
+                        <div class="connection-right">A2</div>
+                    </div>
+                </div>
+
+                <div class="wiring-section">
+                    <h3>🥗 الفسفور (P)</h3>
+                    <div class="connection">
+                        <div class="connection-left">P</div>
+                        <div class="connection-arrow">→</div>
+                        <div class="connection-right">A3</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ ملاحظة:</strong> جميع هذه المستشعرات تحتاج GND مشترك من Arduino
+            </div>
+        </div>
+    </div>
+
+    <!-- Bluetooth -->
+    <div id="bluetooth" class="tab-content">
+        <div class="wiring-section">
+            <h2>🔗 HC-05 Bluetooth Module</h2>
+
+            <div class="ascii-diagram">
+HC-05
+  ┌────────────────────────────────────┐
+  │ VCC ──→ 5V                         │
+  │ GND ──→ GND                        │
+  │ TX ───→ Arduino Pin 11 (SoftSerial)│
+  │ RX ───→ مقسم جهد ──→ 3.33V        │
+  └────────────────────────────────────┘
+
+مقسم الجهد:
+  5V ──[10kΩ]──┬─→ HC-05 RX
+               │
+              [20kΩ]
+               │
+              GND
+  
+  النتيجة: 3.33V (آمن)
+            </div>
+
+            <div class="grid-2">
+                <div class="wiring-section">
+                    <h3>TX (من Arduino)</h3>
+                    <div class="connection">
+                        <div class="connection-left">Pin 11</div>
+                        <div class="connection-arrow">→</div>
+                        <div class="connection-right">HC-05 TX</div>
+                    </div>
+                </div>
+
+                <div class="wiring-section">
+                    <h3>RX (إلى Arduino)</h3>
+                    <div class="connection">
+                        <div class="connection-left">Pin 10</div>
+                        <div class="connection-arrow">→</div>
+                        <div class="connection-right">HC-05 RX</div>
+                    </div>
+                    <p style="margin-top: 10px; color: #f44336; font-size: 12px; font-weight: bold;">
+                        ⚠️ يجب استخدام مقسم جهد!
+                    </p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>❌ لا تفعل:</strong> لا تصل 5V مباشرة إلى RX على HC-05
+            </div>
+
+            <div class="success-box">
+                <strong>✅ افعل:</strong> استخدم مقسم جهد لتقليل الجهد من 5V إلى 3.33V
+            </div>
+        </div>
+    </div>
+
+    <!-- الطاقة -->
+    <div id="power" class="tab-content">
+        <div class="wiring-section">
+            <h2>⚡ متطلبات الطاقة</h2>
+
+            <div class="ascii-diagram">
+مصدر الطاقة (5V, 2A)
+  │
+  ├─→ Arduino (5V): ~0.5A
+  ├─→ DHT11: ~0.05A
+  ├─→ Sensors: ~0.1A
+  ├─→ HC-05: ~0.3A (عند الإرسال)
+  └─→ احتياطي: ~1A
+
+المجموع: 2A (آمن)
+            </div>
+
+            <div class="grid-2">
+                <div class="wiring-section">
+                    <h3>✅ الطريقة الصحيحة</h3>
+                    <ul class="checklist">
+                        <li>مصدر طاقة منفصل 5V/2A</li>
+                        <li>توصيل GND مشترك</li>
+                        <li>مكثفات تنعيم (0.1µF)</li>
+                        <li>جودة عالية</li>
+                    </ul>
+                </div>
+
+                <div class="wiring-section">
+                    <h3>❌ لا تفعل</h3>
+                    <ul class="checklist">
+                        <li>لا تأخذ من USB وحده</li>
+                        <li>لا تخلط الإشارات</li>
+                        <li>لا تستخدم أسلاك ضعيفة</li>
+                        <li>لا تترك توصيلات معلقة</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ هام:</strong> استخدام مصدر طاقة ضعيف هو أكثر سبب للمشاكل!
+            </div>
+        </div>
+    </div>
+
+    <!-- قائمة المراجعة -->
+    <div id="checklist" class="tab-content">
+        <div class="wiring-section">
+            <h2>✅ قائمة فحص التوصيلات</h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 15px;">قبل البدء</h3>
+                    <ul class="checklist">
+                        <li>جميع الأسلاك موجودة</li>
+                        <li>المقاومات موجودة</li>
+                        <li>المكثفات موجودة</li>
+                        <li>مصدر الطاقة جاهز</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 15px;">أثناء التوصيل</h3>
+                    <ul class="checklist">
+                        <li>تحقق من كل توصيل</li>
+                        <li>استخدم multimeter</li>
+                        <li>لا تسرع</li>
+                        <li>اتبع الترتيب</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 15px;">بعد التوصيل</h3>
+                    <ul class="checklist">
+                        <li>فحص جميع التوصيلات</li>
+                        <li>لا توصيلات معلقة</li>
+                        <li>جهد صحيح على كل نقطة</li>
+                        <li>لا قصر دوائر</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 style="color: #667eea; margin-bottom: 15px;">عند التشغيل</h3>
+                    <ul class="checklist">
+                        <li>ابدأ بمستشعر واحد</li>
+                        <li>اختبر كل دالة</li>
+                        <li>راقب الحرارة</li>
+                        <li>لا تسحب الأسلاك</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function showTab(tabName) {
+        // إخفاء جميع التبويبات
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => {
+            content.classList.remove('active');
+        });
+
+        // إزالة active من جميع الأزرار
+        const buttons = document.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // عرض التبويب المحدد
+        document.getElementById(tabName).classList.add('active');
+
+        // تنشيط الزر المحدد
+        event.target.classList.add('active');
+    }
+</script>
+
+</body>
+</html>

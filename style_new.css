@@ -1,0 +1,628 @@
+/* Smart Soil Analyzer - Complete CSS */
+
+:root {
+  --primary: #667eea;
+  --primary-dark: #764ba2;
+  --success: #4ade80;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #06b6d4;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  direction: rtl;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  min-height: 100vh;
+  color: #333;
+  padding: 20px;
+}
+
+/* Header */
+.app-header {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.app-header h1 {
+  color: var(--primary);
+  font-size: 28px;
+  margin: 0;
+}
+
+.header-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.language-selector {
+  position: relative;
+}
+
+.lang-toggle {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.language-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  min-width: 150px;
+}
+
+.language-menu.show {
+  display: block;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: right;
+  transition: background 0.2s;
+}
+
+.lang-option:hover {
+  background: #f3f4f6;
+}
+
+.header-stats {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-item {
+  margin: 0 10px;
+}
+
+/* Main Container */
+.app-main {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Card */
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card h2 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.card .subtitle {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.card h3 {
+  color: var(--primary);
+  margin: 20px 0 15px 0;
+  font-size: 18px;
+}
+
+/* Mode Buttons */
+.mode-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.mode-btn {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 15px;
+  padding: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.mode-btn:hover {
+  border-color: var(--primary);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  transform: translateY(-5px);
+}
+
+.mode-icon {
+  font-size: 40px;
+}
+
+.mode-title {
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--primary);
+}
+
+.mode-desc {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Forms */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-field label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-field input {
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Buttons */
+.button-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-back {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #333;
+  border: 2px solid #e5e7eb;
+}
+
+.btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+.btn-back {
+  background: #f3f4f6;
+  color: #666;
+  border: 2px solid #e5e7eb;
+}
+
+.btn-back:hover {
+  background: #e5e7eb;
+}
+
+/* Plant Selector */
+#plantsSelector {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.plant-btn {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.plant-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+.plant-icon {
+  font-size: 32px;
+}
+
+.plant-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.plant-details {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+/* Results Section */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.value-item {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  border-left: 4px solid var(--primary);
+}
+
+.value-label {
+  display: block;
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.value-number {
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.value-range {
+  display: block;
+  font-size: 11px;
+  color: #999;
+  margin-top: 5px;
+}
+
+/* Plant Cards */
+.plants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.plant-card {
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.plant-card.suitable {
+  background: #f0f9ff;
+  border-color: var(--success);
+}
+
+.plant-card.unsuitable {
+  background: #fef2f2;
+  border-color: var(--danger);
+}
+
+.plant-emoji {
+  font-size: 32px;
+}
+
+.plant-title {
+  font-weight: bold;
+  color: #333;
+  font-size: 13px;
+}
+
+.plant-status {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Status Box */
+.status-box {
+  margin: 20px 0;
+}
+
+.status-good {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border: 2px solid var(--success);
+  border-radius: 10px;
+  padding: 15px;
+  color: #166534;
+}
+
+.status-warning {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 2px solid var(--warning);
+  border-radius: 10px;
+  padding: 15px;
+  color: #92400e;
+}
+
+.status-good strong,
+.status-warning strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.status-good p,
+.status-warning p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Quality Meter */
+.soil-quality-meter {
+  background: #f3f4f6;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.meter-label {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.meter-bar {
+  width: 100%;
+  height: 25px;
+  background: #e5e7eb;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.quality-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+  width: 50%;
+  transition: width 0.5s ease;
+}
+
+.meter-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Deficiencies */
+.deficiencies-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.deficiency-card {
+  background: #fee2e2;
+  border-radius: 10px;
+  padding: 15px;
+  border-left: 4px solid var(--danger);
+}
+
+.deficiency-card h4 {
+  margin: 0 0 10px 0;
+  color: #7f1d1d;
+  font-size: 14px;
+}
+
+.deficiency-card p {
+  margin: 0;
+  font-size: 13px;
+  color: #991b1b;
+}
+
+/* Solutions */
+.solutions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.solution-card {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 10px;
+  padding: 15px;
+  border-left: 4px solid var(--warning);
+}
+
+.solution-card h4 {
+  margin: 0 0 10px 0;
+  color: #92400e;
+  font-size: 14px;
+}
+
+.solution-card p {
+  margin: 8px 0;
+  font-size: 13px;
+  color: #78350f;
+}
+
+.no-issues {
+  background: #dcfce7;
+  color: #166534;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+/* Quality Assessment */
+.quality-assessment {
+  background: #f3f4f6;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 20px 0;
+  border-left: 4px solid var(--primary);
+}
+
+.quality-assessment h3 {
+  margin: 0 0 10px 0;
+  color: var(--primary);
+  font-size: 16px;
+}
+
+.quality-assessment p {
+  margin: 8px 0;
+  color: #374151;
+  font-size: 14px;
+}
+
+/* Hidden Class */
+.hidden {
+  display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    padding: 20px;
+  }
+
+  .mode-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  #plantsSelector {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .values-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .app-header h1 {
+    font-size: 20px;
+  }
+
+  #plantsSelector {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .plant-btn {
+    padding: 10px;
+  }
+
+  .plant-icon {
+    font-size: 24px;
+  }
+}

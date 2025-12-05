@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge Connection Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .test-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-indicator.pending {
+            background: #ff9800;
+            animation: pulse 1s infinite;
+        }
+
+        .status-indicator.success {
+            background: #4caf50;
+        }
+
+        .status-indicator.error {
+            background: #f44336;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .test-result {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #555;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .test-result.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .test-result.success {
+            background: #f1f8e9;
+            color: #33691e;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #1565c0;
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .success-box {
+            background: #f1f8e9;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-box h2 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .success-box p {
+            color: #558b2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Bridge Connection Test</h1>
+        <p class="subtitle">Verify your Bridge server and Arduino are working</p>
+
+        <!-- Bridge Connection Test -->
+        <div class="test-section">
+            <div class="test-label">
+                <span class="status-indicator pending" id="bridgeIndicator"></span>
+                Bridge Server Status
+            </div>
+            <button onclick="testBridge()">Test Bridge Connection</button>
+            <div id="bridgeResult" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- API Endpoint Test -->
+        <div class="test-section">
+            <div class="test-label">
+                <span class="status-indicator pending" id="apiIndicator"></span>
+                API Endpoint Status
+            </div>
+            <button onclick="testAPI()">Test API Endpoint</button>
+            <div id="apiResult" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- Sensor Data Test -->
+        <div class="test-section">
+            <div class="test-label">
+                <span class="status-indicator pending" id="dataIndicator"></span>
+                Sensor Data Status
+            </div>
+            <button onclick="testSensorData()">Get Latest Sensor Data</button>
+            <div id="dataResult" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- Run All Tests -->
+        <button onclick="runAllTests()" style="background: #4caf50; margin-top: 20px;">
+            🚀 Run All Tests
+        </button>
+
+        <!-- Success Message -->
+        <div class="success-box" id="successBox">
+            <h2>✓ All Tests Passed!</h2>
+            <p>Your Bridge is working correctly. Open <strong>advanced-v5-auto.html</strong> to see live data.</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>📋 Before Testing:</h3>
+            <ol>
+                <li>Make sure <strong>npm start</strong> is running in PowerShell</li>
+                <li>Arduino must be connected and sending data</li>
+                <li>Bridge should show "Data received" messages</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        let allTestsPassed = false;
+
+        function showResult(elementId, message, success = true) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            element.className = `test-result ${success ? 'success' : 'error'}`;
+        }
+
+        function setIndicator(elementId, status) {
+            const element = document.getElementById(elementId);
+            element.className = `status-indicator ${status}`;
+        }
+
+        async function testBridge() {
+            setIndicator('bridgeIndicator', 'pending');
+            
+            try {
+                const response = await fetch(`${API_BASE}/`);
+                setIndicator('bridgeIndicator', 'success');
+                showResult('bridgeResult', 
+                    `✓ Bridge is running!\nStatus: ${response.status}\nURL: ${API_BASE}`, 
+                    true
+                );
+            } catch (error) {
+                setIndicator('bridgeIndicator', 'error');
+                showResult('bridgeResult', 
+                    `✗ Cannot connect to Bridge\n\nError: ${error.message}\n\nMake sure:\n1. npm start is running\n2. Bridge shows "running on port 3000"`, 
+                    false
+                );
+            }
+        }
+
+        async function testAPI() {
+            setIndicator('apiIndicator', 'pending');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/readings`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                setIndicator('apiIndicator', 'success');
+                showResult('apiResult', 
+                    `✓ API endpoint is working!\n\n${JSON.stringify(data, null, 2)}`, 
+                    true
+                );
+            } catch (error) {
+                setIndicator('apiIndicator', 'error');
+                showResult('apiResult', 
+                    `✗ API endpoint error\n\nError: ${error.message}\n\nCheck if:\n1. Bridge is running\n2. Arduino is connected\n3. Sensor code is working`, 
+                    false
+                );
+            }
+        }
+
+        async function testSensorData() {
+            setIndicator('dataIndicator', 'pending');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/readings`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Check if we have all sensor fields
+                const requiredFields = ['temperature', 'humidity', 'soilMoisture', 'light', 'ph'];
+                const missingFields = requiredFields.filter(field => !(field in data));
+
+                if (missingFields.length > 0) {
+                    setIndicator('dataIndicator', 'error');
+                    showResult('dataResult', 
+                        `⚠ Sensor data received but missing fields:\n${missingFields.join(', ')}\n\nData received:\n${JSON.stringify(data, null, 2)}`, 
+                        false
+                    );
+                } else {
+                    setIndicator('dataIndicator', 'success');
+                    showResult('dataResult', 
+                        `✓ All sensor data received!\n\n${JSON.stringify(data, null, 2)}`, 
+                        true
+                    );
+                }
+            } catch (error) {
+                setIndicator('dataIndicator', 'error');
+                showResult('dataResult', 
+                    `✗ Cannot get sensor data\n\nError: ${error.message}`, 
+                    false
+                );
+            }
+        }
+
+        async function runAllTests() {
+            console.log('Running all tests...');
+            
+            allTestsPassed = false;
+            document.getElementById('successBox').style.display = 'none';
+
+            // Test Bridge
+            await new Promise(resolve => {
+                testBridge();
+                setTimeout(resolve, 500);
+            });
+
+            // Test API
+            await new Promise(resolve => {
+                testAPI();
+                setTimeout(resolve, 500);
+            });
+
+            // Test Sensor Data
+            await new Promise(resolve => {
+                testSensorData();
+                setTimeout(resolve, 500);
+            });
+
+            // Check if all passed
+            if (
+                document.getElementById('bridgeIndicator').className.includes('success') &&
+                document.getElementById('apiIndicator').className.includes('success') &&
+                document.getElementById('dataIndicator').className.includes('success')
+            ) {
+                allTestsPassed = true;
+                document.getElementById('successBox').style.display = 'block';
+            }
+        }
+
+        // Run tests on page load
+        console.log('🔧 Bridge Connection Test Page Loaded');
+    </script>
+</body>
+</html>

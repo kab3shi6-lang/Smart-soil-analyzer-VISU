@@ -1,66 +1,116 @@
-#include <DHT.h>
 #include <SoftwareSerial.h>
+#include <DHT.h>
 
-// --------------------------
-// تعريف الحساسات
-// --------------------------
-#define DHTPIN 6
-#define DHTTYPE DHT22
+// -------------------- DHT11 CONFIG --------------------
+#define DHTPIN 7
+#define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
 
-#define SOIL_PIN A1   // A0 in module → A1 in Arduino
-#define PH_PIN A0     // Po → A0 in Arduino
+// -------------------- NPK SENSOR CONFIG --------------------
+SoftwareSerial npkSerial(2, 3);  // RX = 2, TX = 3
+byte requestData[8] = {0x01, 0x03, 0x00, 0x00, 0x00, 0x03, 0x05, 0xCB};
+byte responseData[11];
 
-// Bluetooth
-SoftwareSerial BT(10, 11); // RX, TX
+// -------------------- BLUETOOTH HC-05 --------------------
+SoftwareSerial BT(10, 11); // RX = 10, TX = 11
 
+// -------------------- ANALOG SENSORS --------------------
+#define PH_PIN A0
+#define SOIL_PIN A1
+
+
+// ===================== SETUP =====================
 void setup() {
   Serial.begin(9600);
   BT.begin(9600);
-
+  npkSerial.begin(9600);
   dht.begin();
-  delay(2000);
+
+  Serial.println("System Ready...");
+  BT.println("Bluetooth Connected...");
 }
 
-void loop() {
-  // --------------------------
-  // قراءة DHT22
-  // --------------------------
-  float temperature = dht.readTemperature();
-  float humidity = dht.readHumidity();
 
-  if (isnan(temperature) || isnan(humidity)) {
-    Serial.println("DHT ERROR");
-    return;
+
+// ===================== READ PH =====================
+float readPH() {
+  int sensorValue = analogRead(PH_PIN);
+  float voltage = sensorValue * (5.0 / 1023.0);
+  float phValue = 3.5 * voltage + 1.0; // تعديل حسب معايرة الحساس
+  return phValue;
+}
+
+
+
+// ===================== READ SOIL MOISTURE =====================
+int readSoilMoisture() {
+  int value = analogRead(SOIL_PIN);
+  int moisture = map(value, 1023, 300, 0, 100);
+  moisture = constrain(moisture, 0, 100);
+  return moisture;
+}
+
+
+
+// ===================== READ NPK SENSOR =====================
+bool readNPK(int &N, int &P, int &K) {
+
+  npkSerial.write(requestData, 8);
+  delay(150);
+
+  if (npkSerial.available() >= 11) {
+    for (int i = 0; i < 11; i++) {
+      responseData[i] = npkSerial.read();
+    }
+
+    N = responseData[3];
+    P = responseData[5];
+    K = responseData[7];
+
+    return true;
   }
 
-  // --------------------------
-  // قراءة Soil Moisture
-  // --------------------------
-  int soilValue = analogRead(SOIL_PIN); 
-  int soilPercent = map(soilValue, 1023, 300, 0, 100); 
-  soilPercent = constrain(soilPercent, 0, 100);
+  return false;
+}
 
-  // --------------------------
-  // قراءة pH Sensor
-  // --------------------------
-  int phRaw = analogRead(PH_PIN);
-  float voltage = phRaw * (5.0 / 1023.0);
-  float pH = 7 + ((2.5 - voltage) * 3.5);   // معادلة تقريبية
 
-  // --------------------------
-  // إرسال البيانات عبر Serial و Bluetooth
-  // صيغة الإرسال متوافقة 100% مع موقعك
-  // TEMP: , MOISTURE: , PH:
-  // --------------------------
-  String data = 
-    "TEMP:" + String(temperature, 1) +
-    ",MOISTURE:" + String(soilPercent) +
-    ",PH:" + String(pH, 2) +
-    ",N:70,P:60,K:80";  // قيم ثابتة مؤقتاً لحين إضافة NPK الحقيقي
 
-  Serial.println(data);
-  BT.println(data);
+// ===================== MAIN LOOP =====================
+void loop() {
 
-  delay(2000);
+  // ----- Read Sensors -----
+  float temperature = dht.readTemperature();
+  float humidity    = dht.readHumidity();
+  float phValue     = readPH();
+  int soil          = readSoilMoisture();
+
+  int N = 0, P = 0, K = 0;
+  bool npk_OK = readNPK(N, P, K);
+
+
+  // ----------- Build JSON STRING -----------
+  String json = "{";
+
+  json += "\"temperature\":" + String(temperature) + ",";
+  json += "\"humidity\":" + String(humidity) + ",";
+  json += "\"ph\":" + String(phValue) + ",";
+  json += "\"soil\":" + String(soil) + ",";
+
+  if (npk_OK) {
+    json += "\"N\":" + String(N) + ",";
+    json += "\"P\":" + String(P) + ",";
+    json += "\"K\":" + String(K);
+  } else {
+    json += "\"N\":0,\"P\":0,\"K\":0";
+  }
+
+  json += "}";
+
+  // ----------- Output to Serial Monitor -----------
+  Serial.println(json);
+
+  // ----------- Send JSON Over Bluetooth -----------  
+  BT.println(json);
+
+  delay(1500);
 }

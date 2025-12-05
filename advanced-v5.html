@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌱 محلل التربة الذكي - الإصدار 5 (مع الملء التلقائي)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .language-dropdown {
+            padding: 10px 15px;
+            border: 2px solid white;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .language-dropdown:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .language-dropdown:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .language-dropdown option {
+            background: #667eea;
+            color: white;
+            padding: 10px;
+        }
+
+        .lang-btn {
+            padding: 6px 12px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .bridge-status {
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        input[type="number"]::after {
+            content: attr(data-unit);
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .result-item {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .result-item:hover {
+            background: #f9f9f9;
+        }
+
+        .plant-name {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .plant-temp {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .selected-plant-info {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .quality-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .quality-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        .results-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .result-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .plants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .plant-card {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .plant-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .emoji {
+            font-size: 30px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .plant-name-small {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .compatibility {
+            font-size: 11px;
+            color: #667eea;
+            margin-top: 3px;
+        }
+
+        .auto-fill-indicator {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .connection-status {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .connected {
+            color: #4CAF50;
+        }
+
+        .disconnected {
+            color: #f44336;
+        }
+
+        .back-button {
+            background: #f0f0f0;
+            color: #667eea;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .info-text {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+
+        html[dir="rtl"] .input-row {
+            direction: rtl;
+        }
+
+        html[dir="ltr"] .input-row {
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1 data-i18n="title">🌱 محلل التربة الذكي v5</h1>
+            </div>
+            <div class="language-selector">
+                <select id="languageDropdown" class="language-dropdown" onchange="changeLanguage(this.value)">
+                    <option value="ar">العربية</option>
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="de">Deutsch</option>
+                    <option value="zh">中文</option>
+                    <option value="ja">日本語</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+        </div>
+        <div class="bridge-status" id="bridgeStatus">
+            <span id="bridgeStatusText" data-i18n="loading">جاري الاتصال...</span>
+            <div class="connection-status" id="connectionStatus"></div>
+        </div>
+
+        <div class="content">
+            <!-- Screen 1: Mode Selection -->
+            <div id="modeScreen" class="screen active">
+                <h2 data-i18n="selectMode">اختر طريقة التحليل</h2>
+                <div class="mode-buttons">
+                    <button class="btn-primary" onclick="switchToAutoAnalysis()">
+                        <span data-i18n="autoMode">🤖 تحليل تلقائي</span>
+                        <span class="auto-fill-indicator" data-i18n="autoFill">ملء تلقائي</span>
+                    </button>
+                    <button class="btn-primary" onclick="switchToManualSearch()">
+                        <span data-i18n="manualMode">🔍 تحليل يدوي</span>
+                    </button>
+                </div>
+                <div class="info-text" data-i18n="autoFillInfo">
+                    💡 الوضع التلقائي يملأ البيانات من جهاز الاستشعار مباشرة
+                </div>
+            </div>
+
+            <!-- Screen 2: Auto Analysis -->
+            <div id="autoScreen" class="screen">
+                <button class="btn-secondary back-button" onclick="switchToMode()">← <span data-i18n="back">رجوع</span></button>
+                <h2 data-i18n="autoAnalysis">التحليل التلقائي</h2>
+                <div class="info-text">
+                    🔌 <span data-i18n="autoFillAuto">البيانات تملأ تلقائياً من جهاز الاستشعار كل 5 ثواني</span>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="temperature">درجة الحرارة (°C)</label>
+                    <input type="number" id="autoTemp" placeholder="0.0" step="0.1" readonly style="background: #f9f9f9; cursor: not-allowed;">
+                </div>
+                <div class="input-row">
+                    <div class="form-group">
+                        <label data-i18n="moisture">الرطوبة (%)</label>
+                        <input type="number" id="autoMoisture" placeholder="0.0" step="0.1" readonly style="background: #f9f9f9; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="ph">pH</label>
+                        <input type="number" id="autoPh" placeholder="0.0" step="0.1" readonly style="background: #f9f9f9; cursor: not-allowed;">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="form-group">
+                        <label data-i18n="nitrogen">النيتروجين (N)</label>
+                        <input type="number" id="autoNitrogen" placeholder="0" readonly style="background: #f9f9f9; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="phosphorus">الفسفور (P)</label>
+                        <input type="number" id="autoPhosphorus" placeholder="0" readonly style="background: #f9f9f9; cursor: not-allowed;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="potassium">البوتاسيوم (K)</label>
+                    <input type="number" id="autoPotassium" placeholder="0" readonly style="background: #f9f9f9; cursor: not-allowed;">
+                </div>
+                <button class="btn-primary" onclick="analyzeAutoData()" style="width: 100%;">
+                    <span data-i18n="analyze">🔍 تحليل</span>
+                </button>
+            </div>
+
+            <!-- Screen 3: Manual Search -->
+            <div id="manualSearchScreen" class="screen">
+                <button class="btn-secondary back-button" onclick="switchToMode()">← <span data-i18n="back">رجوع</span></button>
+                <h2 data-i18n="selectPlant">🔍 ابحث عن النبات</h2>
+                <input type="text" id="plantSearchInput" class="search-input" placeholder="ابحث..." oninput="handlePlantSearch(event)">
+                <div class="search-results" id="searchResultsContainer">
+                    <div class="result-item" style="text-align: center; color: #999;">
+                        <span data-i18n="startTyping">ابدأ بالكتابة للبحث...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 4: Manual Analysis -->
+            <div id="manualAnalysisScreen" class="screen">
+                <button class="btn-secondary back-button" onclick="switchToManualSearch()">← <span data-i18n="back">رجوع</span></button>
+                <div id="selectedPlantInfo" class="selected-plant-info"></div>
+                <h2 data-i18n="enterData">أدخل بيانات التربة</h2>
+                <div class="form-group">
+                    <label data-i18n="temperature">درجة الحرارة (°C)</label>
+                    <input type="number" id="manualTemp" placeholder="25" step="0.1">
+                </div>
+                <div class="input-row">
+                    <div class="form-group">
+                        <label data-i18n="moisture">الرطوبة (%)</label>
+                        <input type="number" id="manualMoisture" placeholder="70" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="ph">pH</label>
+                        <input type="number" id="manualPh" placeholder="6.5" step="0.1">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="form-group">
+                        <label data-i18n="nitrogen">النيتروجين (N)</label>
+                        <input type="number" id="manualNitrogen" placeholder="50">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="phosphorus">الفسفور (P)</label>
+                        <input type="number" id="manualPhosphorus" placeholder="40">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="potassium">البوتاسيوم (K)</label>
+                    <input type="number" id="manualPotassium" placeholder="30">
+                </div>
+                <button class="btn-primary" onclick="analyzeManualData()" style="width: 100%;">
+                    <span data-i18n="analyze">🔍 تحليل</span>
+                </button>
+            </div>
+
+            <!-- Screen 5: Results -->
+            <div id="resultsScreen" class="screen">
+                <button class="btn-secondary back-button" onclick="switchToMode()">← <span data-i18n="back">رجوع</span></button>
+                <h2 data-i18n="results">النتائج</h2>
+                <div id="resultsList" class="results-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="plants-multilingual.js"></script>
+    <script src="plants-advanced.js"></script>
+    <script src="ai-advanced.js"></script>
+
+    <script>
+        // Current language and selected plant
+        let currentLanguage = 'ar';
+        let currentSelectedPlant = null;
+        let bridgeConnected = false;
+        let lastBridgeData = null;  // Store last bridge data for manual mode auto-fill
+
+        // 10-Language translation system
+        const translations = {
+            ar: {
+                title: '🌱 محلل التربة الذكي v5',
+                selectMode: 'اختر طريقة التحليل',
+                autoMode: '🤖 تحليل تلقائي',
+                autoFill: 'ملء تلقائي',
+                manualMode: '🔍 تحليل يدوي',
+                autoAnalysis: 'التحليل التلقائي',
+                autoFillInfo: '💡 الوضع التلقائي يملأ البيانات من جهاز الاستشعار مباشرة',
+                autoFillAuto: 'البيانات تملأ تلقائياً من جهاز الاستشعار كل 5 ثواني',
+                manualAnalysis: 'التحليل اليدوي',
+                selectPlant: '🔍 ابحث عن النبات',
+                enterData: 'أدخل بيانات التربة',
+                temperature: 'درجة الحرارة (°C)',
+                moisture: 'الرطوبة (%)',
+                ph: 'pH',
+                nitrogen: 'النيتروجين (N)',
+                phosphorus: 'الفسفور (P)',
+                potassium: 'البوتاسيوم (K)',
+                analyze: '🔍 تحليل',
+                back: 'رجوع',
+                results: 'النتائج',
+                startTyping: 'ابدأ بالكتابة للبحث...',
+                noResults: '❌ لم نجد نبات يطابق البحث',
+                selectPlantFromList: 'اختر النبات من القائمة',
+                soilQuality: 'جودة التربة',
+                suitablePlants: 'النباتات المناسبة',
+                solutions: 'التوصيات',
+                compatibility: 'التوافق',
+                enterData: 'يرجى إدخال جميع البيانات',
+                loading: 'جاري الاتصال...',
+                connected: '✅ متصل بنجاح',
+                disconnected: '❌ غير متصل',
+                autoFillEnabled: '✅ الملء التلقائي مفعل'
+            },
+            en: {
+                title: '🌱 Smart Soil Analyzer v5',
+                selectMode: 'Select Analysis Mode',
+                autoMode: '🤖 Auto Analysis',
+                autoFill: 'Auto Fill',
+                manualMode: '🔍 Manual Analysis',
+                autoAnalysis: 'Auto Analysis',
+                autoFillInfo: '💡 Auto mode fills data from sensor automatically',
+                autoFillAuto: 'Data fills automatically from sensor every 5 seconds',
+                manualAnalysis: 'Manual Analysis',
+                selectPlant: '🔍 Search for Plant',
+                enterData: 'Enter Soil Data',
+                temperature: 'Temperature (°C)',
+                moisture: 'Moisture (%)',
+                ph: 'pH',
+                nitrogen: 'Nitrogen (N)',
+                phosphorus: 'Phosphorus (P)',
+                potassium: 'Potassium (K)',
+                analyze: '🔍 Analyze',
+                back: 'Back',
+                results: 'Results',
+                startTyping: 'Start typing to search...',
+                noResults: '❌ No plants found',
+                selectPlantFromList: 'Select a plant from the list',
+                soilQuality: 'Soil Quality',
+                suitablePlants: 'Suitable Plants',
+                solutions: 'Recommendations',
+                compatibility: 'Compatibility',
+                enterData: 'Please enter all data',
+                loading: 'Connecting...',
+                connected: '✅ Connected',
+                disconnected: '❌ Disconnected',
+                autoFillEnabled: '✅ Auto Fill Enabled'
+            },
+            fr: {
+                title: '🌱 Analyseur de Sol Intelligent v5',
+                selectMode: 'Sélectionnez le mode d\'analyse',
+                autoMode: '🤖 Analyse Automatique',
+                autoFill: 'Remplissage Automatique',
+                manualMode: '🔍 Analyse Manuelle',
+                autoAnalysis: 'Analyse Automatique',
+                autoFillInfo: '💡 Le mode auto remplit les données du capteur automatiquement',
+                autoFillAuto: 'Les données se remplissent automatiquement du capteur toutes les 5 secondes',
+                manualAnalysis: 'Analyse Manuelle',
+                selectPlant: '🔍 Rechercher une Plante',
+                enterData: 'Entrez les Données du Sol',
+                temperature: 'Température (°C)',
+                moisture: 'Humidité (%)',
+                ph: 'pH',
+                nitrogen: 'Azote (N)',
+                phosphorus: 'Phosphore (P)',
+                potassium: 'Potassium (K)',
+                analyze: '🔍 Analyser',
+                back: 'Retour',
+                results: 'Résultats',
+                startTyping: 'Commencez à taper pour rechercher...',
+                noResults: '❌ Aucune plante trouvée',
+                selectPlantFromList: 'Sélectionnez une plante dans la liste',
+                soilQuality: 'Qualité du Sol',
+                suitablePlants: 'Plantes Adaptées',
+                solutions: 'Recommandations',
+                compatibility: 'Compatibilité',
+                enterData: 'Veuillez entrer toutes les données',
+                loading: 'Connexion...',
+                connected: '✅ Connecté',
+                disconnected: '❌ Déconnecté',
+                autoFillEnabled: '✅ Remplissage Automatique Activé'
+            },
+            es: {
+                title: '🌱 Analizador Inteligente de Suelo v5',
+                selectMode: 'Seleccionar Modo de Análisis',
+                autoMode: '🤖 Análisis Automático',
+                autoFill: 'Rellenado Automático',
+                manualMode: '🔍 Análisis Manual',
+                autoAnalysis: 'Análisis Automático',
+                autoFillInfo: '💡 El modo automático rellena datos del sensor automáticamente',
+                autoFillAuto: 'Los datos se rellenan automáticamente del sensor cada 5 segundos',
+                manualAnalysis: 'Análisis Manual',
+                selectPlant: '🔍 Buscar Planta',
+                enterData: 'Ingresar Datos del Suelo',
+                temperature: 'Temperatura (°C)',
+                moisture: 'Humedad (%)',
+                ph: 'pH',
+                nitrogen: 'Nitrógeno (N)',
+                phosphorus: 'Fósforo (P)',
+                potassium: 'Potasio (K)',
+                analyze: '🔍 Analizar',
+                back: 'Atrás',
+                results: 'Resultados',
+                startTyping: 'Comience a escribir para buscar...',
+                noResults: '❌ No se encontraron plantas',
+                selectPlantFromList: 'Selecciona una planta de la lista',
+                soilQuality: 'Calidad del Suelo',
+                suitablePlants: 'Plantas Adecuadas',
+                solutions: 'Recomendaciones',
+                compatibility: 'Compatibilidad',
+                enterData: 'Ingrese todos los datos',
+                loading: 'Conectando...',
+                connected: '✅ Conectado',
+                disconnected: '❌ Desconectado',
+                autoFillEnabled: '✅ Rellenado Automático Habilitado'
+            },
+            de: {
+                title: '🌱 Intelligenter Bodenanalysator v5',
+                selectMode: 'Analysemodus wählen',
+                autoMode: '🤖 Automatische Analyse',
+                autoFill: 'Automatisches Ausfüllen',
+                manualMode: '🔍 Manuelle Analyse',
+                autoAnalysis: 'Automatische Analyse',
+                autoFillInfo: '💡 Der Automatikmodus füllt Sensordaten automatisch aus',
+                autoFillAuto: 'Daten werden alle 5 Sekunden automatisch vom Sensor ausgefüllt',
+                manualAnalysis: 'Manuelle Analyse',
+                selectPlant: '🔍 Nach Pflanze suchen',
+                enterData: 'Bodendaten eingeben',
+                temperature: 'Temperatur (°C)',
+                moisture: 'Feuchte (%)',
+                ph: 'pH',
+                nitrogen: 'Stickstoff (N)',
+                phosphorus: 'Phosphor (P)',
+                potassium: 'Kalium (K)',
+                analyze: '🔍 Analysieren',
+                back: 'Zurück',
+                results: 'Ergebnisse',
+                startTyping: 'Zum Suchen eingeben...',
+                noResults: '❌ Keine Pflanzen gefunden',
+                selectPlantFromList: 'Wählen Sie eine Pflanze aus der Liste',
+                soilQuality: 'Bodenqualität',
+                suitablePlants: 'Geeignete Pflanzen',
+                solutions: 'Empfehlungen',
+                compatibility: 'Kompatibilität',
+                enterData: 'Bitte alle Daten eingeben',
+                loading: 'Verbindung wird hergestellt...',
+                connected: '✅ Verbunden',
+                disconnected: '❌ Getrennt',
+                autoFillEnabled: '✅ Automatisches Ausfüllen Aktiviert'
+            },
+            zh: {
+                title: '🌱 智能土壤分析仪 v5',
+                selectMode: '选择分析模式',
+                autoMode: '🤖 自动分析',
+                autoFill: '自动填充',
+                manualMode: '🔍 手动分析',
+                autoAnalysis: '自动分析',
+                autoFillInfo: '💡 自动模式自动填充传感器数据',
+                autoFillAuto: '传感器数据每 5 秒自动填充',
+                manualAnalysis: '手动分析',
+                selectPlant: '🔍 搜索植物',
+                enterData: '输入土壤数据',
+                temperature: '温度 (°C)',
+                moisture: '湿度 (%)',
+                ph: 'pH 值',
+                nitrogen: '氮 (N)',
+                phosphorus: '磷 (P)',
+                potassium: '钾 (K)',
+                analyze: '🔍 分析',
+                back: '返回',
+                results: '结果',
+                startTyping: '开始输入以搜索...',
+                noResults: '❌ 未找到植物',
+                selectPlantFromList: '从列表中选择植物',
+                soilQuality: '土壤质量',
+                suitablePlants: '适合的植物',
+                solutions: '建议',
+                compatibility: '兼容性',
+                enterData: '请输入所有数据',
+                loading: '正在连接...',
+                connected: '✅ 已连接',
+                disconnected: '❌ 已断开连接',
+                autoFillEnabled: '✅ 自动填充已启用'
+            },
+            ja: {
+                title: '🌱 スマート土壌分析装置 v5',
+                selectMode: '分析モードを選択',
+                autoMode: '🤖 自動分析',
+                autoFill: '自動入力',
+                manualMode: '🔍 手動分析',
+                autoAnalysis: '自動分析',
+                autoFillInfo: '💡 自動モードはセンサーデータを自動的に入力します',
+                autoFillAuto: 'センサーデータは 5 秒ごとに自動的に入力されます',
+                manualAnalysis: '手動分析',
+                selectPlant: '🔍 植物を検索',
+                enterData: '土壌データを入力',
+                temperature: '温度 (°C)',
+                moisture: '湿度 (%)',
+                ph: 'pH',
+                nitrogen: '窒素 (N)',
+                phosphorus: 'リン (P)',
+                potassium: 'カリウム (K)',
+                analyze: '🔍 分析',
+                back: '戻る',
+                results: '結果',
+                startTyping: '検索を開始するには入力してください...',
+                noResults: '❌ 植物が見つかりません',
+                selectPlantFromList: 'リストから植物を選択',
+                soilQuality: '土壌品質',
+                suitablePlants: '適切な植物',
+                solutions: '推奨事項',
+                compatibility: '互換性',
+                enterData: 'すべてのデータを入力してください',
+                loading: '接続中...',
+                connected: '✅ 接続済み',
+                disconnected: '❌ 切断',
+                autoFillEnabled: '✅ 自動入力が有効です'
+            },
+            hi: {
+                title: '🌱 स्मार्ट मिट्टी विश्लेषक v5',
+                selectMode: 'विश्लेषण मोड चुनें',
+                autoMode: '🤖 स्वचालित विश्लेषण',
+                autoFill: 'स्वचालित भरण',
+                manualMode: '🔍 मैनुअल विश्लेषण',
+                autoAnalysis: 'स्वचालित विश्लेषण',
+                autoFillInfo: '💡 ऑटो मोड सेंसर डेटा स्वचालित रूप से भरता है',
+                autoFillAuto: 'सेंसर डेटा हर 5 सेकंड में स्वचालित रूप से भरा जाता है',
+                manualAnalysis: 'मैनुअल विश्लेषण',
+                selectPlant: '🔍 पौधे को खोजें',
+                enterData: 'मिट्टी का डेटा दर्ज करें',
+                temperature: 'तापमान (°C)',
+                moisture: 'आर्द्रता (%)',
+                ph: 'pH',
+                nitrogen: 'नाइट्रोजन (N)',
+                phosphorus: 'फॉस्फोरस (P)',
+                potassium: 'पोटेशियम (K)',
+                analyze: '🔍 विश्लेषण',
+                back: 'वापस',
+                results: 'परिणाम',
+                startTyping: 'खोजने के लिए टाइप करना शुरू करें...',
+                noResults: '❌ कोई पौधा नहीं मिला',
+                selectPlantFromList: 'सूची से पौधा चुनें',
+                soilQuality: 'मिट्टी की गुणवत्ता',
+                suitablePlants: 'उपयुक्त पौधे',
+                solutions: 'सुझाव',
+                compatibility: 'अनुकूलता',
+                enterData: 'कृपया सभी डेटा दर्ज करें',
+                loading: 'कनेक्ट हो रहा है...',
+                connected: '✅ कनेक्टेड',
+                disconnected: '❌ डिस्कनेक्टेड',
+                autoFillEnabled: '✅ स्वचालित भरण सक्षम'
+            },
+            tr: {
+                title: '🌱 Akıllı Toprak Analiz Cihazı v5',
+                selectMode: 'Analiz Modunu Seçin',
+                autoMode: '🤖 Otomatik Analiz',
+                autoFill: 'Otomatik Doldurma',
+                manualMode: '🔍 Manuel Analiz',
+                autoAnalysis: 'Otomatik Analiz',
+                autoFillInfo: '💡 Oto mod sensör verilerini otomatik olarak doldurur',
+                autoFillAuto: 'Sensör verileri her 5 saniyede otomatik olarak doldurulur',
+                manualAnalysis: 'Manuel Analiz',
+                selectPlant: '🔍 Bitki Ara',
+                enterData: 'Toprak Verilerini Girin',
+                temperature: 'Sıcaklık (°C)',
+                moisture: 'Nem (%)',
+                ph: 'pH',
+                nitrogen: 'Azot (N)',
+                phosphorus: 'Fosfor (P)',
+                potassium: 'Potasyum (K)',
+                analyze: '🔍 Analiz',
+                back: 'Geri',
+                results: 'Sonuçlar',
+                startTyping: 'Aramaya başlamak için yazın...',
+                noResults: '❌ Bitki bulunamadı',
+                selectPlantFromList: 'Listeden bir bitki seçin',
+                soilQuality: 'Toprak Kalitesi',
+                suitablePlants: 'Uygun Bitkiler',
+                solutions: 'Öneriler',
+                compatibility: 'Uyumluluk',
+                enterData: 'Lütfen tüm verileri girin',
+                loading: 'Bağlanıyor...',
+                connected: '✅ Bağlı',
+                disconnected: '❌ Bağlı Değil',
+                autoFillEnabled: '✅ Otomatik Doldurma Etkin'
+            },
+            pt: {
+                title: '🌱 Analisador Inteligente de Solo v5',
+                selectMode: 'Selecione o Modo de Análise',
+                autoMode: '🤖 Análise Automática',
+                autoFill: 'Preenchimento Automático',
+                manualMode: '🔍 Análise Manual',
+                autoAnalysis: 'Análise Automática',
+                autoFillInfo: '💡 O modo automático preenche dados do sensor automaticamente',
+                autoFillAuto: 'Os dados do sensor são preenchidos automaticamente a cada 5 segundos',
+                manualAnalysis: 'Análise Manual',
+                selectPlant: '🔍 Pesquisar Planta',
+                enterData: 'Insira Dados do Solo',
+                temperature: 'Temperatura (°C)',
+                moisture: 'Umidade (%)',
+                ph: 'pH',
+                nitrogen: 'Nitrogênio (N)',
+                phosphorus: 'Fósforo (P)',
+                potassium: 'Potássio (K)',
+                analyze: '🔍 Analisar',
+                back: 'Voltar',
+                results: 'Resultados',
+                startTyping: 'Comece a digitar para pesquisar...',
+                noResults: '❌ Nenhuma planta encontrada',
+                selectPlantFromList: 'Selecione uma planta da lista',
+                soilQuality: 'Qualidade do Solo',
+                suitablePlants: 'Plantas Adequadas',
+                solutions: 'Recomendações',
+                compatibility: 'Compatibilidade',
+                enterData: 'Por favor, insira todos os dados',
+                loading: 'Conectando...',
+                connected: '✅ Conectado',
+                disconnected: '❌ Desconectado',
+                autoFillEnabled: '✅ Preenchimento Automático Ativado'
+            }
+        };
+
+        // Update text elements based on current language
+        function updateText() {
+            const t = translations[currentLanguage];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    el.textContent = t[key];
+                }
+            });
+            
+            // Set text direction
+            document.documentElement.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+        }
+
+        // Create language selector buttons
+        function createLanguageSelector() {
+            const dropdown = document.getElementById('languageDropdown');
+            if (dropdown) {
+                dropdown.value = currentLanguage;
+            }
+        }
+
+        // Change language
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            updateText();
+            createLanguageSelector();
+            updateConnectionStatus();
+        }
+
+        // Connect to bridge and auto-populate data
+        function connectToBridge() {
+            try {
+                const ws = new WebSocket('ws://localhost:3000');
+                
+                ws.onopen = function() {
+                    console.log('✅ Bridge connected');
+                    bridgeConnected = true;
+                    updateConnectionStatus();
+                };
+                
+                ws.onmessage = function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        
+                        // Store data for manual mode
+                        lastBridgeData = data;
+                        
+                        // Auto-populate auto analysis form
+                        if (document.getElementById('autoTemp')) {
+                            document.getElementById('autoTemp').value = data.temperature?.toFixed(1) || '';
+                            document.getElementById('autoMoisture').value = data.moisture?.toFixed(1) || '';
+                            document.getElementById('autoPh').value = data.pH?.toFixed(1) || '';
+                            document.getElementById('autoNitrogen').value = data.nitrogen?.toFixed(0) || '';
+                            document.getElementById('autoPhosphorus').value = data.phosphorus?.toFixed(0) || '';
+                            document.getElementById('autoPotassium').value = data.potassium?.toFixed(0) || '';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing bridge data:', e);
+                    }
+                };
+                
+                ws.onerror = function() {
+                    bridgeConnected = false;
+                    updateConnectionStatus();
+                };
+                
+                ws.onclose = function() {
+                    bridgeConnected = false;
+                    updateConnectionStatus();
+                    // Reconnect after 3 seconds
+                    setTimeout(connectToBridge, 3000);
+                };
+            } catch (e) {
+                console.error('Bridge connection error:', e);
+            }
+        }
+
+        // Update connection status display
+        function updateConnectionStatus() {
+            const t = translations[currentLanguage];
+            const status = document.getElementById('connectionStatus');
+            if (status) {
+                if (bridgeConnected) {
+                    status.className = 'connected';
+                    status.textContent = t.connected || '✅ Connected';
+                } else {
+                    status.className = 'disconnected';
+                    status.textContent = t.disconnected || '❌ Disconnected';
+                }
+            }
+        }
+
+        // Screen switching functions
+        function switchToMode() {
+            stopAutoFillManualMode();
+            hideAllScreens();
+            document.getElementById('modeScreen').classList.add('active');
+        }
+
+        function switchToAutoAnalysis() {
+            stopAutoFillManualMode();
+            hideAllScreens();
+            document.getElementById('autoScreen').classList.add('active');
+        }
+
+        function switchToManualSearch() {
+            stopAutoFillManualMode();
+            hideAllScreens();
+            document.getElementById('manualSearchScreen').classList.add('active');
+            document.getElementById('plantSearchInput').value = '';
+            document.getElementById('searchResultsContainer').innerHTML = `
+                <div class="result-item" style="text-align: center; color: #999;">
+                    <span data-i18n="startTyping">ابدأ بالكتابة للبحث...</span>
+                </div>
+            `;
+            updateText();
+        }
+
+        function switchToManualAnalysis() {
+            hideAllScreens();
+            document.getElementById('manualAnalysisScreen').classList.add('active');
+            // Start auto-fill when entering manual analysis
+            startAutoFillManualMode();
+        }
+
+        function hideAllScreens() {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+        }
+
+        // Handle plant search
+        function handlePlantSearch(e) {
+            const t = translations[currentLanguage];
+            const query = e.target.value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('searchResultsContainer');
+            
+            console.log('Search query:', query, 'Current language:', currentLanguage);
+            
+            if (!query) {
+                resultsContainer.innerHTML = `<div class="result-item" style="text-align: center; color: #999;"><span>${t.startTyping}</span></div>`;
+                return;
+            }
+
+            // Use plantsDB directly since all plants are already there
+            const results = plantsDB.plants.filter(plant => {
+                const arabicName = plant.nameAr ? plant.nameAr.toLowerCase() : '';
+                const englishName = plant.nameEn ? plant.nameEn.toLowerCase() : '';
+                const mainName = plant.name ? plant.name.toLowerCase() : '';
+                
+                return arabicName.includes(query) || englishName.includes(query) || mainName.includes(query);
+            }).slice(0, 20);
+
+            console.log('Search results:', results.length);
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `<div class="result-item" style="text-align: center; color: #999;"><span>${t.noResults}</span></div>`;
+                return;
+            }
+
+            resultsContainer.innerHTML = results.map(plant => {
+                // Get plant name based on current language
+                let displayName = plant.nameAr || plant.nameEn || plant.name || 'نبات';
+                
+                // Try to translate based on current language
+                if (currentLanguage === 'en' && plant.nameEn) {
+                    displayName = plant.nameEn;
+                } else if (currentLanguage === 'fr' && plant.nameFr) {
+                    displayName = plant.nameFr;
+                } else if (currentLanguage === 'es' && plant.nameEs) {
+                    displayName = plant.nameEs;
+                } else if (currentLanguage === 'de' && plant.nameDe) {
+                    displayName = plant.nameDe;
+                }
+                
+                return `
+                <div class="result-item" onclick="selectPlantFromSearch(${plant.id})">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">${plant.emoji || '🌱'}</span>
+                        <div style="flex: 1;">
+                            <div class="plant-name">${displayName}</div>
+                            <div class="plant-temp">T: ${plant.tempMin || 15}°-${plant.tempMax || 28}°C</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        // Select plant from search
+        function selectPlantFromSearch(plantId) {
+            currentSelectedPlant = plantsDB.plants.find(p => p.id === plantId);
+            if (currentSelectedPlant) {
+                const info = document.getElementById('selectedPlantInfo');
+                const t = translations[currentLanguage];
+                
+                // Get plant name based on current language
+                let plantName = currentSelectedPlant.nameAr || currentSelectedPlant.nameEn || currentSelectedPlant.name || 'نبات';
+                if (currentLanguage === 'en' && currentSelectedPlant.nameEn) {
+                    plantName = currentSelectedPlant.nameEn;
+                } else if (currentLanguage === 'fr' && currentSelectedPlant.nameFr) {
+                    plantName = currentSelectedPlant.nameFr;
+                } else if (currentLanguage === 'es' && currentSelectedPlant.nameEs) {
+                    plantName = currentSelectedPlant.nameEs;
+                } else if (currentLanguage === 'de' && currentSelectedPlant.nameDe) {
+                    plantName = currentSelectedPlant.nameDe;
+                }
+                
+                const tempLabel = currentLanguage === 'ar' ? 'درجة الحرارة' : 
+                                   currentLanguage === 'en' ? 'Temperature' :
+                                   currentLanguage === 'fr' ? 'Température' :
+                                   currentLanguage === 'es' ? 'Temperatura' :
+                                   currentLanguage === 'de' ? 'Temperatur' :
+                                   currentLanguage === 'zh' ? '温度' :
+                                   currentLanguage === 'ja' ? '温度' :
+                                   currentLanguage === 'hi' ? 'तापमान' :
+                                   currentLanguage === 'tr' ? 'Sıcaklık' :
+                                   currentLanguage === 'pt' ? 'Temperatura' : 'Temperature';
+                info.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-size: 40px;">${currentSelectedPlant.emoji || '🌱'}</span>
+                        <div>
+                            <h3>${plantName}</h3>
+                            <p style="font-size: 12px; color: #666;">${tempLabel}: ${currentSelectedPlant.tempMin || 15}°-${currentSelectedPlant.tempMax || 28}°C</p>
+                        </div>
+                    </div>
+                `;
+                
+                console.log('Plant selected:', plantName);
+                
+                // Auto-populate manual analysis with current sensor data
+                startAutoFillManualMode();
+                switchToManualAnalysis();
+            }
+        }
+        
+        // Auto-fill manual analysis fields every 5 seconds
+        let manualAutoFillInterval = null;
+        
+        function startAutoFillManualMode() {
+            // Clear any existing interval
+            if (manualAutoFillInterval) {
+                clearInterval(manualAutoFillInterval);
+            }
+            
+            // Fill immediately
+            autoFillManualFields();
+            
+            // Then fill every 5 seconds
+            manualAutoFillInterval = setInterval(autoFillManualFields, 5000);
+        }
+        
+        function autoFillManualFields() {
+            // Get the last data from bridge
+            if (lastBridgeData) {
+                const tempInput = document.getElementById('manualTemp');
+                const moistureInput = document.getElementById('manualMoisture');
+                const phInput = document.getElementById('manualPh');
+                const nitrogenInput = document.getElementById('manualNitrogen');
+                const phosphorusInput = document.getElementById('manualPhosphorus');
+                const potassiumInput = document.getElementById('manualPotassium');
+                
+                // Only fill if the field is empty
+                if (tempInput && (!tempInput.value || tempInput.value === '')) {
+                    tempInput.value = lastBridgeData.temperature?.toFixed(1) || '';
+                }
+                if (moistureInput && (!moistureInput.value || moistureInput.value === '')) {
+                    moistureInput.value = lastBridgeData.moisture?.toFixed(1) || '';
+                }
+                if (phInput && (!phInput.value || phInput.value === '')) {
+                    phInput.value = lastBridgeData.pH?.toFixed(1) || '';
+                }
+                if (nitrogenInput && (!nitrogenInput.value || nitrogenInput.value === '')) {
+                    nitrogenInput.value = lastBridgeData.nitrogen?.toFixed(0) || '';
+                }
+                if (phosphorusInput && (!phosphorusInput.value || phosphorusInput.value === '')) {
+                    phosphorusInput.value = lastBridgeData.phosphorus?.toFixed(0) || '';
+                }
+                if (potassiumInput && (!potassiumInput.value || potassiumInput.value === '')) {
+                    potassiumInput.value = lastBridgeData.potassium?.toFixed(0) || '';
+                }
+                
+                console.log('Manual fields auto-filled');
+            }
+        }
+        
+        function stopAutoFillManualMode() {
+            if (manualAutoFillInterval) {
+                clearInterval(manualAutoFillInterval);
+                manualAutoFillInterval = null;
+            }
+        }
+
+        // Analyze auto data
+        function analyzeAutoData() {
+            const t = translations[currentLanguage];
+            const temp = parseFloat(document.getElementById('autoTemp').value);
+            const moisture = parseFloat(document.getElementById('autoMoisture').value);
+            const ph = parseFloat(document.getElementById('autoPh').value);
+            const nitrogen = parseFloat(document.getElementById('autoNitrogen').value);
+            const phosphorus = parseFloat(document.getElementById('autoPhosphorus').value);
+            const potassium = parseFloat(document.getElementById('autoPotassium').value);
+
+            if (!temp || !moisture || !ph) {
+                alert(t.enterData || '⚠️ يرجى إدخال جميع البيانات المطلوبة');
+                return;
+            }
+
+            const analysis = aiAnalyzer.analyzeAutomatic({
+                temperature: temp,
+                moisture: moisture,
+                pH: ph,
+                nitrogen: nitrogen || 0,
+                phosphorus: phosphorus || 0,
+                potassium: potassium || 0
+            });
+
+            displayResults(analysis);
+        }
+
+        // Analyze manual data with soil compatibility checking
+        function analyzeManualData() {
+            const t = translations[currentLanguage];
+            
+            // Validate that a plant is selected
+            if (!currentSelectedPlant) {
+                alert(currentLanguage === 'ar' ? '⚠️ يرجى اختيار نبات أولاً' : '⚠️ Please select a plant first');
+                return;
+            }
+            
+            // Get values and trim whitespace
+            const tempStr = document.getElementById('manualTemp').value.trim();
+            const moistureStr = document.getElementById('manualMoisture').value.trim();
+            const phStr = document.getElementById('manualPh').value.trim();
+            
+            // Parse values
+            const temp = tempStr ? parseFloat(tempStr) : NaN;
+            const moisture = moistureStr ? parseFloat(moistureStr) : NaN;
+            const ph = phStr ? parseFloat(phStr) : NaN;
+            const nitrogen = document.getElementById('manualNitrogen').value.trim() ? parseFloat(document.getElementById('manualNitrogen').value.trim()) : 0;
+            const phosphorus = document.getElementById('manualPhosphorus').value.trim() ? parseFloat(document.getElementById('manualPhosphorus').value.trim()) : 0;
+            const potassium = document.getElementById('manualPotassium').value.trim() ? parseFloat(document.getElementById('manualPotassium').value.trim()) : 0;
+
+            console.log('Raw values:', { tempStr, moistureStr, phStr });
+            console.log('Parsed values:', { temp, moisture, ph, nitrogen, phosphorus, potassium });
+
+            // Check if values are valid numbers
+            if (isNaN(temp) || isNaN(moisture) || isNaN(ph)) {
+                alert(currentLanguage === 'ar' ? 
+                    `⚠️ يرجى إدخال قيم صحيحة\nدرجة الحرارة: ${tempStr || 'فارغ'}\nالرطوبة: ${moistureStr || 'فارغ'}\npH: ${phStr || 'فارغ'}` : 
+                    `⚠️ Please enter valid values\nTemperature: ${tempStr || 'empty'}\nMoisture: ${moistureStr || 'empty'}\npH: ${phStr || 'empty'}`);
+                return;
+            }
+
+            // Check if values are in reasonable ranges
+            if (temp < -50 || temp > 60 || moisture < 0 || moisture > 100 || ph < 0 || ph > 14) {
+                alert(currentLanguage === 'ar' ? 
+                    `⚠️ القيم خارج النطاق المقبول:\nدرجة الحرارة: ${temp}°C (يجب: -50 إلى 60)\nالرطوبة: ${moisture}% (يجب: 0 إلى 100)\npH: ${ph} (يجب: 0 إلى 14)` : 
+                    `⚠️ Values out of acceptable range:\nTemperature: ${temp}°C (should be: -50 to 60)\nMoisture: ${moisture}% (should be: 0 to 100)\npH: ${ph} (should be: 0 to 14)`);
+                return;
+            }
+
+            // Check soil compatibility with selected plant
+            const soilData = {
+                temperature: temp,
+                moisture: moisture,
+                pH: ph,
+                nitrogen: nitrogen || 0,
+                phosphorus: phosphorus || 0,
+                potassium: potassium || 0
+            };
+
+            console.log('Plant selected:', currentSelectedPlant.nameAr || currentSelectedPlant.nameEn);
+            console.log('Soil data:', soilData);
+
+            // Compare with plant requirements
+            const compatibility = checkPlantSoilCompatibility(currentSelectedPlant, soilData);
+            console.log('Compatibility:', compatibility);
+            
+            // Get AI recommendations for improvements
+            let aiRecommendations = [];
+            if (!compatibility.isFullyCompatible) {
+                aiRecommendations = getAIRecommendations(currentSelectedPlant, soilData, compatibility);
+            }
+
+            // Display comprehensive results
+            displayManualAnalysisResults(compatibility, aiRecommendations, soilData);
+        }
+
+        // Check if soil is compatible with plant requirements
+        function checkPlantSoilCompatibility(plant, soilData) {
+            const compatibility = {
+                isFullyCompatible: true,
+                issues: [],
+                recommendations: [],
+                soilQuality: 100,
+                plant: plant
+            };
+
+            // Temperature check
+            if (soilData.temperature < plant.tempMin || soilData.temperature > plant.tempMax) {
+                compatibility.isFullyCompatible = false;
+                compatibility.issues.push({
+                    type: 'temperature',
+                    current: soilData.temperature,
+                    ideal: `${plant.tempMin}°-${plant.tempMax}°C`,
+                    severity: 'high'
+                });
+                compatibility.soilQuality -= 20;
+            }
+
+            // Moisture check
+            if (soilData.moisture < (plant.moistureMin || 50) || soilData.moisture > (plant.moistureMax || 80)) {
+                compatibility.isFullyCompatible = false;
+                compatibility.issues.push({
+                    type: 'moisture',
+                    current: soilData.moisture,
+                    ideal: `${plant.moistureMin || 50}%-${plant.moistureMax || 80}%`,
+                    severity: 'high'
+                });
+                compatibility.soilQuality -= 20;
+            }
+
+            // pH check
+            if (soilData.pH < plant.phMin || soilData.pH > plant.phMax) {
+                compatibility.isFullyCompatible = false;
+                compatibility.issues.push({
+                    type: 'pH',
+                    current: soilData.pH,
+                    ideal: `${plant.phMin}-${plant.phMax}`,
+                    severity: soilData.pH < plant.phMin ? 'acidic' : 'alkaline'
+                });
+                compatibility.soilQuality -= 20;
+            }
+
+            // Nitrogen check
+            if (soilData.nitrogen < 30) {
+                compatibility.isFullyCompatible = false;
+                compatibility.issues.push({
+                    type: 'nitrogen',
+                    current: soilData.nitrogen,
+                    ideal: 50,
+                    severity: 'medium'
+                });
+                compatibility.soilQuality -= 10;
+            }
+
+            // Phosphorus check
+            if (soilData.phosphorus < 20) {
+                compatibility.isFullyCompatible = false;
+                compatibility.issues.push({
+                    type: 'phosphorus',
+                    current: soilData.phosphorus,
+                    ideal: 40,
+                    severity: 'medium'
+                });
+                compatibility.soilQuality -= 10;
+            }
+
+            // Potassium check
+            if (soilData.potassium < 20) {
+                compatibility.isFullyCompatible = false;
+                compatibility.issues.push({
+                    type: 'potassium',
+                    current: soilData.potassium,
+                    ideal: 30,
+                    severity: 'medium'
+                });
+                compatibility.soilQuality -= 10;
+            }
+
+            return compatibility;
+        }
+
+        // Get AI recommendations for soil improvements
+        function getAIRecommendations(plant, soilData, compatibility) {
+            const recommendations = [];
+            const plantName = plant.nameAr || plant.nameEn || 'النبات';
+
+            // Temperature recommendations
+            const tempIssue = compatibility.issues.find(i => i.type === 'temperature');
+            if (tempIssue) {
+                recommendations.push({
+                    type: 'temperature',
+                    title: currentLanguage === 'ar' ? '🌡️ درجة الحرارة' : '🌡️ Temperature',
+                    issue: currentLanguage === 'ar' ? 
+                        `الحالية: ${tempIssue.current}°C، المطلوبة: ${tempIssue.ideal}` :
+                        `Current: ${tempIssue.current}°C, Required: ${tempIssue.ideal}`,
+                    solutions: currentLanguage === 'ar' ? [
+                        soilData.temperature < plant.tempMin ? 
+                            `🔥 زيادة درجة الحرارة: استخدم غطاء بلاستيكي أو ضع النبات في مكان أكثر دفئاً` :
+                            `❄️ تقليل درجة الحرارة: حسّن التهوية وقلل التعريض المباشر للشمس`,
+                        `💨 تحسين التهوية حول النبات`
+                    ] : [
+                        soilData.temperature < plant.tempMin ? 
+                            `🔥 Increase temperature: Use plastic cover or place in warmer location` :
+                            `❄️ Decrease temperature: Improve ventilation and reduce direct sun exposure`,
+                        `💨 Improve air circulation around the plant`
+                    ]
+                });
+            }
+
+            // Moisture recommendations
+            const moistureIssue = compatibility.issues.find(i => i.type === 'moisture');
+            if (moistureIssue) {
+                recommendations.push({
+                    type: 'moisture',
+                    title: currentLanguage === 'ar' ? '💧 الرطوبة' : '💧 Moisture',
+                    issue: currentLanguage === 'ar' ? 
+                        `الحالية: ${moistureIssue.current}%، المطلوبة: ${moistureIssue.ideal}` :
+                        `Current: ${moistureIssue.current}%, Required: ${moistureIssue.ideal}`,
+                    solutions: currentLanguage === 'ar' ? [
+                        soilData.moisture < (plant.moistureMin || 50) ? 
+                            `💧 زيادة الرطوبة: اسقِ النبات أكثر وأضف طبقة من المالتش` :
+                            `🌳 تقليل الرطوبة: قلل التسقية وحسّن تصريف المياه`,
+                        `🪴 استخدم تربة ذات قدرة تصريف أفضل`
+                    ] : [
+                        soilData.moisture < (plant.moistureMin || 50) ? 
+                            `💧 Increase moisture: Water more frequently and add mulch layer` :
+                            `🌳 Decrease moisture: Reduce watering and improve drainage`,
+                        `🪴 Use soil with better drainage capacity`
+                    ]
+                });
+            }
+
+            // pH recommendations
+            const phIssue = compatibility.issues.find(i => i.type === 'pH');
+            if (phIssue) {
+                recommendations.push({
+                    type: 'pH',
+                    title: currentLanguage === 'ar' ? '⚗️ درجة الحموضة (pH)' : '⚗️ Soil pH',
+                    issue: currentLanguage === 'ar' ? 
+                        `الحالية: ${phIssue.current}, المطلوبة: ${phIssue.ideal}` :
+                        `Current: ${phIssue.current}, Required: ${phIssue.ideal}`,
+                    solutions: currentLanguage === 'ar' ? [
+                        phIssue.severity === 'acidic' ? 
+                            `🥗 زيادة الحموضة: أضف الحجر الجيري (Lime) أو الرماد` :
+                            `🍋 تقليل الحموضة: أضف الكبريت أو المادة العضوية (Peat Moss)`,
+                        `🌱 الموازنة: أضف السماد العضوي تدريجياً`
+                    ] : [
+                        phIssue.severity === 'acidic' ? 
+                            `🥗 Increase pH: Add Lime or wood ash` :
+                            `🍋 Decrease pH: Add Sulfur or organic matter (Peat Moss)`,
+                        `🌱 Balance: Add organic compost gradually`
+                    ]
+                });
+            }
+
+            // Nitrogen recommendations
+            const nitrogenIssue = compatibility.issues.find(i => i.type === 'nitrogen');
+            if (nitrogenIssue) {
+                recommendations.push({
+                    type: 'nitrogen',
+                    title: currentLanguage === 'ar' ? '🌿 النيتروجين (N)' : '🌿 Nitrogen (N)',
+                    issue: currentLanguage === 'ar' ? 
+                        `النيتروجين منخفض جداً: ${nitrogenIssue.current} (المطلوب: ${nitrogenIssue.ideal})` :
+                        `Nitrogen too low: ${nitrogenIssue.current} (Required: ${nitrogenIssue.ideal})`,
+                    solutions: currentLanguage === 'ar' ? [
+                        `🌾 إضافة السماد النيتروجيني: أضف سماد اليوريا أو سماد عضوي غني بالنيتروجين`,
+                        `🪨 استخدم سماد البقرة أو الدواجن المتحلل`,
+                        `🌱 زرع نباتات فاصوليا أو برسيم لتثبيت النيتروجين بشكل طبيعي`
+                    ] : [
+                        `🌾 Add nitrogen fertilizer: Use urea or organic nitrogen-rich fertilizer`,
+                        `🪨 Use decomposed cow or chicken manure`,
+                        `🌱 Plant legumes (beans, alfalfa) to naturally fix nitrogen`
+                    ]
+                });
+            }
+
+            // Phosphorus recommendations
+            const phosphorusIssue = compatibility.issues.find(i => i.type === 'phosphorus');
+            if (phosphorusIssue) {
+                recommendations.push({
+                    type: 'phosphorus',
+                    title: currentLanguage === 'ar' ? '⚡ الفسفور (P)' : '⚡ Phosphorus (P)',
+                    issue: currentLanguage === 'ar' ? 
+                        `الفسفور منخفض: ${phosphorusIssue.current} (المطلوب: ${phosphorusIssue.ideal})` :
+                        `Phosphorus too low: ${phosphorusIssue.current} (Required: ${phosphorusIssue.ideal})`,
+                    solutions: currentLanguage === 'ar' ? [
+                        `💎 إضافة السماد الفسفوري: استخدم سوبر فوسفات أو روك فوسفات`,
+                        `🦴 أضف عظام مطحونة (Bone Meal) غنية بالفسفور`,
+                        `🥗 مياه السمك أو السماد السائل الذي يحتوي على فسفور`
+                    ] : [
+                        `💎 Add phosphorus fertilizer: Use superphosphate or rock phosphate`,
+                        `🦴 Add ground bone meal (Bone Meal) rich in phosphorus`,
+                        `🥗 Fish emulsion or liquid fertilizers containing phosphorus`
+                    ]
+                });
+            }
+
+            // Potassium recommendations
+            const potassiumIssue = compatibility.issues.find(i => i.type === 'potassium');
+            if (potassiumIssue) {
+                recommendations.push({
+                    type: 'potassium',
+                    title: currentLanguage === 'ar' ? '✨ البوتاسيوم (K)' : '✨ Potassium (K)',
+                    issue: currentLanguage === 'ar' ? 
+                        `البوتاسيوم منخفض: ${potassiumIssue.current} (المطلوب: ${potassiumIssue.ideal})` :
+                        `Potassium too low: ${potassiumIssue.current} (Required: ${potassiumIssue.ideal})`,
+                    solutions: currentLanguage === 'ar' ? [
+                        `🌳 إضافة البوتاسيوم: استخدم كبريتات البوتاسيوم أو كلوريد البوتاسيوم`,
+                        `🥘 رماد الخشب (Wood Ash) مصدر طبيعي غني بالبوتاسيوم`,
+                        `🍌 سماد الموز: اغمر قشور الموز في الماء للحصول على سماد غني بالبوتاسيوم`
+                    ] : [
+                        `🌳 Add potassium: Use potassium sulfate or potassium chloride`,
+                        `🥘 Wood ash - natural source rich in potassium`,
+                        `🍌 Banana peel fertilizer: Soak banana peels in water for potassium-rich liquid`
+                    ]
+                });
+            }
+
+            return recommendations;
+        }
+
+        // Display comprehensive analysis results
+        function displayManualAnalysisResults(compatibility, recommendations, soilData) {
+            const t = translations[currentLanguage];
+            const resultsScreen = document.getElementById('resultsScreen');
+            const resultsList = document.getElementById('resultsList');
+            
+            // Get plant name based on current language
+            let plantName = currentSelectedPlant.nameAr || currentSelectedPlant.nameEn || currentSelectedPlant.name || 'النبات';
+            if (currentLanguage === 'en' && currentSelectedPlant.nameEn) {
+                plantName = currentSelectedPlant.nameEn;
+            } else if (currentLanguage === 'fr' && currentSelectedPlant.nameFr) {
+                plantName = currentSelectedPlant.nameFr;
+            } else if (currentLanguage === 'es' && currentSelectedPlant.nameEs) {
+                plantName = currentSelectedPlant.nameEs;
+            } else if (currentLanguage === 'de' && currentSelectedPlant.nameDe) {
+                plantName = currentSelectedPlant.nameDe;
+            }
+
+            let resultsHTML = `
+                <div class="result-box">
+                    <h4>${t.soilQuality || 'جودة التربة'}</h4>
+                    <div style="margin: 15px 0; text-align: center;">
+                        <span style="font-size: 24px; font-weight: bold; color: #667eea;">${compatibility.soilQuality}%</span>
+                        <p style="font-size: 12px; color: #999; margin-top: 5px;">
+                            ${currentLanguage === 'ar' ? 'مناسبة ل: ' : 'Suitable for: '} <strong>${plantName}</strong>
+                        </p>
+                    </div>
+                    <div class="quality-bar">
+                        <div class="quality-fill" style="width: ${compatibility.soilQuality}%"></div>
+                    </div>
+                </div>
+            `;
+
+            // Compatibility status
+            if (compatibility.isFullyCompatible) {
+                resultsHTML += `
+                    <div class="result-box" style="background: #e8f5e9; border-left-color: #4CAF50;">
+                        <h4 style="color: #4CAF50;">✅ ${currentLanguage === 'ar' ? 'التربة مناسبة تماماً!' : 'Perfect soil compatibility!'}</h4>
+                        <p>${currentLanguage === 'ar' ? 'جميع خصائص التربة مناسبة لزراعة هذا النبات.' : 'All soil properties are perfect for this plant.'}</p>
+                    </div>
+                `;
+            } else {
+                resultsHTML += `
+                    <div class="result-box" style="background: #fff3e0; border-left-color: #ff9800;">
+                        <h4 style="color: #ff9800;">⚠️ ${currentLanguage === 'ar' ? 'التربة تحتاج إلى تحسين' : 'Soil needs improvement'}</h4>
+                        <p>${currentLanguage === 'ar' ? 'عدد المشاكل: ' : 'Number of issues: '}<strong>${compatibility.issues.length}</strong></p>
+                    </div>
+                `;
+            }
+
+            // Show all recommendations from AI
+            if (recommendations.length > 0) {
+                resultsHTML += `<div style="margin-top: 20px;">`;
+                resultsHTML += `<h4 style="color: #667eea; margin-bottom: 15px;">🤖 ${currentLanguage === 'ar' ? 'توصيات AI المتخصصة' : 'AI Expert Recommendations'}</h4>`;
+                
+                recommendations.forEach((rec, index) => {
+                    resultsHTML += `
+                        <div class="result-box" style="margin-bottom: 15px;">
+                            <h5 style="color: #667eea; margin-bottom: 8px;">${rec.title}</h5>
+                            <p style="font-size: 12px; color: #666; margin-bottom: 10px; padding: 8px; background: #f5f5f5; border-radius: 4px;">
+                                ${rec.issue}
+                            </p>
+                            <div style="padding-left: 10px; border-left: 3px solid #667eea;">
+                                ${rec.solutions.map((sol, i) => `<p style="font-size: 13px; margin: 8px 0; color: #333;">✓ ${sol}</p>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                resultsHTML += `</div>`;
+            }
+
+            resultsList.innerHTML = resultsHTML;
+            hideAllScreens();
+            resultsScreen.classList.add('active');
+        }
+
+        // Display results for auto mode
+        function displayResults(analysis) {
+            const t = translations[currentLanguage];
+            const resultsScreen = document.getElementById('resultsScreen');
+            const resultsList = document.getElementById('resultsList');
+            
+            let resultsHTML = `
+                <div class="result-box">
+                    <h4>${t.soilQuality}</h4>
+                    <div class="quality-bar">
+                        <div class="quality-fill" style="width: ${analysis.soilQuality || 0}%"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px; font-weight: bold; color: #667eea;">
+                        ${analysis.soilQuality || 0}%
+                    </div>
+                </div>
+            `;
+
+            if (analysis.suitablePlants && analysis.suitablePlants.length > 0) {
+                resultsHTML += `
+                    <div class="result-box">
+                        <h4>${t.suitablePlants}</h4>
+                        <div class="plants-grid">
+                            ${analysis.suitablePlants.slice(0, 6).map(p => {
+                                const displayName = p.nameAr || p.nameEn || p.name || 'نبات';
+                                return `
+                                <div class="plant-card">
+                                    <div class="emoji">${p.emoji || '🌱'}</div>
+                                    <div class="plant-name-small">${displayName}</div>
+                                    <div class="compatibility">${p.compatibility}% ✓</div>
+                                </div>
+                            `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (analysis.solutions && analysis.solutions.length > 0) {
+                resultsHTML += `
+                    <div class="result-box">
+                        <h4>${t.solutions}</h4>
+                        <ul style="padding-right: 20px;">
+                            ${analysis.solutions.slice(0, 4).map(s => `<li style="margin: 8px 0;">✓ ${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            resultsList.innerHTML = resultsHTML;
+            hideAllScreens();
+            resultsScreen.classList.add('active');
+        }
+
+        // Initialize system
+        document.addEventListener('DOMContentLoaded', function() {
+            createLanguageSelector();
+            updateText();
+            connectToBridge();
+        });
+    </script>
+
+    <!-- WebSocket Connection for Auto Data - Enhanced -->
+    <script>
+        const autoDataReceiver = {
+            ws: null,
+            dataCount: 0,
+            isConnected: false,
+            reconnectAttempts: 0,
+            maxReconnectAttempts: 10,
+            
+            connect: function() {
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const host = window.location.hostname || 'localhost';
+                const port = window.location.port || '3000';
+                const wsUrl = `${protocol}//${host}:${port}`;
+                
+                console.log('🔗 محاولة الاتصال بـ:', wsUrl);
+                console.log('⏱️ محاولة رقم:', this.reconnectAttempts + 1);
+                
+                try {
+                    this.ws = new WebSocket(wsUrl);
+                    
+                    this.ws.onopen = () => {
+                        this.isConnected = true;
+                        this.reconnectAttempts = 0;
+                        console.log('✅ متصل بـ Bridge بنجاح!');
+                        this.updateStatus(true, 'متصل');
+                    };
+                    
+                    this.ws.onmessage = (event) => {
+                        try {
+                            const data = JSON.parse(event.data);
+                            this.dataCount++;
+                            
+                            // طباعة في Console
+                            console.log(`📊 بيانة رقم ${this.dataCount}:`, data);
+                            console.table({
+                                'درجة الحرارة': `${data.TEMP}°C`,
+                                'الرطوبة': `${data.MOISTURE}%`,
+                                'الـ pH': data.PH,
+                                'النيتروجين': data.N,
+                                'الفسفور': data.P,
+                                'البوتاسيوم': data.K,
+                                'الوقت': new Date().toLocaleTimeString('ar-SA')
+                            });
+                            
+                            // تحديث الحقول بالبيانات الجديدة
+                            this.displayData(data);
+                            
+                            // تحديث آخر بيانة في النافذة العامة
+                            window.lastSensorData = data;
+                            
+                            // إذا كان الوضع تلقائي، حدث التحليل تلقائياً
+                            if (window.currentMode === 'auto' && window.analyzeManual) {
+                                setTimeout(() => window.analyzeManual(), 500);
+                            }
+                        } catch (error) {
+                            console.error('❌ خطأ في فك البيانات:', error, 'البيانات الخام:', event.data);
+                        }
+                    };
+                    
+                    this.ws.onerror = (error) => {
+                        console.error('❌ خطأ WebSocket:', error);
+                        this.updateStatus(false, 'خطأ في الاتصال');
+                    };
+                    
+                    this.ws.onclose = () => {
+                        this.isConnected = false;
+                        console.warn('⚠️ تم قطع الاتصال');
+                        this.updateStatus(false, 'غير متصل');
+                        
+                        if (this.reconnectAttempts < this.maxReconnectAttempts) {
+                            const delay = Math.min(3000 + this.reconnectAttempts * 1000, 10000);
+                            console.log(`⏳ إعادة محاولة في ${delay}ms...`);
+                            this.reconnectAttempts++;
+                            setTimeout(() => this.connect(), delay);
+                        } else {
+                            console.error('❌ فشل الاتصال بعد عدة محاولات');
+                            this.updateStatus(false, 'فشل الاتصال');
+                        }
+                    };
+                } catch (error) {
+                    console.error('❌ خطأ في إنشاء WebSocket:', error);
+                    this.updateStatus(false, 'خطأ');
+                }
+            },
+            
+            displayData: function(data) {
+                const fields = {
+                    'tempInput': data.TEMP || data.temperature,
+                    'moistureInput': data.MOISTURE || data.humidity,
+                    'phInput': data.PH || data.ph,
+                    'nInput': data.N || data.nitrogen,
+                    'pInput': data.P || data.phosphorus,
+                    'kInput': data.K || data.potassium
+                };
+                
+                for (const [id, value] of Object.entries(fields)) {
+                    const element = document.getElementById(id);
+                    if (element && value !== undefined) {
+                        const displayValue = typeof value === 'string' ? value : parseFloat(value).toFixed(1);
+                        if (element.value !== displayValue) {
+                            element.value = displayValue;
+                            element.dispatchEvent(new Event('change'));
+                            element.style.backgroundColor = '#e8f5e9';
+                            setTimeout(() => {
+                                element.style.backgroundColor = '';
+                            }, 500);
+                        }
+                    }
+                }
+            },
+            
+            updateStatus: function(connected, message = '') {
+                const statusEl = document.getElementById('bridgeStatus') || 
+                                document.querySelector('[data-status="bridge"]');
+                
+                if (statusEl) {
+                    if (connected) {
+                        statusEl.textContent = '🟢 ' + (message || 'متصل بـ Bridge');
+                        statusEl.style.color = '#4CAF50';
+                        statusEl.style.fontWeight = 'bold';
+                    } else {
+                        statusEl.textContent = '🔴 ' + (message || 'غير متصل');
+                        statusEl.style.color = '#f44336';
+                        statusEl.style.fontWeight = 'bold';
+                    }
+                }
+            }
+        };
+
+        // الاتصال عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 تم تحميل الصفحة - بدء الاتصال بـ Bridge...');
+            autoDataReceiver.connect();
+        });
+        
+        // إعادة اتصال عند إعادة تحميل
+        window.addEventListener('beforeunload', () => {
+            if (autoDataReceiver.ws) {
+                autoDataReceiver.ws.close();
+            }
+        });
+    </script>
+</body>
+</html>

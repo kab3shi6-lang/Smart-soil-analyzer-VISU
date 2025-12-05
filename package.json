@@ -1,0 +1,35 @@
+{
+  "name": "smart-soil-analyzer",
+  "version": "2.0.0",
+  "description": "🌱 نظام محلل التربة الذكي - Smart Soil Analyzer",
+  "main": "bridge.js",
+  "scripts": {
+    "start": "node bridge.js",
+    "dev": "node bridge.js",
+    "test": "echo \"No tests yet\"",
+    "bridge": "node bridge.js",
+    "server": "python -m http.server 8000"
+  },
+  "keywords": [
+    "soil",
+    "analyzer",
+    "agriculture",
+    "bluetooth",
+    "arduino",
+    "smart",
+    "farming"
+  ],
+  "author": "Smart Soil Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
