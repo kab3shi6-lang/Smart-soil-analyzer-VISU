@@ -1,0 +1,471 @@
+<!-- 
+    نسخة محسّنة من advanced-v5.html
+    مع دعم Bluetooth مباشر من المتصفح
+    
+    هذا ملف توضيحي - أضف الأسطر المميزة إلى advanced-v5.html الخاص بك
+-->
+
+<!DOCTYPE html>
+<html dir="auto" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محلل التربة الذكي | Smart Soil Analyzer</title>
+    
+    <!-- ===== الأنماط الأساسية ===== -->
+    <style>
+        /* النمط الأساسي من advanced-v5.html */
+        /* ... (احتفظ بكل شيء كما هو) ... */
+
+        /* ===== إضافة الأنماط الجديدة للـ Bluetooth ===== */
+        
+        #bluetoothPanel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 20px;
+            margin: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #bluetoothStatus {
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 80px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .bluetooth-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .bluetooth-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .bluetooth-btn:active {
+            transform: scale(0.95);
+        }
+
+        .bluetooth-btn.connected {
+            background: #4CAF50;
+            color: white;
+        }
+
+        #bluetoothModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #bluetoothModal.active {
+            display: flex;
+        }
+
+        .bluetooth-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .bluetooth-modal-content h2 {
+            margin-top: 0;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .port-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .port-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .port-item:hover {
+            background: #f0f0f0;
+            border-color: #667eea;
+        }
+
+        .port-item.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal-buttons .connect-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .modal-buttons .cancel-btn {
+            background: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== إضافة لوحة Bluetooth ===== -->
+<div id="bluetoothPanel" style="display: none;">
+    <div style="display: flex; gap: 15px; align-items: center;">
+        <span>🔗 Bluetooth:</span>
+        <span id="bluetoothStatus">🔴 غير متصل</span>
+    </div>
+    <button class="bluetooth-btn" onclick="openBluetoothModal()">
+        🔗 اتصل بـ HC-05
+    </button>
+</div>
+
+<!-- ===== نافذة اختيار المنفذ ===== -->
+<div id="bluetoothModal">
+    <div class="bluetooth-modal-content" dir="auto">
+        <h2>🔗 اتصل بـ Bluetooth</h2>
+        
+        <p style="text-align: center; color: #666;">
+            اختر المنفذ المتصل بـ HC-05:
+        </p>
+        
+        <div class="port-list" id="portList">
+            <div style="text-align: center; color: #999; padding: 20px;">
+                ⏳ جاري البحث عن المنافذ...
+            </div>
+        </div>
+
+        <div style="background: #f0f0f0; padding: 10px; border-radius: 5px; margin: 10px 0; font-size: 12px;">
+            💡 <strong>نصيحة:</strong> إذا لم ترَ المنفذ:
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>تأكد من توصيل USB</li>
+                <li>أعد تشغيل المتصفح</li>
+                <li>استخدم Chrome أو Edge</li>
+            </ul>
+        </div>
+
+        <div class="modal-buttons">
+            <button class="connect-btn" onclick="connectToSelectedPort()">
+                متصل
+            </button>
+            <button class="cancel-btn" onclick="closeBluetoothModal()">
+                إلغاء
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== آخر الموقع كما هو ===== -->
+<!-- باقي محتوى advanced-v5.html بدون تغيير -->
+
+<script>
+    // ===== كود Bluetooth الجديد =====
+    
+    let bluetoothEnabled = false;
+    let selectedPort = null;
+    let serialPort = null;
+    let selectedPortPath = '';
+
+    /**
+     * فتح نافذة اختيار المنفذ
+     */
+    async function openBluetoothModal() {
+        const modal = document.getElementById('bluetoothModal');
+        modal.classList.add('active');
+        
+        // أحصل على المنافذ المتاحة
+        await refreshPortList();
+    }
+
+    /**
+     * أغلق النافذة
+     */
+    function closeBluetoothModal() {
+        document.getElementById('bluetoothModal').classList.remove('active');
+    }
+
+    /**
+     * احصل على قائمة المنافذ
+     */
+    async function refreshPortList() {
+        const portList = document.getElementById('portList');
+        
+        if (!navigator.serial) {
+            portList.innerHTML = `
+                <div style="color: #f44336; text-align: center; padding: 20px;">
+                    ❌ Web Serial API غير مدعومة<br>
+                    استخدم Chrome 89+ أو Edge
+                </div>
+            `;
+            return;
+        }
+
+        try {
+            const ports = await navigator.serial.getPorts();
+            
+            if (ports.length === 0) {
+                portList.innerHTML = `
+                    <div style="color: #ff9800; text-align: center; padding: 20px;">
+                        ⚠️ لا توجد منافذ متصلة<br>
+                        وصّل جهازك وأعد المحاولة
+                    </div>
+                    <button style="width: 100%; padding: 10px; margin-top: 10px;" 
+                            onclick="refreshPortList()">
+                        🔄 تحديث
+                    </button>
+                `;
+                return;
+            }
+
+            // اعرض المنافذ
+            portList.innerHTML = ports.map((port, index) => `
+                <div class="port-item" onclick="selectPort(${index}, this)">
+                    <strong>المنفذ ${index + 1}</strong><br>
+                    <small style="color: #666;">
+                        ${port.getInfo().manufacturer || 'جهاز غير معروف'}
+                    </small>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('خطأ:', error);
+            portList.innerHTML = `
+                <div style="color: #f44336; text-align: center; padding: 20px;">
+                    ❌ خطأ في البحث عن المنافذ
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * اختر منفذ
+     */
+    function selectPort(index, element) {
+        // أزل التحديد السابق
+        document.querySelectorAll('.port-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        // أضف التحديد الجديد
+        element.classList.add('selected');
+        selectedPort = index;
+    }
+
+    /**
+     * اتصل بالمنفذ المختار
+     */
+    async function connectToSelectedPort() {
+        if (selectedPort === null) {
+            alert('اختر منفذاً أولاً');
+            return;
+        }
+
+        try {
+            const ports = await navigator.serial.getPorts();
+            serialPort = ports[selectedPort];
+            
+            await serialPort.open({ baudRate: 9600 });
+            
+            console.log('✅ تم الاتصال');
+            bluetoothEnabled = true;
+            updateBluetoothUI();
+            closeBluetoothModal();
+            startListeningToData();
+        } catch (error) {
+            console.error('❌ فشل الاتصال:', error);
+            alert('فشل الاتصال: ' + error.message);
+        }
+    }
+
+    /**
+     * استمع للبيانات
+     */
+    async function startListeningToData() {
+        const reader = serialPort.readable.getReader();
+        let buffer = '';
+
+        try {
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                const text = new TextDecoder().decode(value);
+                buffer += text;
+
+                // ابحث عن أسطر كاملة
+                while (buffer.includes('\n')) {
+                    const lineEnd = buffer.indexOf('\n');
+                    const line = buffer.substring(0, lineEnd).trim();
+                    buffer = buffer.substring(lineEnd + 1);
+
+                    if (line) {
+                        try {
+                            const data = JSON.parse(line);
+                            handleBluetoothData(data);
+                        } catch (e) {
+                            console.log('بيانات:', line);
+                        }
+                    }
+                }
+            }
+        } finally {
+            reader.releaseLock();
+            bluetoothEnabled = false;
+            updateBluetoothUI();
+        }
+    }
+
+    /**
+     * معالجة البيانات المستقبلة
+     */
+    function handleBluetoothData(data) {
+        console.log('📊 بيانات Bluetooth:', data);
+        
+        // حدّث البيانات العامة
+        lastBridgeData = data;
+        
+        // أرسل إلى WebSocket
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(data));
+        }
+    }
+
+    /**
+     * حدّث واجهة Bluetooth
+     */
+    function updateBluetoothUI() {
+        const panel = document.getElementById('bluetoothPanel');
+        const status = document.getElementById('bluetoothStatus');
+        const btn = document.querySelector('.bluetooth-btn');
+        
+        panel.style.display = 'flex';
+        
+        if (bluetoothEnabled) {
+            status.textContent = '🟢 متصل';
+            status.style.color = '#4CAF50';
+            btn.textContent = '🔌 قطع الاتصال';
+            btn.classList.add('connected');
+            btn.onclick = () => disconnectBluetooth();
+        } else {
+            status.textContent = '🔴 غير متصل';
+            status.style.color = '#f44336';
+            btn.textContent = '🔗 اتصل بـ HC-05';
+            btn.classList.remove('connected');
+            btn.onclick = () => openBluetoothModal();
+        }
+    }
+
+    /**
+     * قطع الاتصال
+     */
+    async function disconnectBluetooth() {
+        try {
+            if (serialPort) {
+                await serialPort.close();
+            }
+            bluetoothEnabled = false;
+            updateBluetoothUI();
+            console.log('✅ تم قطع الاتصال');
+        } catch (error) {
+            console.error('❌ خطأ في قطع الاتصال:', error);
+        }
+    }
+
+    // تهيئة عند التحميل
+    document.addEventListener('DOMContentLoaded', () => {
+        updateBluetoothUI();
+        
+        // تحقق من توفر Web Serial API
+        if (!navigator.serial) {
+            console.warn('⚠️ Web Serial API غير متوفرة');
+        }
+    });
+
+    // ===== انتهاء كود Bluetooth =====
+</script>
+
+<!-- 
+    ===== تعليمات الاستخدام =====
+    
+    1. انسخ كل كود JavaScript أعلاه
+    2. الصقه في advanced-v5.html قبل الـ </body>
+    3. انسخ الـ CSS الجديد وأضفه في <style> الموجود
+    4. احفظ الملف
+    5. افتح في Chrome أو Edge
+    6. اضغط زر "🔗 اتصل بـ HC-05"
+    7. اختر المنفذ من القائمة
+    
+    ===== المتطلبات =====
+    - Chrome 89+ أو Edge
+    - Windows 10/11 أو macOS 11+ أو Linux
+    - USB متصل بـ Arduino/HC-05
+    
+    ===== الفوائد =====
+    ✅ اتصال مباشر من المتصفح
+    ✅ بدون Node.js أو serialport
+    ✅ يعمل في أي نظام
+    ✅ الخصوصية عالية (بيانات محلية)
+-->
+
+</body>
+</html>

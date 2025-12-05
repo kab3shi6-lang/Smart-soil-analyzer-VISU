@@ -5,6 +5,8 @@
   <title data-ar="محلل التربة الذكي" data-en="Smart Soil Analyzer">محلل التربة الذكي</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
 </head>
 <body>
   <header class="app-header">
@@ -79,19 +81,7 @@
       <span class="stat-separator">•</span>
       <span class="stat-item">✨ <span data-ar="احترافي وذكي" data-en="Professional & Smart">احترافي وذكي</span></span>
     </div>
-    <div class="header-bluetooth" id="bluetoothStatus" style="display: none;">
-      <button id="bluetoothBtn" class="bluetooth-btn">
-        <span class="bt-icon">📱</span>
-        <span class="bt-text" data-ar="توصيل بالأردوينو" data-en="Connect Arduino">توصيل بالأردوينو</span>
-      </button>
-    </div>
-    <div class="header-esp01" id="esp01Status">
-      <button id="esp01Btn" class="esp01-btn" title="توصيل بـ ESP-01">
-        <span class="esp-icon">📡</span>
-        <span class="esp-text" data-ar="توصيل WiFi" data-en="Connect WiFi">توصيل WiFi</span>
-      </button>
-      <input type="text" id="esp01Input" class="esp01-input" placeholder="192.168.1.100" style="display: none;" />
-    </div>
+
   </header>
 
   <main class="app-main">
@@ -163,7 +153,44 @@
 
     <!-- شاشة التحديد اليدوي -->
     <section id="manualModeScreen" class="card hidden">
-      <h2 data-ar="التحديد اليدوي - اختر النبات" data-en="Manual Selection - Choose Plant">التحديد اليدوي - اختر النبات</h2>
+      <h2 data-ar="التحديد اليدوي - أدخل بيانات التربة ثم اختر النبات" data-en="Manual Selection - Enter Soil Data Then Choose Plant">التحديد اليدوي - أدخل بيانات التربة ثم اختر النبات</h2>
+      
+      <form id="manualSoilForm">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="manualTemp" data-ar="درجة الحرارة (°C)" data-en="Temperature (°C)">درجة الحرارة (°C)</label>
+            <input type="number" id="manualTemp" step="0.1" required />
+          </div>
+          <div class="form-field">
+            <label for="manualMoisture" data-ar="الرطوبة (%)" data-en="Moisture (%)">الرطوبة (%)</label>
+            <input type="number" id="manualMoisture" step="0.1" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="manualPh" data-ar="درجة الحموضة pH (0–14)" data-en="pH Level (0–14)">درجة الحموضة pH (0–14)</label>
+            <input type="number" id="manualPh" step="0.1" min="0" max="14" required />
+          </div>
+          <div class="form-field">
+            <label for="manualN" data-ar="النيتروجين (N)" data-en="Nitrogen (N)">النيتروجين (N)</label>
+            <input type="number" id="manualN" step="1" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="manualP" data-ar="الفسفور (P)" data-en="Phosphorus (P)">الفسفور (P)</label>
+            <input type="number" id="manualP" step="1" required />
+          </div>
+          <div class="form-field">
+            <label for="manualK" data-ar="البوتاسيوم (K)" data-en="Potassium (K)">البوتاسيوم (K)</label>
+            <input type="number" id="manualK" step="1" required />
+          </div>
+        </div>
+      </form>
+
+      <h3 data-ar="اختر النبات من القائمة" data-en="Choose Plant from List">اختر النبات من القائمة</h3>
       <div id="plantsSelector" class="plants-selector">
         <!-- سيتم ملؤه بقائمة النباتات -->
       </div>
