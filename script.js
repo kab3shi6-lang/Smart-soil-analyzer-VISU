@@ -242,56 +242,56 @@ window.addEventListener("load", () => {
 // قاعدة بيانات شاملة للنباتات مع 2000+ نبات
 let plants = [];
 
-// بيانات النباتات الأساسية
+// بيانات النباتات الأساسية مع ترجمات لـ 10 لغات
 const basePlantsData = [
-  { nameAr: "الطماطم", nameEn: "Tomato", icon: "🍅", category: "vegetables" },
-  { nameAr: "البطاطس", nameEn: "Potato", icon: "🥔", category: "vegetables" },
-  { nameAr: "القمح", nameEn: "Wheat", icon: "🌾", category: "grains" },
-  { nameAr: "الفاصوليا", nameEn: "Beans", icon: "🫘", category: "legumes" },
-  { nameAr: "الجزر", nameEn: "Carrot", icon: "🥕", category: "vegetables" },
-  { nameAr: "الخس", nameEn: "Lettuce", icon: "🥬", category: "vegetables" },
-  { nameAr: "الفلفل الحار", nameEn: "Chili Pepper", icon: "🌶️", category: "vegetables" },
-  { nameAr: "السبانخ", nameEn: "Spinach", icon: "🌿", category: "vegetables" },
-  { nameAr: "البصل", nameEn: "Onion", icon: "🧅", category: "vegetables" },
-  { nameAr: "الخيار", nameEn: "Cucumber", icon: "🥒", category: "vegetables" },
-  { nameAr: "الذرة", nameEn: "Corn", icon: "🌽", category: "grains" },
-  { nameAr: "الفراولة", nameEn: "Strawberry", icon: "🍓", category: "fruits" },
-  { nameAr: "التفاح", nameEn: "Apple", icon: "🍎", category: "fruits" },
-  { nameAr: "البرتقال", nameEn: "Orange", icon: "🍊", category: "fruits" },
-  { nameAr: "الليمون", nameEn: "Lemon", icon: "🍋", category: "fruits" },
-  { nameAr: "الموز", nameEn: "Banana", icon: "🍌", category: "fruits" },
-  { nameAr: "العنب", nameEn: "Grape", icon: "🍇", category: "fruits" },
-  { nameAr: "الشمام", nameEn: "Melon", icon: "🍈", category: "fruits" },
-  { nameAr: "الكيوي", nameEn: "Kiwi", icon: "🥝", category: "fruits" },
-  { nameAr: "الكرنب", nameEn: "Cabbage", icon: "🥬", category: "vegetables" },
-  { nameAr: "البروكلي", nameEn: "Broccoli", icon: "🥦", category: "vegetables" },
-  { nameAr: "الملفوف", nameEn: "Cauliflower", icon: "🌸", category: "vegetables" },
-  { nameAr: "اللفت", nameEn: "Turnip", icon: "🌾", category: "vegetables" },
-  { nameAr: "الجنجل", nameEn: "Parsnip", icon: "🥕", category: "vegetables" },
-  { nameAr: "الفجل", nameEn: "Radish", icon: "🔴", category: "vegetables" },
-  { nameAr: "الثوم", nameEn: "Garlic", icon: "🧄", category: "vegetables" },
-  { nameAr: "الكراث", nameEn: "Leek", icon: "🌱", category: "vegetables" },
-  { nameAr: "البازلاء", nameEn: "Peas", icon: "💚", category: "legumes" },
-  { nameAr: "العدس", nameEn: "Lentils", icon: "🟤", category: "legumes" },
-  { nameAr: "الحمص", nameEn: "Chickpeas", icon: "🟡", category: "legumes" },
-  { nameAr: "الشوفان", nameEn: "Oats", icon: "🌾", category: "grains" },
-  { nameAr: "الشعير", nameEn: "Barley", icon: "🌾", category: "grains" },
-  { nameAr: "الأرز", nameEn: "Rice", icon: "🍚", category: "grains" },
-  { nameAr: "الذرة الحلوة", nameEn: "Sweet Corn", icon: "🌽", category: "vegetables" },
-  { nameAr: "الكوسا", nameEn: "Zucchini", icon: "🟢", category: "vegetables" },
-  { nameAr: "الباذنجان", nameEn: "Eggplant", icon: "🍆", category: "vegetables" },
-  { nameAr: "الفلفل الحلو", nameEn: "Bell Pepper", icon: "🔴", category: "vegetables" },
-  { nameAr: "البندورة الكرزية", nameEn: "Cherry Tomato", icon: "🍅", category: "vegetables" },
-  { nameAr: "الشمر", nameEn: "Fennel", icon: "🌿", category: "vegetables" },
-  { nameAr: "الشبت", nameEn: "Dill", icon: "🌿", category: "herbs" },
-  { nameAr: "البقدونس", nameEn: "Parsley", icon: "🌿", category: "herbs" },
-  { nameAr: "الريحان", nameEn: "Basil", icon: "🌿", category: "herbs" },
-  { nameAr: "الزعتر", nameEn: "Thyme", icon: "🌿", category: "herbs" },
-  { nameAr: "الروزماري", nameEn: "Rosemary", icon: "🌿", category: "herbs" },
-  { nameAr: "النعناع", nameEn: "Mint", icon: "🌿", category: "herbs" },
-  { nameAr: "الزنجبيل", nameEn: "Ginger", icon: "🟤", category: "vegetables" },
-  { nameAr: "الكركم", nameEn: "Turmeric", icon: "🟠", category: "vegetables" },
-  { nameAr: "الفلفل الأسود", nameEn: "Black Pepper", icon: "⚫", category: "spices" },
+  { nameAr: "الطماطم", nameEn: "Tomato", nameFr: "Tomate", nameEs: "Tomate", nameDe: "Tomate", nameTr: "Domates", nameUr: "ٹماٹر", nameHi: "टमाटर", namePt: "Tomate", nameZh: "番茄", icon: "🍅", category: "vegetables" },
+  { nameAr: "البطاطس", nameEn: "Potato", nameFr: "Pomme de terre", nameEs: "Patata", nameDe: "Kartoffel", nameTr: "Patates", nameUr: "آلو", nameHi: "आलू", namePt: "Batata", nameZh: "土豆", icon: "🥔", category: "vegetables" },
+  { nameAr: "القمح", nameEn: "Wheat", nameFr: "Blé", nameEs: "Trigo", nameDe: "Weizen", nameTr: "Buğday", nameUr: "گندم", nameHi: "गेहूं", namePt: "Trigo", nameZh: "小麦", icon: "🌾", category: "grains" },
+  { nameAr: "الفاصوليا", nameEn: "Beans", nameFr: "Haricots", nameEs: "Judías", nameDe: "Bohnen", nameTr: "Fasulye", nameUr: "پھلیاں", nameHi: "सेम", namePt: "Feijão", nameZh: "豆子", icon: "🫘", category: "legumes" },
+  { nameAr: "الجزر", nameEn: "Carrot", nameFr: "Carotte", nameEs: "Zanahoria", nameDe: "Karotte", nameTr: "Havuç", nameUr: "گاجر", nameHi: "गाजर", namePt: "Cenoura", nameZh: "胡萝卜", icon: "🥕", category: "vegetables" },
+  { nameAr: "الخس", nameEn: "Lettuce", nameFr: "Laitue", nameEs: "Lechuga", nameDe: "Salat", nameTr: "Marul", nameUr: "سلاد پتی", nameHi: "सलाद", namePt: "Alface", nameZh: "生菜", icon: "🥬", category: "vegetables" },
+  { nameAr: "الفلفل الحار", nameEn: "Chili Pepper", nameFr: "Piment", nameEs: "Chile", nameDe: "Chilischote", nameTr: "Acı Biber", nameUr: "مرچ", nameHi: "मिर्च", namePt: "Pimenta", nameZh: "辣椒", icon: "🌶️", category: "vegetables" },
+  { nameAr: "السبانخ", nameEn: "Spinach", nameFr: "Épinards", nameEs: "Espinacas", nameDe: "Spinat", nameTr: "Ispanak", nameUr: "پالک", nameHi: "पालक", namePt: "Espinafre", nameZh: "菠菜", icon: "🌿", category: "vegetables" },
+  { nameAr: "البصل", nameEn: "Onion", nameFr: "Oignon", nameEs: "Cebolla", nameDe: "Zwiebel", nameTr: "Soğan", nameUr: "پیاز", nameHi: "प्याज", namePt: "Cebola", nameZh: "洋葱", icon: "🧅", category: "vegetables" },
+  { nameAr: "الخيار", nameEn: "Cucumber", nameFr: "Concombre", nameEs: "Pepino", nameDe: "Gurke", nameTr: "Salatalık", nameUr: "کھیرا", nameHi: "खीरा", namePt: "Pepino", nameZh: "黄瓜", icon: "🥒", category: "vegetables" },
+  { nameAr: "الذرة", nameEn: "Corn", nameFr: "Maïs", nameEs: "Maíz", nameDe: "Mais", nameTr: "Mısır", nameUr: "مکئی", nameHi: "मक्का", namePt: "Milho", nameZh: "玉米", icon: "🌽", category: "grains" },
+  { nameAr: "الفراولة", nameEn: "Strawberry", nameFr: "Fraise", nameEs: "Fresa", nameDe: "Erdbeere", nameTr: "Çilek", nameUr: "سٹرابیری", nameHi: "स्ट्रॉबेरी", namePt: "Morango", nameZh: "草莓", icon: "🍓", category: "fruits" },
+  { nameAr: "التفاح", nameEn: "Apple", nameFr: "Pomme", nameEs: "Manzana", nameDe: "Apfel", nameTr: "Elma", nameUr: "سیب", nameHi: "सेब", namePt: "Maçã", nameZh: "苹果", icon: "🍎", category: "fruits" },
+  { nameAr: "البرتقال", nameEn: "Orange", nameFr: "Orange", nameEs: "Naranja", nameDe: "Orange", nameTr: "Portakal", nameUr: "مالٹا", nameHi: "संतरा", namePt: "Laranja", nameZh: "橙子", icon: "🍊", category: "fruits" },
+  { nameAr: "الليمون", nameEn: "Lemon", nameFr: "Citron", nameEs: "Limón", nameDe: "Zitrone", nameTr: "Limon", nameUr: "لیموں", nameHi: "नींबू", namePt: "Limão", nameZh: "柠檬", icon: "🍋", category: "fruits" },
+  { nameAr: "الموز", nameEn: "Banana", nameFr: "Banane", nameEs: "Plátano", nameDe: "Banane", nameTr: "Muz", nameUr: "کیلا", nameHi: "केला", namePt: "Banana", nameZh: "香蕉", icon: "🍌", category: "fruits" },
+  { nameAr: "العنب", nameEn: "Grape", nameFr: "Raisin", nameEs: "Uva", nameDe: "Traube", nameTr: "Üzüm", nameUr: "انگور", nameHi: "अंगूर", namePt: "Uva", nameZh: "葡萄", icon: "🍇", category: "fruits" },
+  { nameAr: "الشمام", nameEn: "Melon", nameFr: "Melon", nameEs: "Melón", nameDe: "Melone", nameTr: "Kavun", nameUr: "خربوزہ", nameHi: "खरबूजा", namePt: "Melão", nameZh: "甜瓜", icon: "🍈", category: "fruits" },
+  { nameAr: "الكيوي", nameEn: "Kiwi", nameFr: "Kiwi", nameEs: "Kiwi", nameDe: "Kiwi", nameTr: "Kivi", nameUr: "کیوی", nameHi: "कीवी", namePt: "Kiwi", nameZh: "猕猴桃", icon: "🥝", category: "fruits" },
+  { nameAr: "الكرنب", nameEn: "Cabbage", nameFr: "Chou", nameEs: "Repollo", nameDe: "Kohl", nameTr: "Lahana", nameUr: "بند گوبھی", nameHi: "पत्ता गोभी", namePt: "Repolho", nameZh: "卷心菜", icon: "🥬", category: "vegetables" },
+  { nameAr: "البروكلي", nameEn: "Broccoli", nameFr: "Brocoli", nameEs: "Brócoli", nameDe: "Brokkoli", nameTr: "Brokoli", nameUr: "بروکولی", nameHi: "ब्रोकोली", namePt: "Brócolis", nameZh: "西兰花", icon: "🥦", category: "vegetables" },
+  { nameAr: "الملفوف", nameEn: "Cauliflower", nameFr: "Chou-fleur", nameEs: "Coliflor", nameDe: "Blumenkohl", nameTr: "Karnabahar", nameUr: "پھول گوبھی", nameHi: "फूलगोभी", namePt: "Couve-flor", nameZh: "花椰菜", icon: "🌸", category: "vegetables" },
+  { nameAr: "اللفت", nameEn: "Turnip", nameFr: "Navet", nameEs: "Nabo", nameDe: "Rübe", nameTr: "Şalgam", nameUr: "شلجم", nameHi: "शलगम", namePt: "Nabo", nameZh: "萝卜", icon: "🌾", category: "vegetables" },
+  { nameAr: "الجنجل", nameEn: "Parsnip", nameFr: "Panais", nameEs: "Chirivía", nameDe: "Pastinake", nameTr: "Yabani havuç", nameUr: "شقاقل", nameHi: "शकरकंद", namePt: "Pastinaga", nameZh: "欧防风", icon: "🥕", category: "vegetables" },
+  { nameAr: "الفجل", nameEn: "Radish", nameFr: "Radis", nameEs: "Rábano", nameDe: "Rettich", nameTr: "Turp", nameUr: "مولی", nameHi: "मूली", namePt: "Rabanete", nameZh: "萝卜", icon: "🔴", category: "vegetables" },
+  { nameAr: "الثوم", nameEn: "Garlic", nameFr: "Ail", nameEs: "Ajo", nameDe: "Knoblauch", nameTr: "Sarımsak", nameUr: "لہسن", nameHi: "लहसुन", namePt: "Alho", nameZh: "大蒜", icon: "🧄", category: "vegetables" },
+  { nameAr: "الكراث", nameEn: "Leek", nameFr: "Poireau", nameEs: "Puerro", nameDe: "Lauch", nameTr: "Pırasa", nameUr: "لیک", nameHi: "लीक", namePt: "Alho-poró", nameZh: "韭葱", icon: "🌱", category: "vegetables" },
+  { nameAr: "البازلاء", nameEn: "Peas", nameFr: "Petits pois", nameEs: "Guisantes", nameDe: "Erbsen", nameTr: "Bezelye", nameUr: "مٹر", nameHi: "मटर", namePt: "Ervilhas", nameZh: "豌豆", icon: "💚", category: "legumes" },
+  { nameAr: "العدس", nameEn: "Lentils", nameFr: "Lentilles", nameEs: "Lentejas", nameDe: "Linsen", nameTr: "Mercimek", nameUr: "دال", nameHi: "दाल", namePt: "Lentilhas", nameZh: "扁豆", icon: "🟤", category: "legumes" },
+  { nameAr: "الحمص", nameEn: "Chickpeas", nameFr: "Pois chiches", nameEs: "Garbanzos", nameDe: "Kichererbsen", nameTr: "Nohut", nameUr: "چنے", nameHi: "छोले", namePt: "Grão-de-bico", nameZh: "鹰嘴豆", icon: "🟡", category: "legumes" },
+  { nameAr: "الشوفان", nameEn: "Oats", nameFr: "Avoine", nameEs: "Avena", nameDe: "Hafer", nameTr: "Yulaf", nameUr: "جئی", nameHi: "जई", namePt: "Aveia", nameZh: "燕麦", icon: "🌾", category: "grains" },
+  { nameAr: "الشعير", nameEn: "Barley", nameFr: "Orge", nameEs: "Cebada", nameDe: "Gerste", nameTr: "Arpa", nameUr: "جو", nameHi: "जौ", namePt: "Cevada", nameZh: "大麦", icon: "🌾", category: "grains" },
+  { nameAr: "الأرز", nameEn: "Rice", nameFr: "Riz", nameEs: "Arroz", nameDe: "Reis", nameTr: "Pirinç", nameUr: "چاول", nameHi: "चावल", namePt: "Arroz", nameZh: "大米", icon: "🍚", category: "grains" },
+  { nameAr: "الذرة الحلوة", nameEn: "Sweet Corn", nameFr: "Maïs doux", nameEs: "Maíz dulce", nameDe: "Süßmais", nameTr: "Tatlı mısır", nameUr: "میٹھی مکئی", nameHi: "मीठी मक्का", namePt: "Milho doce", nameZh: "甜玉米", icon: "🌽", category: "vegetables" },
+  { nameAr: "الكوسا", nameEn: "Zucchini", nameFr: "Courgette", nameEs: "Calabacín", nameDe: "Zucchini", nameTr: "Kabak", nameUr: "کدو", nameHi: "तुरई", namePt: "Abobrinha", nameZh: "西葫芦", icon: "🟢", category: "vegetables" },
+  { nameAr: "الباذنجان", nameEn: "Eggplant", nameFr: "Aubergine", nameEs: "Berenjena", nameDe: "Aubergine", nameTr: "Patlıcan", nameUr: "بینگن", nameHi: "बैंगन", namePt: "Berinjela", nameZh: "茄子", icon: "🍆", category: "vegetables" },
+  { nameAr: "الفلفل الحلو", nameEn: "Bell Pepper", nameFr: "Poivron", nameEs: "Pimiento", nameDe: "Paprika", nameTr: "Dolma biber", nameUr: "شملہ مرچ", nameHi: "शिमला मिर्च", namePt: "Pimentão", nameZh: "甜椒", icon: "🔴", category: "vegetables" },
+  { nameAr: "البندورة الكرزية", nameEn: "Cherry Tomato", nameFr: "Tomate cerise", nameEs: "Tomate cherry", nameDe: "Kirschtomate", nameTr: "Kiraz domates", nameUr: "چیری ٹماٹر", nameHi: "चेरी टमाटर", namePt: "Tomate cereja", nameZh: "樱桃番茄", icon: "🍅", category: "vegetables" },
+  { nameAr: "الشمر", nameEn: "Fennel", nameFr: "Fenouil", nameEs: "Hinojo", nameDe: "Fenchel", nameTr: "Rezene", nameUr: "سونف", nameHi: "सौंफ", namePt: "Funcho", nameZh: "茴香", icon: "🌿", category: "vegetables" },
+  { nameAr: "الشبت", nameEn: "Dill", nameFr: "Aneth", nameEs: "Eneldo", nameDe: "Dill", nameTr: "Dereotu", nameUr: "سویا", nameHi: "सोया", namePt: "Endro", nameZh: "莳萝", icon: "🌿", category: "herbs" },
+  { nameAr: "البقدونس", nameEn: "Parsley", nameFr: "Persil", nameEs: "Perejil", nameDe: "Petersilie", nameTr: "Maydanoz", nameUr: "اجمود", nameHi: "अजमोद", namePt: "Salsa", nameZh: "欧芹", icon: "🌿", category: "herbs" },
+  { nameAr: "الريحان", nameEn: "Basil", nameFr: "Basilic", nameEs: "Albahaca", nameDe: "Basilikum", nameTr: "Fesleğen", nameUr: "تلسی", nameHi: "तुलसी", namePt: "Manjericão", nameZh: "罗勒", icon: "🌿", category: "herbs" },
+  { nameAr: "الزعتر", nameEn: "Thyme", nameFr: "Thym", nameEs: "Tomillo", nameDe: "Thymian", nameTr: "Kekik", nameUr: "آجوائن", nameHi: "अजवायन", namePt: "Tomilho", nameZh: "百里香", icon: "🌿", category: "herbs" },
+  { nameAr: "الروزماري", nameEn: "Rosemary", nameFr: "Romarin", nameEs: "Romero", nameDe: "Rosmarin", nameTr: "Biberiye", nameUr: "روزمیری", nameHi: "रोजमैरी", namePt: "Alecrim", nameZh: "迷迭香", icon: "🌿", category: "herbs" },
+  { nameAr: "النعناع", nameEn: "Mint", nameFr: "Menthe", nameEs: "Menta", nameDe: "Minze", nameTr: "Nane", nameUr: "پودینہ", nameHi: "पुदीना", namePt: "Hortelã", nameZh: "薄荷", icon: "🌿", category: "herbs" },
+  { nameAr: "الزنجبيل", nameEn: "Ginger", nameFr: "Gingembre", nameEs: "Jengibre", nameDe: "Ingwer", nameTr: "Zencefil", nameUr: "ادرک", nameHi: "अदरक", namePt: "Gengibre", nameZh: "生姜", icon: "🟤", category: "vegetables" },
+  { nameAr: "الكركم", nameEn: "Turmeric", nameFr: "Curcuma", nameEs: "Cúrcuma", nameDe: "Kurkuma", nameTr: "Zerdeçal", nameUr: "ہلدی", nameHi: "हल्दी", namePt: "Cúrcuma", nameZh: "姜黄", icon: "🟠", category: "vegetables" },
+  { nameAr: "الفلفل الأسود", nameEn: "Black Pepper", nameFr: "Poivre noir", nameEs: "Pimienta negra", nameDe: "Schwarzer Pfeffer", nameTr: "Karabiber", nameUr: "کالی مرچ", nameHi: "काली मिर्च", namePt: "Pimenta preta", nameZh: "黑胡椒", icon: "⚫", category: "spices" },
 ];
 
 // دالة لإنشاء 2000+ نبات ديناميكياً بدون تكرار
@@ -300,33 +300,33 @@ function generateLargePlantsDatabase() {
   const icons = ["🍅", "🥔", "🌾", "🫘", "🥕", "🥬", "🌶️", "🌿", "🧅", "🥒", "🌽", "🍓", "🍎", "🍊", "🍋", "🍌", "🍇"];
   let id = 1;
   
-  // إضافة النباتات الأساسية أولاً
+  // إضافة النباتات الأساسية أولاً - مع جميع الترجمات
   basePlantsData.forEach((base, index) => {
-    plants.push(createPlantObject(id++, base.nameAr, base.nameEn, base.icon, base.category));
+    plants.push(createPlantObjectMultilingual(id++, base, null));
   });
   
-  // إضافة نباتات مشتقة بإضافة أصناف مختلفة (بدون تكرار)
+  // إضافة نباتات مشتقة بإضافة أصناف مختلفة (بدون تكرار) - مع ترجمات لـ 10 لغات
   const varieties = [
-    { arSuffix: " (صنف محسّن)", enSuffix: " (Improved Variety)" },
-    { arSuffix: " (عضوي)", enSuffix: " (Organic)" },
-    { arSuffix: " (هجين)", enSuffix: " (Hybrid)" },
-    { arSuffix: " (مبكر النضج)", enSuffix: " (Early Maturity)" },
-    { arSuffix: " (متأخر النضج)", enSuffix: " (Late Maturity)" },
-    { arSuffix: " (قزم)", enSuffix: " (Dwarf)" },
-    { arSuffix: " (طويل الساق)", enSuffix: " (Tall)" },
-    { arSuffix: " (مقاوم للجفاف)", enSuffix: " (Drought Resistant)" },
-    { arSuffix: " (مقاوم للأمراض)", enSuffix: " (Disease Resistant)" },
-    { arSuffix: " (محسّن الجودة)", enSuffix: " (Quality Enhanced)" },
-    { arSuffix: " (عالي الإنتاج)", enSuffix: " (High Yield)" },
-    { arSuffix: " (محسّن النكهة)", enSuffix: " (Flavor Enhanced)" },
-    { arSuffix: " (مبكر جداً)", enSuffix: " (Very Early)" },
-    { arSuffix: " (متوسط المدة)", enSuffix: " (Mid Season)" },
-    { arSuffix: " (محسّن اللون)", enSuffix: " (Color Enhanced)" },
-    { arSuffix: " (مقاوم للحشرات)", enSuffix: " (Pest Resistant)" },
-    { arSuffix: " (صنف ممتاز)", enSuffix: " (Premium)" },
-    { arSuffix: " (مقاوم للبرودة)", enSuffix: " (Cold Resistant)" },
-    { arSuffix: " (مقاوم للحرارة)", enSuffix: " (Heat Tolerant)" },
-    { arSuffix: " (صنف استوائي)", enSuffix: " (Tropical)" },
+    { ar: " (صنف محسّن)", en: " (Improved Variety)", fr: " (Variété améliorée)", es: " (Variedad mejorada)", de: " (Verbesserte Sorte)", tr: " (Geliştirilmiş Çeşit)", ur: " (بہتر قسم)", hi: " (उन्नत किस्म)", pt: " (Variedade melhorada)", zh: " (改良品种)" },
+    { ar: " (عضوي)", en: " (Organic)", fr: " (Bio)", es: " (Orgánico)", de: " (Bio)", tr: " (Organik)", ur: " (نامیاتی)", hi: " (जैविक)", pt: " (Orgânico)", zh: " (有机)" },
+    { ar: " (هجين)", en: " (Hybrid)", fr: " (Hybride)", es: " (Híbrido)", de: " (Hybrid)", tr: " (Hibrit)", ur: " (ہائبرڈ)", hi: " (संकर)", pt: " (Híbrido)", zh: " (杂交)" },
+    { ar: " (مبكر النضج)", en: " (Early Maturity)", fr: " (Maturité précoce)", es: " (Madurez temprana)", de: " (Frühe Reife)", tr: " (Erken Olgunluk)", ur: " (جلد پکنے والا)", hi: " (जल्दी पकने वाला)", pt: " (Maturação precoce)", zh: " (早熟)" },
+    { ar: " (متأخر النضج)", en: " (Late Maturity)", fr: " (Maturité tardive)", es: " (Madurez tardía)", de: " (Späte Reife)", tr: " (Geç Olgunluk)", ur: " (دیر سے پکنے والا)", hi: " (देर से पकने वाला)", pt: " (Maturação tardia)", zh: " (晚熟)" },
+    { ar: " (قزم)", en: " (Dwarf)", fr: " (Nain)", es: " (Enano)", de: " (Zwerg)", tr: " (Cüce)", ur: " (بونا)", hi: " (बौना)", pt: " (Anão)", zh: " (矮生)" },
+    { ar: " (طويل الساق)", en: " (Tall)", fr: " (Grand)", es: " (Alto)", de: " (Groß)", tr: " (Uzun)", ur: " (لمبا)", hi: " (लंबा)", pt: " (Alto)", zh: " (高杆)" },
+    { ar: " (مقاوم للجفاف)", en: " (Drought Resistant)", fr: " (Résistant à la sécheresse)", es: " (Resistente a la sequía)", de: " (Trockenheitsresistent)", tr: " (Kuraklığa Dayanıklı)", ur: " (خشک سالی مزاحم)", hi: " (सूखा प्रतिरोधी)", pt: " (Resistente à seca)", zh: " (抗旱)" },
+    { ar: " (مقاوم للأمراض)", en: " (Disease Resistant)", fr: " (Résistant aux maladies)", es: " (Resistente a enfermedades)", de: " (Krankheitsresistent)", tr: " (Hastalığa Dayanıklı)", ur: " (بیماری مزاحم)", hi: " (रोग प्रतिरोधी)", pt: " (Resistente a doenças)", zh: " (抗病)" },
+    { ar: " (محسّن الجودة)", en: " (Quality Enhanced)", fr: " (Qualité améliorée)", es: " (Calidad mejorada)", de: " (Qualitätsverbessert)", tr: " (Kalite Artırılmış)", ur: " (معیار میں بہتری)", hi: " (गुणवत्ता में सुधार)", pt: " (Qualidade aprimorada)", zh: " (品质改良)" },
+    { ar: " (عالي الإنتاج)", en: " (High Yield)", fr: " (Rendement élevé)", es: " (Alto rendimiento)", de: " (Hoher Ertrag)", tr: " (Yüksek Verimli)", ur: " (زیادہ پیداوار)", hi: " (उच्च उपज)", pt: " (Alto rendimento)", zh: " (高产)" },
+    { ar: " (محسّن النكهة)", en: " (Flavor Enhanced)", fr: " (Saveur améliorée)", es: " (Sabor mejorado)", de: " (Geschmackverbessert)", tr: " (Lezzet Artırılmış)", ur: " (ذائقہ بہتر)", hi: " (स्वाद में सुधार)", pt: " (Sabor aprimorado)", zh: " (风味改良)" },
+    { ar: " (مبكر جداً)", en: " (Very Early)", fr: " (Très précoce)", es: " (Muy temprano)", de: " (Sehr früh)", tr: " (Çok Erken)", ur: " (بہت جلد)", hi: " (बहुत जल्दी)", pt: " (Muito precoce)", zh: " (特早)" },
+    { ar: " (متوسط المدة)", en: " (Mid Season)", fr: " (Mi-saison)", es: " (Media temporada)", de: " (Mitte Saison)", tr: " (Orta Sezon)", ur: " (درمیانی موسم)", hi: " (मध्य मौसम)", pt: " (Meia estação)", zh: " (中季)" },
+    { ar: " (محسّن اللون)", en: " (Color Enhanced)", fr: " (Couleur améliorée)", es: " (Color mejorado)", de: " (Farbverbessert)", tr: " (Renk Artırılmış)", ur: " (رنگ بہتر)", hi: " (रंग में सुधार)", pt: " (Cor aprimorada)", zh: " (色泽改良)" },
+    { ar: " (مقاوم للحشرات)", en: " (Pest Resistant)", fr: " (Résistant aux insectes)", es: " (Resistente a plagas)", de: " (Schädlingsresistent)", tr: " (Zararlılara Dayanıklı)", ur: " (کیڑوں مزاحم)", hi: " (कीट प्रतिरोधी)", pt: " (Resistente a pragas)", zh: " (抗虫)" },
+    { ar: " (صنف ممتاز)", en: " (Premium)", fr: " (Premium)", es: " (Premium)", de: " (Premium)", tr: " (Premium)", ur: " (پریمیم)", hi: " (प्रीमियम)", pt: " (Premium)", zh: " (优质)" },
+    { ar: " (مقاوم للبرودة)", en: " (Cold Resistant)", fr: " (Résistant au froid)", es: " (Resistente al frío)", de: " (Kälteresistent)", tr: " (Soğuğa Dayanıklı)", ur: " (سردی مزاحم)", hi: " (ठंड प्रतिरोधी)", pt: " (Resistente ao frio)", zh: " (耐寒)" },
+    { ar: " (مقاوم للحرارة)", en: " (Heat Tolerant)", fr: " (Tolérant à la chaleur)", es: " (Tolerante al calor)", de: " (Hitzetolerant)", tr: " (Sıcağa Dayanıklı)", ur: " (گرمی مزاحم)", hi: " (गर्मी सहनशील)", pt: " (Tolerante ao calor)", zh: " (耐热)" },
+    { ar: " (صنف استوائي)", en: " (Tropical)", fr: " (Tropical)", es: " (Tropical)", de: " (Tropisch)", tr: " (Tropikal)", ur: " (اشنکٹبندیی)", hi: " (उष्णकटिबंधीय)", pt: " (Tropical)", zh: " (热带)" },
   ];
   
   // توليد 2000+ نبات بدون تكرار
@@ -337,153 +337,101 @@ function generateLargePlantsDatabase() {
     varieties.forEach((variety) => {
       if (plants.length >= TARGET_PLANT_COUNT) return;
       
-      const combination = `${base.nameAr}|${variety.arSuffix}`;
+      const combination = `${base.nameAr}|${variety.ar}`;
       if (!usedCombinations.has(combination)) {
         usedCombinations.add(combination);
         
-        const nameAr = base.nameAr + variety.arSuffix;
-        const nameEn = base.nameEn + variety.enSuffix;
-        const icon = base.icon; // استخدم الأيقونة الأصلية
-        
-        plants.push(createPlantObject(id++, nameAr, nameEn, icon, base.category));
+        const plantObj = createPlantObjectMultilingual(id++, base, variety);
+        plants.push(plantObj);
       }
     });
   });
   
-  // استراتيجية 2: إضافة نباتات إضافية حقيقية إذا لزم الأمر
+  // استراتيجية 2: إضافة نباتات إضافية حقيقية إذا لزم الأمر - مع جميع الترجمات
   const additionalPlants = [
     // الخضروات
-    { nameAr: "اليقطين", nameEn: "Pumpkin", icon: "🎃", category: "vegetables" },
-    { nameAr: "القرع", nameEn: "Squash", icon: "🟨", category: "vegetables" },
-    { nameAr: "الفلفل البوابيا", nameEn: "Bell Pepper", icon: "🫑", category: "vegetables" },
-    { nameAr: "القرنبيط", nameEn: "Cauliflower", icon: "🥬", category: "vegetables" },
-    { nameAr: "البطاطا الحلوة", nameEn: "Sweet Potato", icon: "🍠", category: "vegetables" },
-    { nameAr: "الفجل الأبيض", nameEn: "White Radish", icon: "⚪", category: "vegetables" },
-    { nameAr: "الكرفس", nameEn: "Celery", icon: "🥬", category: "vegetables" },
-    { nameAr: "الخرشوف", nameEn: "Artichoke", icon: "🌿", category: "vegetables" },
-    { nameAr: "الهليون", nameEn: "Asparagus", icon: "🌱", category: "vegetables" },
-    { nameAr: "الراوند", nameEn: "Rhubarb", icon: "🌿", category: "vegetables" },
-    { nameAr: "البامية", nameEn: "Okra", icon: "🟢", category: "vegetables" },
-    { nameAr: "الخردل", nameEn: "Mustard Greens", icon: "🥬", category: "vegetables" },
-    { nameAr: "السلق", nameEn: "Swiss Chard", icon: "🥬", category: "vegetables" },
-    { nameAr: "اللوبيا", nameEn: "Cowpea", icon: "🟤", category: "vegetables" },
+    { nameAr: "اليقطين", nameEn: "Pumpkin", nameFr: "Citrouille", nameEs: "Calabaza", nameDe: "Kürbis", nameTr: "Balkabağı", nameUr: "کدو", nameHi: "कद्दू", namePt: "Abóbora", nameZh: "南瓜", icon: "🎃", category: "vegetables" },
+    { nameAr: "القرع", nameEn: "Squash", nameFr: "Courge", nameEs: "Calabacín", nameDe: "Kürbis", nameTr: "Kabak", nameUr: "کدو", nameHi: "पेठा", namePt: "Abóbora", nameZh: "南瓜", icon: "🟨", category: "vegetables" },
+    { nameAr: "البطاطا الحلوة", nameEn: "Sweet Potato", nameFr: "Patate douce", nameEs: "Batata", nameDe: "Süßkartoffel", nameTr: "Tatlı patates", nameUr: "شکرقندی", nameHi: "शकरकंद", namePt: "Batata-doce", nameZh: "红薯", icon: "🍠", category: "vegetables" },
+    { nameAr: "الكرفس", nameEn: "Celery", nameFr: "Céleri", nameEs: "Apio", nameDe: "Sellerie", nameTr: "Kereviz", nameUr: "اجوائن", nameHi: "अजवाइन", namePt: "Aipo", nameZh: "芹菜", icon: "🥬", category: "vegetables" },
+    { nameAr: "الخرشوف", nameEn: "Artichoke", nameFr: "Artichaut", nameEs: "Alcachofa", nameDe: "Artischocke", nameTr: "Enginar", nameUr: "ہاتھی چک", nameHi: "आटिचोक", namePt: "Alcachofra", nameZh: "洋蓟", icon: "🌿", category: "vegetables" },
+    { nameAr: "الهليون", nameEn: "Asparagus", nameFr: "Asperge", nameEs: "Espárrago", nameDe: "Spargel", nameTr: "Kuşkonmaz", nameUr: "اسپیراگس", nameHi: "शतावरी", namePt: "Aspargo", nameZh: "芦笋", icon: "🌱", category: "vegetables" },
+    { nameAr: "البامية", nameEn: "Okra", nameFr: "Gombo", nameEs: "Okra", nameDe: "Okra", nameTr: "Bamya", nameUr: "بھنڈی", nameHi: "भिंडी", namePt: "Quiabo", nameZh: "秋葵", icon: "🟢", category: "vegetables" },
+    { nameAr: "السلق", nameEn: "Swiss Chard", nameFr: "Blette", nameEs: "Acelga", nameDe: "Mangold", nameTr: "Pazı", nameUr: "چکندر کا ساگ", nameHi: "चुकंदर का साग", namePt: "Acelga", nameZh: "瑞士甜菜", icon: "🥬", category: "vegetables" },
     
     // الفواكه
-    { nameAr: "التمر", nameEn: "Date", icon: "🔗", category: "fruits" },
-    { nameAr: "التوت", nameEn: "Mulberry", icon: "🫐", category: "fruits" },
-    { nameAr: "الرمان", nameEn: "Pomegranate", icon: "🥭", category: "fruits" },
-    { nameAr: "الجوافة", nameEn: "Guava", icon: "🥝", category: "fruits" },
-    { nameAr: "جوز الهند", nameEn: "Coconut", icon: "🥥", category: "fruits" },
-    { nameAr: "الأفوكادو", nameEn: "Avocado", icon: "🥑", category: "fruits" },
-    { nameAr: "الكرز", nameEn: "Cherry", icon: "🍒", category: "fruits" },
-    { nameAr: "الخوخ", nameEn: "Peach", icon: "🍑", category: "fruits" },
-    { nameAr: "المشمش", nameEn: "Apricot", icon: "🍑", category: "fruits" },
-    { nameAr: "البرقوق", nameEn: "Plum", icon: "🫐", category: "fruits" },
-    { nameAr: "الكمثرى", nameEn: "Pear", icon: "🍐", category: "fruits" },
-    { nameAr: "التين", nameEn: "Fig", icon: "🟣", category: "fruits" },
-    { nameAr: "الباباي", nameEn: "Papaya", icon: "🥭", category: "fruits" },
-    { nameAr: "الليتشي", nameEn: "Lychee", icon: "🔴", category: "fruits" },
-    { nameAr: "الباشن فروت", nameEn: "Passion Fruit", icon: "🟡", category: "fruits" },
-    { nameAr: "التوت البري", nameEn: "Blueberry", icon: "🫐", category: "fruits" },
-    { nameAr: "توت العليق", nameEn: "Raspberry", icon: "🔴", category: "fruits" },
-    { nameAr: "التوت الأسود", nameEn: "Blackberry", icon: "⚫", category: "fruits" },
+    { nameAr: "التمر", nameEn: "Date", nameFr: "Datte", nameEs: "Dátil", nameDe: "Dattel", nameTr: "Hurma", nameUr: "کھجور", nameHi: "खजूर", namePt: "Tâmara", nameZh: "枣", icon: "🔗", category: "fruits" },
+    { nameAr: "الرمان", nameEn: "Pomegranate", nameFr: "Grenade", nameEs: "Granada", nameDe: "Granatapfel", nameTr: "Nar", nameUr: "انار", nameHi: "अनार", namePt: "Romã", nameZh: "石榴", icon: "🥭", category: "fruits" },
+    { nameAr: "الجوافة", nameEn: "Guava", nameFr: "Goyave", nameEs: "Guayaba", nameDe: "Guave", nameTr: "Guava", nameUr: "امرود", nameHi: "अमरूद", namePt: "Goiaba", nameZh: "番石榴", icon: "🥝", category: "fruits" },
+    { nameAr: "الأفوكادو", nameEn: "Avocado", nameFr: "Avocat", nameEs: "Aguacate", nameDe: "Avocado", nameTr: "Avokado", nameUr: "ایوکاڈو", nameHi: "एवोकाडो", namePt: "Abacate", nameZh: "牛油果", icon: "🥑", category: "fruits" },
+    { nameAr: "الكرز", nameEn: "Cherry", nameFr: "Cerise", nameEs: "Cereza", nameDe: "Kirsche", nameTr: "Kiraz", nameUr: "چیری", nameHi: "चेरी", namePt: "Cereja", nameZh: "樱桃", icon: "🍒", category: "fruits" },
+    { nameAr: "الخوخ", nameEn: "Peach", nameFr: "Pêche", nameEs: "Melocotón", nameDe: "Pfirsich", nameTr: "Şeftali", nameUr: "آڑو", nameHi: "आड़ू", namePt: "Pêssego", nameZh: "桃子", icon: "🍑", category: "fruits" },
+    { nameAr: "المشمش", nameEn: "Apricot", nameFr: "Abricot", nameEs: "Albaricoque", nameDe: "Aprikose", nameTr: "Kayısı", nameUr: "خوبانی", nameHi: "खुबानी", namePt: "Damasco", nameZh: "杏", icon: "🍑", category: "fruits" },
+    { nameAr: "الكمثرى", nameEn: "Pear", nameFr: "Poire", nameEs: "Pera", nameDe: "Birne", nameTr: "Armut", nameUr: "ناشپاتی", nameHi: "नाशपाती", namePt: "Pêra", nameZh: "梨", icon: "🍐", category: "fruits" },
+    { nameAr: "التين", nameEn: "Fig", nameFr: "Figue", nameEs: "Higo", nameDe: "Feige", nameTr: "İncir", nameUr: "انجیر", nameHi: "अंजीर", namePt: "Figo", nameZh: "无花果", icon: "🟣", category: "fruits" },
     
     // الحبوب
-    { nameAr: "الرز البري", nameEn: "Wild Rice", icon: "🍚", category: "grains" },
-    { nameAr: "القمح الأسمر", nameEn: "Buckwheat", icon: "🌾", category: "grains" },
-    { nameAr: "الشعير الأسود", nameEn: "Black Barley", icon: "🌾", category: "grains" },
-    { nameAr: "الذرة السوداء", nameEn: "Black Corn", icon: "🌽", category: "grains" },
-    { nameAr: "الأرز البني", nameEn: "Brown Rice", icon: "🍚", category: "grains" },
-    { nameAr: "الشوفان البري", nameEn: "Wild Oats", icon: "🌾", category: "grains" },
-    { nameAr: "الكينوا", nameEn: "Quinoa", icon: "🌾", category: "grains" },
-    { nameAr: "الأمارانث", nameEn: "Amaranth", icon: "🌾", category: "grains" },
-    { nameAr: "الحنطة السوداء", nameEn: "Bulgur", icon: "🌾", category: "grains" },
-    { nameAr: "الفريك", nameEn: "Freekeh", icon: "🌾", category: "grains" },
+    { nameAr: "الكينوا", nameEn: "Quinoa", nameFr: "Quinoa", nameEs: "Quinoa", nameDe: "Quinoa", nameTr: "Kinoa", nameUr: "کوینوا", nameHi: "क्विनोआ", namePt: "Quinoa", nameZh: "藜麦", icon: "🌾", category: "grains" },
+    { nameAr: "الأرز البني", nameEn: "Brown Rice", nameFr: "Riz brun", nameEs: "Arroz integral", nameDe: "Brauner Reis", nameTr: "Esmer pirinç", nameUr: "بھورے چاول", nameHi: "ब्राउन राइस", namePt: "Arroz integral", nameZh: "糙米", icon: "🍚", category: "grains" },
     
     // البقوليات
-    { nameAr: "العدس الأحمر", nameEn: "Red Lentils", icon: "🟤", category: "legumes" },
-    { nameAr: "العدس الأسود", nameEn: "Black Lentils", icon: "⚫", category: "legumes" },
-    { nameAr: "الفول السوداني", nameEn: "Peanut", icon: "🥜", category: "legumes" },
-    { nameAr: "الحمص الأسود", nameEn: "Black Chickpea", icon: "🟤", category: "legumes" },
-    { nameAr: "الفول المدمس", nameEn: "Fava Beans", icon: "🫘", category: "legumes" },
-    { nameAr: "الترمس", nameEn: "Lupini Beans", icon: "🟡", category: "legumes" },
-    { nameAr: "الفاصوليا السوداء", nameEn: "Black Beans", icon: "⚫", category: "legumes" },
-    { nameAr: "الفاصوليا البيضاء", nameEn: "White Beans", icon: "⚪", category: "legumes" },
-    { nameAr: "الفاصوليا الحمراء", nameEn: "Red Kidney Beans", icon: "🔴", category: "legumes" },
+    { nameAr: "العدس الأحمر", nameEn: "Red Lentils", nameFr: "Lentilles rouges", nameEs: "Lentejas rojas", nameDe: "Rote Linsen", nameTr: "Kırmızı mercimek", nameUr: "لال دال", nameHi: "लाल मसूर", namePt: "Lentilhas vermelhas", nameZh: "红扁豆", icon: "🟤", category: "legumes" },
+    { nameAr: "الفول السوداني", nameEn: "Peanut", nameFr: "Cacahuète", nameEs: "Cacahuete", nameDe: "Erdnuss", nameTr: "Fıstık", nameUr: "مونگ پھلی", nameHi: "मूंगफली", namePt: "Amendoim", nameZh: "花生", icon: "🥜", category: "legumes" },
+    { nameAr: "الفول المدمس", nameEn: "Fava Beans", nameFr: "Fèves", nameEs: "Habas", nameDe: "Saubohnen", nameTr: "Bakla", nameUr: "باقلہ", nameHi: "बाकला", namePt: "Favas", nameZh: "蚕豆", icon: "🫘", category: "legumes" },
     
     // الأعشاب
-    { nameAr: "الشمر البري", nameEn: "Wild Fennel", icon: "🌿", category: "herbs" },
-    { nameAr: "عرق السوس", nameEn: "Licorice", icon: "🌿", category: "herbs" },
-    { nameAr: "البابونج", nameEn: "Chamomile", icon: "🌼", category: "herbs" },
-    { nameAr: "اللافندر", nameEn: "Lavender", icon: "💜", category: "herbs" },
-    { nameAr: "المريمية", nameEn: "Sage", icon: "🌿", category: "herbs" },
-    { nameAr: "الأوريجانو", nameEn: "Oregano", icon: "🌿", category: "herbs" },
-    { nameAr: "الكزبرة", nameEn: "Coriander", icon: "🌿", category: "herbs" },
-    { nameAr: "الطرخون", nameEn: "Tarragon", icon: "🌿", category: "herbs" },
-    { nameAr: "البردقوش", nameEn: "Marjoram", icon: "🌿", category: "herbs" },
-    { nameAr: "الكراوية", nameEn: "Caraway", icon: "🌿", category: "herbs" },
-    { nameAr: "اليانسون", nameEn: "Anise", icon: "🌿", category: "herbs" },
-    { nameAr: "الحلبة", nameEn: "Fenugreek", icon: "🌿", category: "herbs" },
+    { nameAr: "البابونج", nameEn: "Chamomile", nameFr: "Camomille", nameEs: "Manzanilla", nameDe: "Kamille", nameTr: "Papatya", nameUr: "بابونہ", nameHi: "कैमोमाइल", namePt: "Camomila", nameZh: "洋甘菊", icon: "🌼", category: "herbs" },
+    { nameAr: "اللافندر", nameEn: "Lavender", nameFr: "Lavande", nameEs: "Lavanda", nameDe: "Lavendel", nameTr: "Lavanta", nameUr: "لیوینڈر", nameHi: "लैवेंडर", namePt: "Lavanda", nameZh: "薰衣草", icon: "💜", category: "herbs" },
+    { nameAr: "المريمية", nameEn: "Sage", nameFr: "Sauge", nameEs: "Salvia", nameDe: "Salbei", nameTr: "Adaçayı", nameUr: "سالویا", nameHi: "सेज", namePt: "Sálvia", nameZh: "鼠尾草", icon: "🌿", category: "herbs" },
+    { nameAr: "الكزبرة", nameEn: "Coriander", nameFr: "Coriandre", nameEs: "Cilantro", nameDe: "Koriander", nameTr: "Kişniş", nameUr: "دھنیا", nameHi: "धनिया", namePt: "Coentro", nameZh: "香菜", icon: "🌿", category: "herbs" },
+    { nameAr: "الحلبة", nameEn: "Fenugreek", nameFr: "Fenugrec", nameEs: "Fenogreco", nameDe: "Bockshornklee", nameTr: "Çemen", nameUr: "میتھی", nameHi: "मेथी", namePt: "Feno-grego", nameZh: "胡芦巴", icon: "🌿", category: "herbs" },
     
     // التوابل
-    { nameAr: "الحبة السوداء", nameEn: "Black Seed", icon: "⚫", category: "spices" },
-    { nameAr: "السمسم", nameEn: "Sesame", icon: "🤎", category: "spices" },
-    { nameAr: "بذور الكتان", nameEn: "Flax Seeds", icon: "🟤", category: "spices" },
-    { nameAr: "الزعفران", nameEn: "Saffron", icon: "🟡", category: "spices" },
-    { nameAr: "القرنفل", nameEn: "Cloves", icon: "🟤", category: "spices" },
-    { nameAr: "الهيل", nameEn: "Cardamom", icon: "🟢", category: "spices" },
-    { nameAr: "جوزة الطيب", nameEn: "Nutmeg", icon: "🟤", category: "spices" },
-    { nameAr: "الكمون", nameEn: "Cumin", icon: "🟤", category: "spices" },
-    { nameAr: "الكركم", nameEn: "Turmeric", icon: "🟠", category: "spices" },
-    { nameAr: "الفانيليا", nameEn: "Vanilla", icon: "🟤", category: "spices" },
+    { nameAr: "السمسم", nameEn: "Sesame", nameFr: "Sésame", nameEs: "Sésamo", nameDe: "Sesam", nameTr: "Susam", nameUr: "تل", nameHi: "तिल", namePt: "Gergelim", nameZh: "芝麻", icon: "🤎", category: "spices" },
+    { nameAr: "الزعفران", nameEn: "Saffron", nameFr: "Safran", nameEs: "Azafrán", nameDe: "Safran", nameTr: "Safran", nameUr: "زعفران", nameHi: "केसर", namePt: "Açafrão", nameZh: "藏红花", icon: "🟡", category: "spices" },
+    { nameAr: "الكمون", nameEn: "Cumin", nameFr: "Cumin", nameEs: "Comino", nameDe: "Kreuzkümmel", nameTr: "Kimyon", nameUr: "زیرہ", nameHi: "जीरा", namePt: "Cominho", nameZh: "孜然", icon: "🟤", category: "spices" },
     
     // الزهور
-    { nameAr: "الشمس (عباد الشمس)", nameEn: "Sunflower", icon: "🌻", category: "flowers" },
-    { nameAr: "الزهور", nameEn: "Flowers", icon: "🌸", category: "flowers" },
-    { nameAr: "الورود", nameEn: "Roses", icon: "🌹", category: "flowers" },
-    { nameAr: "الكركديه", nameEn: "Hibiscus", icon: "🌺", category: "flowers" },
-    { nameAr: "الأقحوان", nameEn: "Marigold", icon: "🌼", category: "flowers" },
-    { nameAr: "الياسمين", nameEn: "Jasmine", icon: "⚪", category: "flowers" },
-    { nameAr: "الأوركيد", nameEn: "Orchid", icon: "💜", category: "flowers" },
-    { nameAr: "الزنبق", nameEn: "Lily", icon: "🌸", category: "flowers" },
-    { nameAr: "التيوليب", nameEn: "Tulip", icon: "🌷", category: "flowers" },
-    { nameAr: "النرجس", nameEn: "Daffodil", icon: "🌼", category: "flowers" },
-    { nameAr: "البنفسج", nameEn: "Violet", icon: "💜", category: "flowers" },
-    { nameAr: "الجاردينيا", nameEn: "Gardenia", icon: "⚪", category: "flowers" },
+    { nameAr: "عباد الشمس", nameEn: "Sunflower", nameFr: "Tournesol", nameEs: "Girasol", nameDe: "Sonnenblume", nameTr: "Ayçiçeği", nameUr: "سورج مکھی", nameHi: "सूरजमुखी", namePt: "Girassol", nameZh: "向日葵", icon: "🌻", category: "flowers" },
+    { nameAr: "الورد", nameEn: "Rose", nameFr: "Rose", nameEs: "Rosa", nameDe: "Rose", nameTr: "Gül", nameUr: "گلاب", nameHi: "गुलाब", namePt: "Rosa", nameZh: "玫瑰", icon: "🌹", category: "flowers" },
+    { nameAr: "الياسمين", nameEn: "Jasmine", nameFr: "Jasmin", nameEs: "Jazmín", nameDe: "Jasmin", nameTr: "Yasemin", nameUr: "چمیلی", nameHi: "चमेली", namePt: "Jasmim", nameZh: "茉莉花", icon: "⚪", category: "flowers" },
+    { nameAr: "التيوليب", nameEn: "Tulip", nameFr: "Tulipe", nameEs: "Tulipán", nameDe: "Tulpe", nameTr: "Lale", nameUr: "ٹیولپ", nameHi: "ट्यूलिप", namePt: "Tulipa", nameZh: "郁金香", icon: "🌷", category: "flowers" },
   ];
   
   // إضافة النباتات الإضافية
   additionalPlants.forEach((plant) => {
     if (plants.length >= TARGET_PLANT_COUNT) return;
     
-    plants.push(createPlantObject(id++, plant.nameAr, plant.nameEn, plant.icon, plant.category));
+    plants.push(createPlantObjectMultilingual(id++, plant, null));
     
     // إضافة أصناف للنباتات الإضافية
     varieties.forEach((variety) => {
       if (plants.length >= TARGET_PLANT_COUNT) return;
       
-      const nameAr = plant.nameAr + variety.arSuffix;
-      const nameEn = plant.nameEn + variety.enSuffix;
-      
-      plants.push(createPlantObject(id++, nameAr, nameEn, plant.icon, plant.category));
+      plants.push(createPlantObjectMultilingual(id++, plant, variety));
     });
   });
   
-  // استراتيجية 3: إضافة نباتات عشوائية متنوعة
-  const randomVariations = ["(مستورد)", "(محلي)", "(بري)", "(مستزرع)", "(قديم)", "(جديد)", "(ذهبي)", "(فضي)", "(أحمر)", "(أخضر)", "(أصفر)", "(متميز)"];
-  const randomCategories = ["vegetables", "fruits", "grains", "legumes", "herbs", "spices", "flowers"];
+  // استراتيجية 3: إضافة نباتات عشوائية متنوعة مع دعم متعدد اللغات
+  const randomVariations = [
+    { ar: " (مستورد)", en: " (Imported)", fr: " (Importé)", es: " (Importado)", de: " (Importiert)", tr: " (İthal)", ur: " (درآمدی)", hi: " (आयातित)", pt: " (Importado)", zh: " (进口)" },
+    { ar: " (محلي)", en: " (Local)", fr: " (Local)", es: " (Local)", de: " (Lokal)", tr: " (Yerel)", ur: " (مقامی)", hi: " (स्थानीय)", pt: " (Local)", zh: " (本地)" },
+    { ar: " (بري)", en: " (Wild)", fr: " (Sauvage)", es: " (Silvestre)", de: " (Wild)", tr: " (Yabani)", ur: " (جنگلی)", hi: " (जंगली)", pt: " (Selvagem)", zh: " (野生)" },
+    { ar: " (مزروع)", en: " (Cultivated)", fr: " (Cultivé)", es: " (Cultivado)", de: " (Kultiviert)", tr: " (Kültür)", ur: " (کاشت شدہ)", hi: " (खेती)", pt: " (Cultivado)", zh: " (栽培)" },
+    { ar: " (ذهبي)", en: " (Golden)", fr: " (Doré)", es: " (Dorado)", de: " (Golden)", tr: " (Altın)", ur: " (سنہری)", hi: " (सुनहरा)", pt: " (Dourado)", zh: " (金色)" },
+    { ar: " (أحمر)", en: " (Red)", fr: " (Rouge)", es: " (Rojo)", de: " (Rot)", tr: " (Kırmızı)", ur: " (سرخ)", hi: " (लाल)", pt: " (Vermelho)", zh: " (红色)" },
+    { ar: " (أخضر)", en: " (Green)", fr: " (Vert)", es: " (Verde)", de: " (Grün)", tr: " (Yeşil)", ur: " (سبز)", hi: " (हरा)", pt: " (Verde)", zh: " (绿色)" },
+  ];
   
   while (plants.length < TARGET_PLANT_COUNT) {
     const randomBase = basePlantsData[Math.floor(Math.random() * basePlantsData.length)];
     const randomVariation = randomVariations[Math.floor(Math.random() * randomVariations.length)];
     
-    const nameAr = randomBase.nameAr + ` ${randomVariation}`;
-    const nameEn = randomBase.nameEn + ` ${randomVariation}`;
-    
     // تجنب التكرار
+    const nameAr = randomBase.nameAr + randomVariation.ar;
     const isDuplicate = plants.some(p => p.nameAr === nameAr);
     if (!isDuplicate) {
-      plants.push(createPlantObject(id++, nameAr, nameEn, randomBase.icon, randomBase.category));
+      plants.push(createPlantObjectMultilingual(id++, randomBase, randomVariation));
     }
   }
 }
@@ -541,6 +489,70 @@ function createPlantObject(id, nameAr, nameEn, icon, category) {
   };
 }
 
+// دالة لإنشاء كائن نبات متعدد اللغات (للأصناف المشتقة)
+function createPlantObjectMultilingual(id, base, variety) {
+  const category = base.category;
+  
+  // قيم معقولة بناءً على فئة النبات
+  let baseTemp = { min: 15, max: 28 };
+  let baseMoisture = { min: 50, max: 75 };
+  let basePH = { min: 6.0, max: 7.0 };
+  let baseNutrients = { min: 60, max: 80 };
+  
+  if (category === 'grains') {
+    baseTemp = { min: 10, max: 25 };
+    baseNutrients = { min: 70, max: 90 };
+  } else if (category === 'legumes') {
+    baseNutrients = { min: 40, max: 60 };
+  } else if (category === 'fruits') {
+    baseMoisture = { min: 60, max: 80 };
+    basePH = { min: 5.8, max: 7.2 };
+  } else if (category === 'herbs') {
+    baseTemp = { min: 12, max: 24 };
+    baseMoisture = { min: 45, max: 65 };
+    basePH = { min: 6.0, max: 7.0 };
+  }
+  
+  // إضافة تنويع عشوائي قليل
+  const tempMin = baseTemp.min + Math.random() * 3;
+  const tempMax = baseTemp.max + Math.random() * 3;
+  const moistureMin = Math.max(30, baseMoisture.min - Math.random() * 10);
+  const moistureMax = Math.min(90, baseMoisture.max + Math.random() * 10);
+  const phMin = Math.max(5.0, basePH.min - Math.random() * 0.5);
+  const phMax = Math.min(8.0, basePH.max + Math.random() * 0.5);
+  
+  return {
+    id: "plant_" + id,
+    // أسماء بجميع اللغات العشر
+    nameAr: base.nameAr + (variety ? variety.ar : ''),
+    nameEn: base.nameEn + (variety ? variety.en : ''),
+    nameFr: (base.nameFr || base.nameEn) + (variety ? variety.fr : ''),
+    nameEs: (base.nameEs || base.nameEn) + (variety ? variety.es : ''),
+    nameDe: (base.nameDe || base.nameEn) + (variety ? variety.de : ''),
+    nameTr: (base.nameTr || base.nameEn) + (variety ? variety.tr : ''),
+    nameUr: (base.nameUr || base.nameAr) + (variety ? variety.ur : ''),
+    nameHi: (base.nameHi || base.nameEn) + (variety ? variety.hi : ''),
+    namePt: (base.namePt || base.nameEn) + (variety ? variety.pt : ''),
+    nameZh: (base.nameZh || base.nameEn) + (variety ? variety.zh : ''),
+    icon: base.icon,
+    category,
+    tempMin: Math.round(tempMin * 10) / 10,
+    tempMax: Math.round(tempMax * 10) / 10,
+    moistureMin: Math.round(moistureMin),
+    moistureMax: Math.round(moistureMax),
+    phMin: Math.round(phMin * 10) / 10,
+    phMax: Math.round(phMax * 10) / 10,
+    nMin: baseNutrients.min + Math.floor(Math.random() * 30),
+    pMin: baseNutrients.min + Math.floor(Math.random() * 30),
+    kMin: baseNutrients.min + Math.floor(Math.random() * 30),
+    caMin: 30 + Math.floor(Math.random() * 20),
+    mgMin: 20 + Math.floor(Math.random() * 20),
+    difficulty: ['سهل', 'متوسط', 'صعب'][Math.floor(Math.random() * 3)],
+    wateringFreq: ['كل يومين', 'يومياً', 'كل 3 أيام'][Math.floor(Math.random() * 3)],
+    harvestTime: 60 + Math.floor(Math.random() * 120)
+  };
+}
+
 // قاعدة بيانات المواد الطبيعية للتحسين
 const naturalMaterials = {
   nitrogen: [
@@ -588,7 +600,19 @@ function saveSearchHistory() {
 }
 
 function getPlantName(plant) {
-  return i18n.currentLang === 'ar' ? plant.nameAr : plant.nameEn;
+  const lang = i18n.currentLang;
+  // Support all 10 languages
+  if (lang === 'ar') return plant.nameAr;
+  if (lang === 'en') return plant.nameEn;
+  if (lang === 'fr') return plant.nameFr || plant.nameEn;
+  if (lang === 'es') return plant.nameEs || plant.nameEn;
+  if (lang === 'de') return plant.nameDe || plant.nameEn;
+  if (lang === 'tr') return plant.nameTr || plant.nameEn;
+  if (lang === 'ur') return plant.nameUr || plant.nameAr;
+  if (lang === 'hi') return plant.nameHi || plant.nameEn;
+  if (lang === 'pt') return plant.namePt || plant.nameEn;
+  if (lang === 'zh') return plant.nameZh || plant.nameEn;
+  return plant.nameEn;
 }
 
 function getMaterialName(material) {
