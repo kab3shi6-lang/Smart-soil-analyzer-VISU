@@ -24,6 +24,9 @@ function startBluetoothBridge() {
 
       const box = document.getElementById("btDataBox");
       if (box) box.style.display = "block";
+      
+      // Update sensor status indicators
+      updateSensorStatus('connected', 'متصل بالجسر | Connected to Bridge');
     };
 
     btSocket.onmessage = (event) => {
@@ -134,31 +137,101 @@ function startBluetoothBridge() {
         if (k2) k2.value = data.k;
       }
       
+      // Update sensor status to show data is being received
+      const hasData = Object.keys(data).length > 0;
+      if (hasData) {
+        updateSensorStatus('receiving', 'جاري استقبال البيانات | Receiving data...');
+        
+        // Highlight form fields briefly
+        highlightUpdatedFields();
+        
+        // Reset status after a delay
+        setTimeout(() => {
+          updateSensorStatus('connected', 'متصل - البيانات جاهزة | Connected - Data ready');
+        }, 1000);
+      }
+      
       console.log("✅ Form fields updated with:", data);
     };
 
     btSocket.onerror = (err) => {
       console.warn("⚠ WebSocket Error:", err);
+      updateSensorStatus('disconnected', 'خطأ في الاتصال | Connection error');
     };
 
     btSocket.onclose = () => {
       console.log("⚪ Bluetooth bridge disconnected");
       isBtConnected = false;
+      updateSensorStatus('disconnected', 'غير متصل | Disconnected');
       
       // Implement exponential backoff with max retry limit
       if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
         reconnectAttempts++;
         const delay = RECONNECT_BASE_DELAY * Math.pow(1.5, reconnectAttempts - 1);
         console.log(`🔄 Reconnect attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS} in ${Math.round(delay/1000)}s`);
+        updateSensorStatus('connecting', `جاري إعادة الاتصال (${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS}) | Reconnecting...`);
         setTimeout(startBluetoothBridge, delay);
       } else {
         console.log("⛔ Max reconnect attempts reached. Please refresh the page to try again.");
+        updateSensorStatus('disconnected', 'فشل الاتصال - أعد تحميل الصفحة | Connection failed - Refresh page');
       }
     };
 
   } catch (e) {
     console.error("WebSocket exception:", e);
   }
+}
+
+/**
+ * تحديث حالة المستشعر
+ * Update sensor status indicator
+ */
+function updateSensorStatus(status, message) {
+  const statusContainers = [
+    document.getElementById('sensorStatusAuto'),
+    document.getElementById('sensorStatusManual')
+  ];
+  
+  statusContainers.forEach(container => {
+    if (!container) return;
+    
+    const indicator = container.querySelector('.status-indicator');
+    const text = container.querySelector('.status-text');
+    
+    if (indicator) {
+      indicator.className = 'status-indicator ' + status;
+    }
+    
+    if (text) {
+      text.textContent = message;
+    }
+    
+    // Update container class
+    container.className = 'sensor-status ' + status;
+  });
+}
+
+/**
+ * تمييز الحقول المحدثة
+ * Highlight updated form fields
+ */
+function highlightUpdatedFields() {
+  const fieldIds = ['temp', 'moisture', 'ph', 'n', 'p', 'k', 
+                    'manualTemp', 'manualMoisture', 'manualPh', 'manualN', 'manualP', 'manualK'];
+  
+  fieldIds.forEach(id => {
+    const field = document.getElementById(id);
+    if (field && field.value) {
+      field.style.backgroundColor = '#dcfce7';
+      field.style.borderColor = '#22c55e';
+      field.style.transition = 'all 0.3s ease';
+      
+      setTimeout(() => {
+        field.style.backgroundColor = '';
+        field.style.borderColor = '';
+      }, 1500);
+    }
+  });
 }
 
 // تشغيل الاتصال تلقائياً عند فتح الموقع
@@ -808,6 +881,23 @@ function analyzeAutoMode() {
   renderImprovementTips(reading);
   renderStatusBox(suitable.length, unsuitable.length);
   renderGeneralTips(Array.from(generalIssues));
+  
+  // تحليل ذكي من AI للوضع التلقائي (مع التحقق من توفر aiAnalyzer)
+  if (typeof aiAnalyzer !== 'undefined' && aiAnalyzer && plants.length > 0) {
+    try {
+      // استخدام أول نبات مناسب أو أول نبات في القائمة للتحليل العام
+      const referenceP = suitable.length > 0 ? suitable[0].plant : plants[0];
+      if (referenceP) {
+        const aiAnalysis = aiAnalyzer.analyzeAndRecommend(reading, referenceP);
+        const soilQuality = aiAnalyzer.assessSoilQuality(reading, referenceP);
+        const implementationPlan = aiAnalyzer.calculateImplementationPlan(aiAnalysis, i18n.currentLang);
+        
+        renderAutoAIRecommendations(aiAnalysis, soilQuality, implementationPlan);
+      }
+    } catch (aiError) {
+      console.warn('AI Analyzer error in auto mode:', aiError);
+    }
+  }
 
   document.getElementById("manualResultContainer").classList.add("hidden");
   document.getElementById("autoResultContainer").classList.remove("hidden");
@@ -1553,9 +1643,152 @@ function renderAdvancedRecommendations(analysis, soilQuality, implementationPlan
     if (!advancedSection) {
       const div = document.createElement('div');
       div.innerHTML = advancedRecommendationsHtml;
-      resultsContainer.appendChild(div.firstElementChild);
+      // التحقق من وجود العنصر قبل الإضافة
+      if (div.firstElementChild) {
+        resultsContainer.appendChild(div.firstElementChild);
+      }
     } else {
       advancedSection.innerHTML = advancedRecommendationsHtml;
+    }
+  }
+}
+
+/**
+ * 🤖 عرض التوصيات الذكية للوضع التلقائي
+ * Render AI recommendations for auto mode
+ */
+function renderAutoAIRecommendations(analysis, soilQuality, implementationPlan) {
+  const lang = i18n.currentLang;
+  
+  // إنشاء قسم التوصيات الذكية للوضع التلقائي
+  let autoAIHtml = `
+    <div class="ai-recommendations-section auto-ai">
+      <div class="ai-header">
+        <h3>🤖 ${lang === 'ar' ? 'تحليل التربة بالذكاء الاصطناعي' : 'AI Soil Analysis'}</h3>
+        <span class="urgency-badge urgency-${analysis.urgencyLevel}">
+          ${lang === 'ar' ? 
+            (analysis.urgencyLevel === 'critical' ? '🔴 حالة حرجة' : 
+             analysis.urgencyLevel === 'high' ? '🟠 يحتاج اهتمام' :
+             analysis.urgencyLevel === 'medium' ? '🟡 جيد' : '🟢 ممتاز') :
+            (analysis.urgencyLevel === 'critical' ? '🔴 Critical' : 
+             analysis.urgencyLevel === 'high' ? '🟠 Needs Attention' :
+             analysis.urgencyLevel === 'medium' ? '🟡 Good' : '🟢 Excellent')}
+        </span>
+      </div>
+
+      <!-- تقييم جودة التربة -->
+      <div class="soil-quality-assessment">
+        <div class="quality-score">
+          <span class="score-number">${soilQuality.score}%</span>
+          <div class="score-bar">
+            <div class="score-fill" style="width: ${soilQuality.score}%; background: ${
+              soilQuality.score >= 80 ? '#22c55e' :
+              soilQuality.score >= 60 ? '#eab308' :
+              soilQuality.score >= 40 ? '#f97316' : '#ef4444'
+            };"></div>
+          </div>
+          <p class="score-status">${soilQuality.status}</p>
+        </div>
+        <p class="score-recommendation">${soilQuality.recommendation}</p>
+      </div>
+
+      <!-- النقائص المكتشفة -->
+      ${analysis.deficiencies.length > 0 ? `
+        <div class="deficiencies-section">
+          <h4>${lang === 'ar' ? '⚠️ نقاط تحتاج تحسين:' : '⚠️ Areas for Improvement:'}</h4>
+          <div class="deficiencies-list">
+            ${analysis.deficiencies.map(def => `
+              <div class="deficiency-item">
+                <div class="deficiency-header">
+                  <span class="deficiency-element">
+                    ${def.element === 'nitrogen' ? (lang === 'ar' ? '🌱 النيتروجين' : '🌱 Nitrogen') : 
+                      def.element === 'phosphorus' ? (lang === 'ar' ? '🌻 الفسفور' : '🌻 Phosphorus') : 
+                      (lang === 'ar' ? '💪 البوتاسيوم' : '💪 Potassium')}
+                  </span>
+                  <span class="deficiency-level">
+                    ${lang === 'ar' ? 'النقص:' : 'Deficit:'} 
+                    <strong>${def.deficit.toFixed(1)}</strong>
+                  </span>
+                </div>
+                <p class="deficiency-impact">${def.impact}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : `
+        <div class="deficiencies-section good-status">
+          <p>✅ ${lang === 'ar' ? 'التربة متوازنة جيداً!' : 'Soil is well balanced!'}</p>
+        </div>
+      `}
+
+      <!-- توصيات AI للتحسين -->
+      ${analysis.recommendations.length > 0 ? `
+        <div class="specific-recommendations">
+          <h4>${lang === 'ar' ? '💡 توصيات AI لتحسين التربة:' : '💡 AI Recommendations for Soil Improvement:'}</h4>
+          ${analysis.recommendations.map((rec, idx) => `
+            <div class="recommendation-card compact">
+              <div class="rec-header">
+                <h5>
+                  ${rec.element === 'nitrogen' ? (lang === 'ar' ? '🌱 تعزيز النيتروجين' : '🌱 Boost Nitrogen') : 
+                    rec.element === 'phosphorus' ? (lang === 'ar' ? '🌻 زيادة الفسفور' : '🌻 Increase Phosphorus') : 
+                    (lang === 'ar' ? '💪 تقوية البوتاسيوم' : '💪 Boost Potassium')}
+                </h5>
+                <span class="cost-badge cost-${rec.costLevel}">
+                  ${lang === 'ar' ? 
+                    (rec.costLevel === 'high' ? '💰 تكلفة عالية' : rec.costLevel === 'medium' ? '💰 تكلفة متوسطة' : '💰 تكلفة منخفضة') :
+                    (rec.costLevel === 'high' ? '💰 High Cost' : rec.costLevel === 'medium' ? '💰 Medium Cost' : '💰 Low Cost')}
+                </span>
+              </div>
+              
+              <!-- أفضل مادة موصى بها -->
+              ${rec.materials.length > 0 ? `
+                <div class="top-material">
+                  <strong>${lang === 'ar' ? '⭐ أفضل خيار:' : '⭐ Best Option:'}</strong>
+                  <span class="material-name">${lang === 'ar' ? rec.materials[0].nameAr : rec.materials[0].nameEn}</span>
+                  <span class="material-amount">(${Math.round(rec.materials[0].recommendedGrams)} ${lang === 'ar' ? 'جرام' : 'grams'})</span>
+                </div>
+              ` : ''}
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <!-- ملخص خطة التنفيذ -->
+      <div class="implementation-summary">
+        <div class="summary-item">
+          <span class="summary-icon">⏱️</span>
+          <span class="summary-label">${lang === 'ar' ? 'الوقت المتوقع:' : 'Expected Time:'}</span>
+          <span class="summary-value">${implementationPlan.totalDays} ${lang === 'ar' ? 'يوم' : 'days'}</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-icon">💰</span>
+          <span class="summary-label">${lang === 'ar' ? 'التكلفة:' : 'Cost:'}</span>
+          <span class="summary-value">${implementationPlan.estimatedCost}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // إضافة قسم AI للوضع التلقائي
+  const autoContainer = document.getElementById("autoResultContainer");
+  if (autoContainer) {
+    // البحث عن قسم موجود أو إنشاء واحد جديد
+    let autoAISection = autoContainer.querySelector('.ai-recommendations-section');
+    if (!autoAISection) {
+      const div = document.createElement('div');
+      div.innerHTML = autoAIHtml;
+      // التحقق من وجود العنصر قبل الإضافة
+      if (div.firstElementChild) {
+        // إضافة قبل قائمة النباتات
+        const suitableList = autoContainer.querySelector('#suitableList');
+        if (suitableList && suitableList.parentNode) {
+          suitableList.parentNode.insertBefore(div.firstElementChild, suitableList);
+        } else {
+          autoContainer.appendChild(div.firstElementChild);
+        }
+      }
+    } else {
+      autoAISection.outerHTML = autoAIHtml;
     }
   }
 }

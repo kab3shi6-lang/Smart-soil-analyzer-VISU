@@ -107,6 +107,13 @@
     <!-- شاشة التحليل التلقائي -->
     <section id="autoModeScreen" class="card hidden">
       <h2 data-ar="التحليل التلقائي - أدخل بيانات التربة" data-en="Automatic Analysis - Enter Soil Data">التحليل التلقائي - أدخل بيانات التربة</h2>
+      
+      <!-- حالة اتصال المستشعر -->
+      <div id="sensorStatusAuto" class="sensor-status">
+        <span class="status-indicator disconnected"></span>
+        <span class="status-text" data-ar="في انتظار بيانات المستشعر..." data-en="Waiting for sensor data...">في انتظار بيانات المستشعر...</span>
+      </div>
+      
       <form id="soilForm">
         <div class="form-row">
           <div class="form-field">
@@ -152,6 +159,12 @@
     <!-- شاشة التحديد اليدوي -->
     <section id="manualModeScreen" class="card hidden">
       <h2 data-ar="التحديد اليدوي - أدخل بيانات التربة ثم اختر النبات" data-en="Manual Selection - Enter Soil Data Then Choose Plant">التحديد اليدوي - أدخل بيانات التربة ثم اختر النبات</h2>
+      
+      <!-- حالة اتصال المستشعر -->
+      <div id="sensorStatusManual" class="sensor-status">
+        <span class="status-indicator disconnected"></span>
+        <span class="status-text" data-ar="في انتظار بيانات المستشعر..." data-en="Waiting for sensor data...">في انتظار بيانات المستشعر...</span>
+      </div>
       
       <form id="manualSoilForm">
         <div class="form-row">
