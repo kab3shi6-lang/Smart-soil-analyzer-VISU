@@ -28,9 +28,8 @@ int potassium = 0;
 
 // pH Calibration constants - adjusted for typical pH sensor
 // Standard pH sensor outputs ~2.5V at pH 7, ranging 0-5V for pH 0-14
-const float PH_CALIBRATION_OFFSET = 0.0;
-const float PH_CALIBRATION_SLOPE = 14.0;  // Full pH range
-const float PH_CALIBRATION_INTERCEPT = 0.0;
+const float PH_CALIBRATION_OFFSET = 0.0;  // Offset adjustment for fine-tuning
+const float PH_CALIBRATION_SLOPE = 14.0;  // Full pH range (0-14)
 
 void setup() {
   Serial.begin(9600);

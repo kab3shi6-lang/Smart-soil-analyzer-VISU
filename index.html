@@ -5,8 +5,6 @@
   <title data-ar="محلل التربة الذكي" data-en="Smart Soil Analyzer">محلل التربة الذكي</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
-  <script src="i18n.js"></script>
-  <script src="app.js"></script>
 </head>
 <body>
   <header class="app-header">
@@ -271,109 +269,6 @@
   <script src="bluetooth.js"></script>
   <script src="esp01.js"></script>
   <script src="script.js"></script>
-
-  <!-- الجسر الجديد للبلوتوث (أُضيف الآن) -->
-  <script>
-    let btSocket = null;
-    
-    function initBluetoothBridge() {
-      try {
-        btSocket = new WebSocket("ws://localhost:3000");
-
-        btSocket.onopen = () => {
-          console.log("✅ Connected to Bluetooth Bridge");
-        };
-
-        btSocket.onmessage = (event) => {
-          console.log("📨 Bluetooth → Website:", event.data);
-          
-          // Try to parse and update form fields
-          try {
-            let data = {};
-            const raw = event.data.trim();
-            
-            // JSON format from Arduino
-            if (raw.startsWith('{')) {
-              const jsonData = JSON.parse(raw);
-              data.TEMP = jsonData.temperature || jsonData.temp;
-              data.MOISTURE = jsonData.moisture;
-              data.PH = jsonData.pH || jsonData.ph;
-              data.N = jsonData.nitrogen || jsonData.n;
-              data.P = jsonData.phosphorus || jsonData.p;
-              data.K = jsonData.potassium || jsonData.k;
-            } else if (raw.includes(':')) {
-              // Key:Value format
-              raw.split(',').forEach(pair => {
-                const [key, val] = pair.split(':');
-                if (key && val) data[key.trim().toUpperCase()] = parseFloat(val);
-              });
-            }
-            
-            // Update both auto and manual form fields
-            if (data.TEMP !== undefined) {
-              const temp1 = document.getElementById('temp');
-              const temp2 = document.getElementById('manualTemp');
-              if (temp1) temp1.value = data.TEMP;
-              if (temp2) temp2.value = data.TEMP;
-            }
-            if (data.MOISTURE !== undefined) {
-              const m1 = document.getElementById('moisture');
-              const m2 = document.getElementById('manualMoisture');
-              if (m1) m1.value = data.MOISTURE;
-              if (m2) m2.value = data.MOISTURE;
-            }
-            if (data.PH !== undefined) {
-              const ph1 = document.getElementById('ph');
-              const ph2 = document.getElementById('manualPh');
-              if (ph1) ph1.value = data.PH;
-              if (ph2) ph2.value = data.PH;
-            }
-            if (data.N !== undefined) {
-              const n1 = document.getElementById('n');
-              const n2 = document.getElementById('manualN');
-              if (n1) n1.value = data.N;
-              if (n2) n2.value = data.N;
-            }
-            if (data.P !== undefined) {
-              const p1 = document.getElementById('p');
-              const p2 = document.getElementById('manualP');
-              if (p1) p1.value = data.P;
-              if (p2) p2.value = data.P;
-            }
-            if (data.K !== undefined) {
-              const k1 = document.getElementById('k');
-              const k2 = document.getElementById('manualK');
-              if (k1) k1.value = data.K;
-              if (k2) k2.value = data.K;
-            }
-            
-            console.log("✅ Form fields updated with:", data);
-          } catch (e) {
-            console.log("⚠️ Could not parse bluetooth data:", e);
-          }
-        };
-
-        btSocket.onerror = (err) => console.log("⚠️ Bluetooth WebSocket Error:", err);
-
-        btSocket.onclose = () => {
-          console.log("⚪ Bluetooth bridge disconnected");
-          // Try to reconnect after 5 seconds
-          setTimeout(initBluetoothBridge, 5000);
-        };
-      } catch (e) {
-        console.log("❌ Failed to connect to Bluetooth bridge:", e);
-      }
-    }
-    
-    // Initialize on page load
-    window.addEventListener('load', initBluetoothBridge);
-
-    function sendToBluetooth(msg) {
-      if (btSocket && btSocket.readyState === WebSocket.OPEN) {
-        btSocket.send(msg);
-      }
-    }
-  </script>
 
 </body>
 </html>

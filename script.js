@@ -4,6 +4,10 @@
 
 let btSocket = null;
 let isBtConnected = false;
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 10;
+const RECONNECT_BASE_DELAY = 5000;
+const TARGET_PLANT_COUNT = 2050; // Target number of plants in database
 
 /**
  * الاتصال بجسر البلوتوث (Node.js bridge.js)
@@ -16,6 +20,7 @@ function startBluetoothBridge() {
     btSocket.onopen = () => {
       console.log("🌐 Connected to Bluetooth Bridge");
       isBtConnected = true;
+      reconnectAttempts = 0; // Reset reconnect counter on successful connection
 
       const box = document.getElementById("btDataBox");
       if (box) box.style.display = "block";
@@ -31,16 +36,29 @@ function startBluetoothBridge() {
       // Try to parse and update form fields with different formats
       let data = {};
       
-      // JSON format from Arduino
+      // JSON format from bridge or Arduino
       if (msg.startsWith('{')) {
         try {
           const jsonData = JSON.parse(msg);
-          data.temp = jsonData.temperature || jsonData.temp;
-          data.moisture = jsonData.moisture;
-          data.ph = jsonData.pH || jsonData.ph;
-          data.n = jsonData.nitrogen || jsonData.n;
-          data.p = jsonData.phosphorus || jsonData.p;
-          data.k = jsonData.potassium || jsonData.k;
+          
+          // Check if this is wrapped data from bridge (has 'type' and 'data' properties)
+          if (jsonData.type && jsonData.data) {
+            const sensorData = jsonData.data;
+            data.temp = sensorData.TEMP || sensorData.temperature || sensorData.temp;
+            data.moisture = sensorData.MOISTURE || sensorData.moisture;
+            data.ph = sensorData.PH || sensorData.pH || sensorData.ph;
+            data.n = sensorData.N || sensorData.nitrogen || sensorData.n;
+            data.p = sensorData.P || sensorData.phosphorus || sensorData.p;
+            data.k = sensorData.K || sensorData.potassium || sensorData.k;
+          } else {
+            // Direct JSON from Arduino
+            data.temp = jsonData.temperature || jsonData.temp || jsonData.TEMP;
+            data.moisture = jsonData.moisture || jsonData.MOISTURE;
+            data.ph = jsonData.pH || jsonData.ph || jsonData.PH;
+            data.n = jsonData.nitrogen || jsonData.n || jsonData.N;
+            data.p = jsonData.phosphorus || jsonData.p || jsonData.P;
+            data.k = jsonData.potassium || jsonData.k || jsonData.K;
+          }
         } catch (e) {
           console.log('JSON parse error, trying other formats');
         }
@@ -126,8 +144,16 @@ function startBluetoothBridge() {
     btSocket.onclose = () => {
       console.log("⚪ Bluetooth bridge disconnected");
       isBtConnected = false;
-      // Try to reconnect after 5 seconds
-      setTimeout(startBluetoothBridge, 5000);
+      
+      // Implement exponential backoff with max retry limit
+      if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+        reconnectAttempts++;
+        const delay = RECONNECT_BASE_DELAY * Math.pow(1.5, reconnectAttempts - 1);
+        console.log(`🔄 Reconnect attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS} in ${Math.round(delay/1000)}s`);
+        setTimeout(startBluetoothBridge, delay);
+      } else {
+        console.log("⛔ Max reconnect attempts reached. Please refresh the page to try again.");
+      }
     };
 
   } catch (e) {
@@ -232,12 +258,11 @@ function generateLargePlantsDatabase() {
   
   // توليد 2000+ نبات بدون تكرار
   const usedCombinations = new Set();
-  let targetCount = 2050;
   
   // استراتيجية 1: مزج الأصناف مع النباتات الأساسية
   basePlantsData.forEach((base) => {
     varieties.forEach((variety) => {
-      if (plants.length >= targetCount) return;
+      if (plants.length >= TARGET_PLANT_COUNT) return;
       
       const combination = `${base.nameAr}|${variety.arSuffix}`;
       if (!usedCombinations.has(combination)) {
@@ -356,13 +381,13 @@ function generateLargePlantsDatabase() {
   
   // إضافة النباتات الإضافية
   additionalPlants.forEach((plant) => {
-    if (plants.length >= targetCount) return;
+    if (plants.length >= TARGET_PLANT_COUNT) return;
     
     plants.push(createPlantObject(id++, plant.nameAr, plant.nameEn, plant.icon, plant.category));
     
     // إضافة أصناف للنباتات الإضافية
     varieties.forEach((variety) => {
-      if (plants.length >= targetCount) return;
+      if (plants.length >= TARGET_PLANT_COUNT) return;
       
       const nameAr = plant.nameAr + variety.arSuffix;
       const nameEn = plant.nameEn + variety.enSuffix;
@@ -375,7 +400,7 @@ function generateLargePlantsDatabase() {
   const randomVariations = ["(مستورد)", "(محلي)", "(بري)", "(مستزرع)", "(قديم)", "(جديد)", "(ذهبي)", "(فضي)", "(أحمر)", "(أخضر)", "(أصفر)", "(متميز)"];
   const randomCategories = ["vegetables", "fruits", "grains", "legumes", "herbs", "spices", "flowers"];
   
-  while (plants.length < targetCount) {
+  while (plants.length < TARGET_PLANT_COUNT) {
     const randomBase = basePlantsData[Math.floor(Math.random() * basePlantsData.length)];
     const randomVariation = randomVariations[Math.floor(Math.random() * randomVariations.length)];
     
@@ -803,12 +828,18 @@ function analyzeManualMode() {
   renderManualResults(result);
   renderImprovementTips(reading);
   
-  // تحليل ذكي من AI
-  const aiAnalysis = aiAnalyzer.analyzeAndRecommend(reading, appState.selectedPlant);
-  const soilQuality = aiAnalyzer.assessSoilQuality(reading, appState.selectedPlant);
-  const implementationPlan = aiAnalyzer.calculateImplementationPlan(aiAnalysis, i18n.currentLang);
-  
-  renderAdvancedRecommendations(aiAnalysis, soilQuality, implementationPlan);
+  // تحليل ذكي من AI (مع التحقق من توفر aiAnalyzer)
+  if (typeof aiAnalyzer !== 'undefined' && aiAnalyzer) {
+    try {
+      const aiAnalysis = aiAnalyzer.analyzeAndRecommend(reading, appState.selectedPlant);
+      const soilQuality = aiAnalyzer.assessSoilQuality(reading, appState.selectedPlant);
+      const implementationPlan = aiAnalyzer.calculateImplementationPlan(aiAnalysis, i18n.currentLang);
+      
+      renderAdvancedRecommendations(aiAnalysis, soilQuality, implementationPlan);
+    } catch (aiError) {
+      console.warn('AI Analyzer error:', aiError);
+    }
+  }
   
   renderStatusBox(result.suitable ? 1 : 0, result.suitable ? 0 : 1);
 
