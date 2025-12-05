@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌱 محلل التربة الذكي - البوابة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .option-icon {
+            font-size: 40px;
+        }
+
+        .option-text {
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .info-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .status.online {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.offline {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌱 محلل التربة الذكي</h1>
+    <p class="subtitle">Smart Soil Analyzer - اختر طريقة الوصول</p>
+
+    <div class="options">
+        <!-- Local Server Option -->
+        <a href="http://localhost:3000/advanced-v5.html" class="option" id="localBtn">
+            <div class="option-icon">🖥️</div>
+            <div class="option-text">الخادم المحلي</div>
+            <div style="font-size: 12px; opacity: 0.9;">Local Server</div>
+        </a>
+
+        <!-- GitHub Pages Option -->
+        <a href="https://kab3shi6-lang.github.io/Smart-soil-analyzer-VISU/" class="option">
+            <div class="option-icon">🌐</div>
+            <div class="option-text">GitHub Pages</div>
+            <div style="font-size: 12px; opacity: 0.9;">Online Version</div>
+        </a>
+    </div>
+
+    <!-- Status Information -->
+    <div id="status" class="status online">
+        ✅ الخادم المحلي: متصل
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box">
+        <strong>💡 نصائح:</strong>
+        <p>📌 <strong>الخادم المحلي:</strong> للاستخدام مع Arduino و Bluetooth (تحديث حي)</p>
+        <p>📌 <strong>GitHub Pages:</strong> للعرض العام والمشاركة (نسخة قراءة فقط)</p>
+        <p>⏳ <strong>ملاحظة:</strong> قد تحتاج GitHub Pages إلى دقيقة لتحديث التغييرات</p>
+    </div>
+
+    <!-- Version Info -->
+    <div style="margin-top: 30px; padding: 15px; background: #f9f9f9; border-radius: 8px; font-size: 12px; color: #999;">
+        <p>🔄 آخر تحديث: <span id="updateTime">يحمّل...</span></p>
+        <p>📦 النسخة: v5 (with Bluetooth)</p>
+        <p>🌍 اللغات المدعومة: 10 لغات</p>
+    </div>
+</div>
+
+<script>
+    // Check if local server is running
+    function checkLocalServer() {
+        fetch('http://localhost:3000/', { method: 'HEAD', mode: 'no-cors' })
+            .then(response => {
+                document.getElementById('status').className = 'status online';
+                document.getElementById('status').textContent = '✅ الخادم المحلي: متصل | Local Server: Connected';
+            })
+            .catch(error => {
+                document.getElementById('status').className = 'status offline';
+                document.getElementById('status').textContent = '❌ الخادم المحلي: غير متصل | Local Server: Disconnected (استخدم GitHub Pages بدلاً منه)';
+                
+                // Redirect local button to GitHub Pages
+                document.getElementById('localBtn').href = 'https://kab3shi6-lang.github.io/Smart-soil-analyzer-VISU/';
+                document.getElementById('localBtn').querySelector('.option-text').textContent = 'GitHub Pages';
+                document.getElementById('localBtn').querySelector('div:last-child').textContent = 'Fallback Version';
+            });
+    }
+
+    // Update timestamp
+    function updateTimestamp() {
+        const now = new Date();
+        const time = now.toLocaleString('ar-SA');
+        document.getElementById('updateTime').textContent = time;
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+        checkLocalServer();
+        updateTimestamp();
+        setInterval(updateTimestamp, 60000); // Update every minute
+    });
+</script>
+
+</body>
+</html>
