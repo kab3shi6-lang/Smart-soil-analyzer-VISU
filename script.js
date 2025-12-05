@@ -946,7 +946,7 @@ function renderPlantSelector() {
   
   const lang = i18n.currentLang;
 
-  // إنشاء حاوية البحث
+  // إنشاء حاوية البحث - use translate() for all strings
   const searchContainer = document.createElement("div");
   searchContainer.className = "plant-search-container";
   searchContainer.innerHTML = `
@@ -955,17 +955,17 @@ function renderPlantSelector() {
         type="text" 
         id="plantSearchInput" 
         class="plant-search-input"
-        placeholder="${lang === 'ar' ? 'ابحث عن نبات...' : 'Search for a plant...'}"
+        placeholder="${i18n.translate('Search for a plant...')}"
       />
       <span class="search-icon">🔍</span>
     </div>
     <div class="search-filters">
-      <button class="filter-btn active" data-filter="all">${lang === 'ar' ? 'الكل' : 'All'}</button>
-      <button class="filter-btn" data-filter="vegetables">${lang === 'ar' ? 'خضروات' : 'Vegetables'}</button>
-      <button class="filter-btn" data-filter="fruits">${lang === 'ar' ? 'فواكه' : 'Fruits'}</button>
-      <button class="filter-btn" data-filter="grains">${lang === 'ar' ? 'حبوب' : 'Grains'}</button>
-      <button class="filter-btn" data-filter="legumes">${lang === 'ar' ? 'بقوليات' : 'Legumes'}</button>
-      <button class="filter-btn" data-filter="herbs">${lang === 'ar' ? 'أعشاب' : 'Herbs'}</button>
+      <button class="filter-btn active" data-filter="all">${i18n.translate('All')}</button>
+      <button class="filter-btn" data-filter="vegetables">${i18n.translate('Vegetables')}</button>
+      <button class="filter-btn" data-filter="fruits">${i18n.translate('Fruits')}</button>
+      <button class="filter-btn" data-filter="grains">${i18n.translate('Grains')}</button>
+      <button class="filter-btn" data-filter="legumes">${i18n.translate('Legumes')}</button>
+      <button class="filter-btn" data-filter="herbs">${i18n.translate('Herbs')}</button>
     </div>
   `;
   selector.appendChild(searchContainer);
@@ -995,8 +995,8 @@ function renderPlantSelector() {
     if (filtered.length === 0) {
       plantsContainer.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; padding: 30px; color: #666;">
-          <p style="font-size: 1.2rem;">🔍 ${lang === 'ar' ? 'لم نجد نباتات' : 'No plants found'}</p>
-          <p style="font-size: 0.9rem;">${lang === 'ar' ? 'جرّب كلمة بحث أخرى' : 'Try a different search term'}</p>
+          <p style="font-size: 1.2rem;">🔍 ${i18n.translate('No plants found')}</p>
+          <p style="font-size: 0.9rem;">${i18n.translate('Try a different search term')}</p>
         </div>
       `;
       return;
@@ -1009,7 +1009,7 @@ function renderPlantSelector() {
       btn.innerHTML = `
         <span class="plant-icon">${plant.icon}</span>
         <span class="plant-name">${getPlantName(plant)}</span>
-        <span class="plant-category">${plant.category}</span>
+        <span class="plant-category">${i18n.translate(plant.category.charAt(0).toUpperCase() + plant.category.slice(1))}</span>
       `;
       btn.addEventListener("click", () => {
         // Check if manual soil form has values
@@ -1021,8 +1021,7 @@ function renderPlantSelector() {
         const manualK = document.getElementById("manualK")?.value;
         
         if (!manualTemp || !manualMoisture || !manualPh || !manualN || !manualP || !manualK) {
-          const lang = i18n.currentLang;
-          alert(lang === 'ar' ? '❌ يرجى ملء جميع حقول التربة أولاً' : '❌ Please fill all soil fields first');
+          alert(i18n.translate('Please fill all soil fields first'));
           return;
         }
         
