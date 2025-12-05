@@ -1274,26 +1274,269 @@ function renderManualResults(result) {
   const compatibility = document.getElementById("plantCompatibility");
   compatibility.innerHTML = "";
   const lang = i18n.currentLang;
+  const plant = result.plant;
+  const reading = appState.soilData;
 
-  if (result.suitable) {
-    compatibility.innerHTML = `<div class="status-box status-good" style="margin-bottom: 15px;">✓ ${lang === 'ar' ? 'التربة مناسبة تماماً لهذا النبات!' : 'Soil is perfect for this plant!'}</div>`;
-  } else {
-    compatibility.innerHTML = `<div class="status-box status-poor" style="margin-bottom: 15px;">✗ ${lang === 'ar' ? 'التربة غير مناسبة للنبات' : 'Soil is not suitable for this plant'}</div>`;
+  // Main suitability status with visual appeal - MORE PROMINENT
+  const suitabilityHtml = result.suitable 
+    ? `
+      <div class="suitability-status suitable">
+        <div class="status-icon">✅</div>
+        <div class="status-content">
+          <h4>${lang === 'ar' ? '🎉 التربة مناسبة تماماً!' : '🎉 Soil is Perfect!'}</h4>
+          <p>${lang === 'ar' ? `تربتك مثالية لزراعة ${plant.nameAr}. يمكنك البدء بالزراعة فوراً!` : `Your soil is ideal for growing ${plant.nameEn}. You can start planting immediately!`}</p>
+        </div>
+      </div>
+    `
+    : `
+      <div class="suitability-status unsuitable">
+        <div class="status-icon">❌</div>
+        <div class="status-content">
+          <h4>${lang === 'ar' ? '⚠️ التربة غير مناسبة حالياً' : '⚠️ Soil is NOT Currently Suitable'}</h4>
+          <p>${lang === 'ar' ? `التربة ليست مناسبة لـ ${plant.nameAr} حالياً. اقرأ التوصيات أدناه لمعرفة كيف تجعلها مناسبة باستخدام الأسمدة الطبيعية.` : `Soil is not suitable for ${plant.nameEn} currently. Read the recommendations below to learn how to make it suitable using natural fertilizers.`}</p>
+        </div>
+      </div>
+    `;
+  
+  compatibility.innerHTML = suitabilityHtml;
+
+  // Show plant requirements vs current values - ALWAYS SHOW
+  const comparisonHtml = `
+    <div class="soil-comparison">
+      <h4>${lang === 'ar' ? '📊 مقارنة قيم التربة مع متطلبات النبات:' : '📊 Soil Values vs Plant Requirements:'}</h4>
+      <div class="comparison-grid">
+        <div class="comparison-item ${reading.temp >= plant.tempMin && reading.temp <= plant.tempMax ? 'good' : 'bad'}">
+          <span class="comp-label">${lang === 'ar' ? 'درجة الحرارة' : 'Temperature'}</span>
+          <span class="comp-values">
+            <span class="current">${lang === 'ar' ? 'الحالي:' : 'Current:'} ${reading.temp}°C</span>
+            <span class="required">${lang === 'ar' ? 'المطلوب:' : 'Required:'} ${plant.tempMin}-${plant.tempMax}°C</span>
+          </span>
+          <span class="comp-status">${reading.temp >= plant.tempMin && reading.temp <= plant.tempMax ? '✓' : '✗'}</span>
+        </div>
+        <div class="comparison-item ${reading.moisture >= plant.moistureMin && reading.moisture <= plant.moistureMax ? 'good' : 'bad'}">
+          <span class="comp-label">${lang === 'ar' ? 'الرطوبة' : 'Moisture'}</span>
+          <span class="comp-values">
+            <span class="current">${lang === 'ar' ? 'الحالي:' : 'Current:'} ${reading.moisture}%</span>
+            <span class="required">${lang === 'ar' ? 'المطلوب:' : 'Required:'} ${plant.moistureMin}-${plant.moistureMax}%</span>
+          </span>
+          <span class="comp-status">${reading.moisture >= plant.moistureMin && reading.moisture <= plant.moistureMax ? '✓' : '✗'}</span>
+        </div>
+        <div class="comparison-item ${reading.ph >= plant.phMin && reading.ph <= plant.phMax ? 'good' : 'bad'}">
+          <span class="comp-label">${lang === 'ar' ? 'الحموضة (pH)' : 'pH Level'}</span>
+          <span class="comp-values">
+            <span class="current">${lang === 'ar' ? 'الحالي:' : 'Current:'} ${reading.ph}</span>
+            <span class="required">${lang === 'ar' ? 'المطلوب:' : 'Required:'} ${plant.phMin}-${plant.phMax}</span>
+          </span>
+          <span class="comp-status">${reading.ph >= plant.phMin && reading.ph <= plant.phMax ? '✓' : '✗'}</span>
+        </div>
+        <div class="comparison-item ${reading.n >= plant.nMin ? 'good' : 'bad'}">
+          <span class="comp-label">${lang === 'ar' ? 'النيتروجين (N)' : 'Nitrogen (N)'}</span>
+          <span class="comp-values">
+            <span class="current">${lang === 'ar' ? 'الحالي:' : 'Current:'} ${reading.n}</span>
+            <span class="required">${lang === 'ar' ? 'المطلوب:' : 'Required:'} ${plant.nMin}+</span>
+          </span>
+          <span class="comp-status">${reading.n >= plant.nMin ? '✓' : '✗'}</span>
+        </div>
+        <div class="comparison-item ${reading.p >= plant.pMin ? 'good' : 'bad'}">
+          <span class="comp-label">${lang === 'ar' ? 'الفسفور (P)' : 'Phosphorus (P)'}</span>
+          <span class="comp-values">
+            <span class="current">${lang === 'ar' ? 'الحالي:' : 'Current:'} ${reading.p}</span>
+            <span class="required">${lang === 'ar' ? 'المطلوب:' : 'Required:'} ${plant.pMin}+</span>
+          </span>
+          <span class="comp-status">${reading.p >= plant.pMin ? '✓' : '✗'}</span>
+        </div>
+        <div class="comparison-item ${reading.k >= plant.kMin ? 'good' : 'bad'}">
+          <span class="comp-label">${lang === 'ar' ? 'البوتاسيوم (K)' : 'Potassium (K)'}</span>
+          <span class="comp-values">
+            <span class="current">${lang === 'ar' ? 'الحالي:' : 'Current:'} ${reading.k}</span>
+            <span class="required">${lang === 'ar' ? 'المطلوب:' : 'Required:'} ${plant.kMin}+</span>
+          </span>
+          <span class="comp-status">${reading.k >= plant.kMin ? '✓' : '✗'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  compatibility.innerHTML += comparisonHtml;
+
+  // Show issues if any
+  if (result.issues.length > 0) {
+    const issuesSection = document.createElement("div");
+    issuesSection.className = "issues-section";
+    issuesSection.innerHTML = `<h4>${lang === 'ar' ? '❌ المشاكل المكتشفة:' : '❌ Detected Issues:'}</h4>`;
+    
+    result.issues.forEach((issue) => {
+      const issueEl = document.createElement("div");
+      issueEl.className = "issue-item";
+      issueEl.innerHTML = `<span class="issue-icon">⚠️</span> ${issue}`;
+      issuesSection.appendChild(issueEl);
+    });
+    compatibility.appendChild(issuesSection);
   }
 
-  result.issues.forEach((issue) => {
-    const issueEl = document.createElement("div");
-    issueEl.className = "issue-item";
-    issueEl.innerHTML = `<span style="color: #dc2626;">✗</span> ${issue}`;
-    compatibility.appendChild(issueEl);
-  });
+  // Add DIRECT natural fertilizer recommendations for unsuitable soil (without AI dependency)
+  if (!result.suitable) {
+    const fertilizerSection = document.createElement("div");
+    fertilizerSection.className = "natural-fertilizers-direct";
+    
+    let fertilizerHtml = `
+      <h4>${lang === 'ar' ? '🌿 كيف تجعل التربة مناسبة باستخدام الأسمدة الطبيعية:' : '🌿 How to Make Soil Suitable Using Natural Fertilizers:'}</h4>
+    `;
+    
+    // Nitrogen deficiency
+    if (reading.n < plant.nMin) {
+      const deficit = plant.nMin - reading.n;
+      fertilizerHtml += `
+        <div class="fertilizer-recommendation">
+          <h5>${lang === 'ar' ? '🌱 لزيادة النيتروجين (نقص: ' + deficit.toFixed(0) + ' وحدة)' : '🌱 To Increase Nitrogen (Deficit: ' + deficit.toFixed(0) + ' units)'}</h5>
+          <div class="fertilizer-options">
+            <div class="fertilizer-option best">
+              <span class="option-badge">${lang === 'ar' ? '⭐ الأفضل' : '⭐ Best'}</span>
+              <strong>${lang === 'ar' ? 'سماد الدجاج العضوي' : 'Organic Chicken Manure'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>${Math.round(deficit * 15)} ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُضاف للتربة ويُخلط قبل الزراعة بأسبوع' : '📝 Application: Mix into soil one week before planting'}</p>
+            </div>
+            <div class="fertilizer-option">
+              <span class="option-badge secondary">${lang === 'ar' ? 'بديل' : 'Alternative'}</span>
+              <strong>${lang === 'ar' ? 'سماد البقر المتحلل' : 'Aged Cow Manure'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>${Math.round(deficit * 25)} ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُدفن بعمق 10-15 سم' : '📝 Application: Bury 10-15 cm deep'}</p>
+            </div>
+            <div class="fertilizer-option">
+              <span class="option-badge secondary">${lang === 'ar' ? 'اقتصادي' : 'Budget'}</span>
+              <strong>${lang === 'ar' ? 'بقايا القهوة المطحونة' : 'Coffee Grounds'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>${Math.round(deficit * 10)} ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُخلط مع ماء الري' : '📝 Application: Mix with watering'}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Phosphorus deficiency
+    if (reading.p < plant.pMin) {
+      const deficit = plant.pMin - reading.p;
+      fertilizerHtml += `
+        <div class="fertilizer-recommendation">
+          <h5>${lang === 'ar' ? '🌻 لزيادة الفسفور (نقص: ' + deficit.toFixed(0) + ' وحدة)' : '🌻 To Increase Phosphorus (Deficit: ' + deficit.toFixed(0) + ' units)'}</h5>
+          <div class="fertilizer-options">
+            <div class="fertilizer-option best">
+              <span class="option-badge">${lang === 'ar' ? '⭐ الأفضل' : '⭐ Best'}</span>
+              <strong>${lang === 'ar' ? 'دقيق العظام الناعم' : 'Fine Bone Meal'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>${Math.round(deficit * 8)} ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُرش ويُقلب مع التربة السطحية' : '📝 Application: Spread and mix with topsoil'}</p>
+            </div>
+            <div class="fertilizer-option">
+              <span class="option-badge secondary">${lang === 'ar' ? 'بديل' : 'Alternative'}</span>
+              <strong>${lang === 'ar' ? 'رماد الخشب' : 'Wood Ash'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>${Math.round(deficit * 12)} ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُنشر بالتساوي على سطح التربة' : '📝 Application: Spread evenly on soil surface'}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Potassium deficiency
+    if (reading.k < plant.kMin) {
+      const deficit = plant.kMin - reading.k;
+      fertilizerHtml += `
+        <div class="fertilizer-recommendation">
+          <h5>${lang === 'ar' ? '💪 لزيادة البوتاسيوم (نقص: ' + deficit.toFixed(0) + ' وحدة)' : '💪 To Increase Potassium (Deficit: ' + deficit.toFixed(0) + ' units)'}</h5>
+          <div class="fertilizer-options">
+            <div class="fertilizer-option best">
+              <span class="option-badge">${lang === 'ar' ? '⭐ الأفضل' : '⭐ Best'}</span>
+              <strong>${lang === 'ar' ? 'رماد الخشب عالي الجودة' : 'High-Quality Wood Ash'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>${Math.round(deficit * 10)} ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُنشر بانتظام على التربة' : '📝 Application: Spread regularly on soil'}</p>
+            </div>
+            <div class="fertilizer-option">
+              <span class="option-badge secondary">${lang === 'ar' ? 'بديل صديق للبيئة' : 'Eco-friendly'}</span>
+              <strong>${lang === 'ar' ? 'قشور الموز المجففة والمطحونة' : 'Dried & Ground Banana Peels'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>${Math.round(deficit * 5)} ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُضاف مع السماد العضوي' : '📝 Application: Add with organic fertilizer'}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // pH adjustment
+    if (reading.ph < plant.phMin) {
+      fertilizerHtml += `
+        <div class="fertilizer-recommendation">
+          <h5>${lang === 'ar' ? '🔬 لرفع درجة الحموضة (التربة حمضية جداً)' : '🔬 To Raise pH (Soil is Too Acidic)'}</h5>
+          <div class="fertilizer-options">
+            <div class="fertilizer-option best">
+              <span class="option-badge">${lang === 'ar' ? '⭐ الأفضل' : '⭐ Best'}</span>
+              <strong>${lang === 'ar' ? 'الجير الزراعي' : 'Agricultural Lime'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>100-200 ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُرش ويُخلط مع التربة، ثم يُسقى' : '📝 Application: Spread, mix with soil, then water'}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (reading.ph > plant.phMax) {
+      fertilizerHtml += `
+        <div class="fertilizer-recommendation">
+          <h5>${lang === 'ar' ? '🔬 لخفض درجة الحموضة (التربة قلوية جداً)' : '🔬 To Lower pH (Soil is Too Alkaline)'}</h5>
+          <div class="fertilizer-options">
+            <div class="fertilizer-option best">
+              <span class="option-badge">${lang === 'ar' ? '⭐ الأفضل' : '⭐ Best'}</span>
+              <strong>${lang === 'ar' ? 'الكبريت الزراعي أو السماد العضوي الحمضي' : 'Agricultural Sulfur or Acidic Organic Matter'}</strong>
+              <p class="amount">${lang === 'ar' ? '📦 الكمية:' : '📦 Amount:'} <span>50-100 ${lang === 'ar' ? 'جرام لكل متر مربع' : 'grams per sq meter'}</span></p>
+              <p class="application">${lang === 'ar' ? '📝 التطبيق: يُضاف تدريجياً مع مراقبة pH' : '📝 Application: Add gradually while monitoring pH'}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Summary action plan
+    fertilizerHtml += `
+      <div class="action-summary">
+        <h5>${lang === 'ar' ? '📋 ملخص خطة العمل:' : '📋 Action Plan Summary:'}</h5>
+        <ol>
+          <li>${lang === 'ar' ? 'اجمع المواد الطبيعية الموصى بها أعلاه' : 'Gather the recommended natural materials above'}</li>
+          <li>${lang === 'ar' ? 'أضف الأسمدة الطبيعية للتربة قبل الزراعة بـ 7-14 يوم' : 'Add natural fertilizers to soil 7-14 days before planting'}</li>
+          <li>${lang === 'ar' ? 'اسقِ التربة جيداً بعد إضافة الأسمدة' : 'Water soil well after adding fertilizers'}</li>
+          <li>${lang === 'ar' ? 'أعد قياس التربة بعد أسبوعين للتأكد من التحسن' : 'Re-measure soil after 2 weeks to confirm improvement'}</li>
+        </ol>
+        <p class="estimated-time">⏱️ ${lang === 'ar' ? 'الوقت المتوقع للتحسن: 14-21 يوم' : 'Expected improvement time: 14-21 days'}</p>
+      </div>
+    `;
+    
+    fertilizerSection.innerHTML = fertilizerHtml;
+    compatibility.appendChild(fertilizerSection);
+  } else {
+    // Show tips for maintaining good soil
+    const maintainSection = document.createElement("div");
+    maintainSection.className = "maintain-tips";
+    maintainSection.innerHTML = `
+      <h4>${lang === 'ar' ? '✨ نصائح للحفاظ على جودة التربة:' : '✨ Tips to Maintain Soil Quality:'}</h4>
+      <ul>
+        <li>${lang === 'ar' ? 'استمر في الري المنتظم حسب احتياجات النبات' : 'Continue regular watering according to plant needs'}</li>
+        <li>${lang === 'ar' ? 'أضف السماد العضوي كل 3-4 أشهر' : 'Add organic compost every 3-4 months'}</li>
+        <li>${lang === 'ar' ? 'راقب مستوى العناصر الغذائية بشكل دوري' : 'Monitor nutrient levels periodically'}</li>
+        <li>${lang === 'ar' ? 'حافظ على تهوية التربة بالتقليب الخفيف' : 'Maintain soil aeration with light tilling'}</li>
+      </ul>
+    `;
+    compatibility.appendChild(maintainSection);
+  }
 
-  result.tips.forEach((tip) => {
-    const tipEl = document.createElement("div");
-    tipEl.className = "tip-item";
-    tipEl.innerHTML = `<span style="color: #059669;">💡</span> ${tip}`;
-    compatibility.appendChild(tipEl);
-  });
+  // Show quick tips
+  if (result.tips.length > 0) {
+    const tipsSection = document.createElement("div");
+    tipsSection.className = "quick-tips-section";
+    tipsSection.innerHTML = `<h4>${lang === 'ar' ? '💡 نصائح إضافية:' : '💡 Additional Tips:'}</h4>`;
+    
+    result.tips.forEach((tip) => {
+      const tipEl = document.createElement("div");
+      tipEl.className = "tip-item";
+      tipEl.innerHTML = `<span class="tip-icon">💡</span> ${tip}`;
+      tipsSection.appendChild(tipEl);
+    });
+    compatibility.appendChild(tipsSection);
+  }
 }
 
 function createPlantCard(result, isGood) {
@@ -1648,7 +1891,7 @@ function renderAdvancedRecommendations(analysis, soilQuality, implementationPlan
         resultsContainer.appendChild(div.firstElementChild);
       }
     } else {
-      advancedSection.innerHTML = advancedRecommendationsHtml;
+      advancedSection.outerHTML = advancedRecommendationsHtml;
     }
   }
 }

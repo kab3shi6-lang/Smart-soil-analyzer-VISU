@@ -2000,3 +2000,568 @@ body {
   color: #1e293b;
 }
 
+/* ============================================ */
+/* Manual Mode Suitability Display Styles */
+/* ============================================ */
+
+.suitability-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.suitability-status.suitable {
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  border: 2px solid #22c55e;
+}
+
+.suitability-status.unsuitable {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #f59e0b;
+}
+
+.suitability-status .status-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.suitability-status .status-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 1.3rem;
+}
+
+.suitability-status.suitable .status-content h4 {
+  color: #166534;
+}
+
+.suitability-status.unsuitable .status-content h4 {
+  color: #92400e;
+}
+
+.suitability-status .status-content p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.suitability-status.suitable .status-content p {
+  color: #15803d;
+}
+
+.suitability-status.unsuitable .status-content p {
+  color: #a16207;
+}
+
+/* Soil Comparison Grid */
+.soil-comparison {
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.soil-comparison h4 {
+  margin: 0 0 15px 0;
+  color: #334155;
+  font-size: 1.1rem;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.comparison-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 15px;
+  border-radius: 10px;
+  background: white;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.comparison-item.good {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+}
+
+.comparison-item.bad {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+}
+
+.comparison-item .comp-label {
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.comparison-item .comp-values {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.comparison-item .current {
+  color: #64748b;
+}
+
+.comparison-item .required {
+  color: #475569;
+  font-weight: 500;
+}
+
+.comparison-item .comp-status {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.comparison-item.good .comp-status {
+  color: #22c55e;
+}
+
+.comparison-item.bad .comp-status {
+  color: #ef4444;
+}
+
+/* Issues Section */
+.issues-section {
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border-left: 4px solid #ef4444;
+}
+
+.issues-section h4 {
+  margin: 0 0 15px 0;
+  color: #991b1b;
+  font-size: 1.1rem;
+}
+
+.issues-section .issue-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: #dc2626;
+}
+
+.issues-section .issue-item:last-child {
+  margin-bottom: 0;
+}
+
+.issues-section .issue-icon {
+  font-size: 1.1rem;
+}
+
+/* Quick Tips Section */
+.quick-tips-section {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border-left: 4px solid #22c55e;
+}
+
+.quick-tips-section h4 {
+  margin: 0 0 15px 0;
+  color: #166534;
+  font-size: 1.1rem;
+}
+
+.quick-tips-section .tip-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: #15803d;
+}
+
+.quick-tips-section .tip-item:last-child {
+  margin-bottom: 0;
+}
+
+.quick-tips-section .tip-icon {
+  font-size: 1.1rem;
+}
+
+/* Enhanced AI Recommendations for Manual Mode */
+.ai-recommendations-section {
+  background: linear-gradient(135deg, #f8f9ff, #f0f4ff);
+  border-radius: 15px;
+  padding: 25px;
+  margin-top: 25px;
+  border-left: 5px solid #1a5f4a;
+  box-shadow: 0 8px 25px rgba(26, 95, 74, 0.1);
+}
+
+.natural-fertilizers-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.natural-fertilizers-section h4 {
+  margin: 0 0 15px 0;
+  color: #1a5f4a;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fertilizer-card {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #86efac;
+}
+
+.fertilizer-card:last-child {
+  margin-bottom: 0;
+}
+
+.fertilizer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.fertilizer-name {
+  font-weight: 700;
+  color: #166534;
+  font-size: 1.1rem;
+}
+
+.fertilizer-priority {
+  background: #22c55e;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.fertilizer-details {
+  display: grid;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.fertilizer-details p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fertilizer-details .amount {
+  background: #166534;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .suitability-status {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .comparison-item {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .comparison-item .comp-values {
+    flex-direction: row;
+    gap: 10px;
+  }
+}
+
+/* ============================================ */
+/* Natural Fertilizer Recommendations Styles */
+/* ============================================ */
+
+.natural-fertilizers-direct {
+  background: linear-gradient(135deg, #fefce8, #fef9c3);
+  border-radius: 15px;
+  padding: 25px;
+  margin-top: 20px;
+  border: 2px solid #eab308;
+  box-shadow: 0 8px 25px rgba(234, 179, 8, 0.15);
+}
+
+.natural-fertilizers-direct h4 {
+  color: #854d0e;
+  font-size: 1.3rem;
+  margin: 0 0 20px 0;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #fcd34d;
+}
+
+.fertilizer-recommendation {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #fde68a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.fertilizer-recommendation:last-of-type {
+  margin-bottom: 20px;
+}
+
+.fertilizer-recommendation h5 {
+  color: #166534;
+  font-size: 1.15rem;
+  margin: 0 0 15px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px dashed #86efac;
+}
+
+.fertilizer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.fertilizer-option {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border-radius: 10px;
+  padding: 15px;
+  border-left: 4px solid #64748b;
+  transition: all 0.3s ease;
+}
+
+.fertilizer-option:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.fertilizer-option.best {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border-left-color: #22c55e;
+  border-width: 5px;
+}
+
+.option-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.option-badge.secondary {
+  background: linear-gradient(135deg, #64748b, #475569);
+}
+
+.fertilizer-option strong {
+  display: block;
+  color: #1e293b;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.fertilizer-option .amount {
+  margin: 0 0 8px 0;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.fertilizer-option .amount span {
+  background: #166534;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.fertilizer-option .application {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Action Summary Styles */
+.action-summary {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 2px solid #3b82f6;
+}
+
+.action-summary h5 {
+  color: #1e40af;
+  font-size: 1.1rem;
+  margin: 0 0 15px 0;
+}
+
+.action-summary ol {
+  margin: 0 0 15px 0;
+  padding-right: 20px;
+  counter-reset: step-counter;
+  list-style: none;
+}
+
+.action-summary ol li {
+  position: relative;
+  padding: 10px 15px 10px 45px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: #1e3a8a;
+  font-size: 0.95rem;
+  counter-increment: step-counter;
+  border-left: 3px solid #3b82f6;
+}
+
+.action-summary ol li::before {
+  content: counter(step-counter);
+  position: absolute;
+  right: auto;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #3b82f6;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+[dir="rtl"] .action-summary ol li::before {
+  left: auto;
+  right: 10px;
+}
+
+[dir="rtl"] .action-summary ol li {
+  padding: 10px 45px 10px 15px;
+  border-left: none;
+  border-right: 3px solid #3b82f6;
+}
+
+.action-summary .estimated-time {
+  margin: 0;
+  color: #1e40af;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+}
+
+/* Maintain Tips for Good Soil */
+.maintain-tips {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 2px solid #22c55e;
+}
+
+.maintain-tips h4 {
+  color: #166534;
+  font-size: 1.1rem;
+  margin: 0 0 15px 0;
+}
+
+.maintain-tips ul {
+  margin: 0;
+  padding-right: 20px;
+  list-style: none;
+}
+
+.maintain-tips ul li {
+  position: relative;
+  padding: 10px 15px 10px 35px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: #15803d;
+  font-size: 0.95rem;
+}
+
+.maintain-tips ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 10px;
+  color: #22c55e;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+[dir="rtl"] .maintain-tips ul li::before {
+  left: auto;
+  right: 10px;
+}
+
+[dir="rtl"] .maintain-tips ul li {
+  padding: 10px 35px 10px 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .natural-fertilizers-direct {
+    padding: 15px;
+  }
+  
+  .fertilizer-recommendation {
+    padding: 15px;
+  }
+  
+  .fertilizer-option {
+    padding: 12px;
+  }
+  
+  .action-summary ol li {
+    padding: 8px 12px 8px 40px;
+    font-size: 0.9rem;
+  }
+  
+  [dir="rtl"] .action-summary ol li {
+    padding: 8px 40px 8px 12px;
+  }
+}
+
