@@ -1881,17 +1881,18 @@ function renderAdvancedRecommendations(analysis, soilQuality, implementationPlan
   // إضافة قسم التوصيات الذكية إلى صفحة النتائج
   const resultsContainer = document.getElementById("manualResultContainer");
   if (resultsContainer) {
-    // البحث عن قسم موجود أو إنشاء واحد جديد
+    // البحث عن قسم موجود وإزالته إن وجد
     let advancedSection = resultsContainer.querySelector('.ai-recommendations-section');
-    if (!advancedSection) {
-      const div = document.createElement('div');
-      div.innerHTML = advancedRecommendationsHtml;
-      // التحقق من وجود العنصر قبل الإضافة
-      if (div.firstElementChild) {
-        resultsContainer.appendChild(div.firstElementChild);
-      }
-    } else {
-      advancedSection.outerHTML = advancedRecommendationsHtml;
+    if (advancedSection) {
+      advancedSection.remove();
+    }
+    
+    // إنشاء القسم الجديد وإضافته
+    const div = document.createElement('div');
+    div.innerHTML = advancedRecommendationsHtml;
+    // التحقق من وجود العنصر قبل الإضافة
+    if (div.firstElementChild) {
+      resultsContainer.appendChild(div.firstElementChild);
     }
   }
 }
@@ -2015,23 +2016,24 @@ function renderAutoAIRecommendations(analysis, soilQuality, implementationPlan) 
   // إضافة قسم AI للوضع التلقائي
   const autoContainer = document.getElementById("autoResultContainer");
   if (autoContainer) {
-    // البحث عن قسم موجود أو إنشاء واحد جديد
+    // البحث عن قسم موجود وإزالته إن وجد
     let autoAISection = autoContainer.querySelector('.ai-recommendations-section');
-    if (!autoAISection) {
-      const div = document.createElement('div');
-      div.innerHTML = autoAIHtml;
-      // التحقق من وجود العنصر قبل الإضافة
-      if (div.firstElementChild) {
-        // إضافة قبل قائمة النباتات
-        const suitableList = autoContainer.querySelector('#suitableList');
-        if (suitableList && suitableList.parentNode) {
-          suitableList.parentNode.insertBefore(div.firstElementChild, suitableList);
-        } else {
-          autoContainer.appendChild(div.firstElementChild);
-        }
+    if (autoAISection) {
+      autoAISection.remove();
+    }
+    
+    // إنشاء القسم الجديد
+    const div = document.createElement('div');
+    div.innerHTML = autoAIHtml;
+    // التحقق من وجود العنصر قبل الإضافة
+    if (div.firstElementChild) {
+      // إضافة قبل قائمة النباتات
+      const suitableList = autoContainer.querySelector('#suitableList');
+      if (suitableList && suitableList.parentNode) {
+        suitableList.parentNode.insertBefore(div.firstElementChild, suitableList);
+      } else {
+        autoContainer.appendChild(div.firstElementChild);
       }
-    } else {
-      autoAISection.outerHTML = autoAIHtml;
     }
   }
 }
