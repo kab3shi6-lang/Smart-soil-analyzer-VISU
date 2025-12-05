@@ -7,11 +7,11 @@ let isBtConnected = false;
 
 /**
  * الاتصال بجسر البلوتوث (Node.js bridge.js)
- * يعمل عبر ws://localhost:8080
+ * يعمل عبر ws://localhost:3000
  */
 function startBluetoothBridge() {
   try {
-    btSocket = new WebSocket("ws://localhost:8080");
+    btSocket = new WebSocket("ws://localhost:3000");
 
     btSocket.onopen = () => {
       console.log("🌐 Connected to Bluetooth Bridge");
@@ -28,22 +28,95 @@ function startBluetoothBridge() {
       const span = document.getElementById("btDataValue");
       if (span) span.textContent = msg;
 
-      // معالجة قيم التربة إذا أرسلها الأردوينو
-      if (msg.includes("=")) {
-        const obj = {};
+      // Try to parse and update form fields with different formats
+      let data = {};
+      
+      // JSON format from Arduino
+      if (msg.startsWith('{')) {
+        try {
+          const jsonData = JSON.parse(msg);
+          data.temp = jsonData.temperature || jsonData.temp;
+          data.moisture = jsonData.moisture;
+          data.ph = jsonData.pH || jsonData.ph;
+          data.n = jsonData.nitrogen || jsonData.n;
+          data.p = jsonData.phosphorus || jsonData.p;
+          data.k = jsonData.potassium || jsonData.k;
+        } catch (e) {
+          console.log('JSON parse error, trying other formats');
+        }
+      }
+      // Key:Value format (TEMP:22.5,MOISTURE:65)
+      else if (msg.includes(":")) {
+        msg.split(",").forEach(pair => {
+          const [k, v] = pair.split(":");
+          if (k && v) {
+            const key = k.trim().toLowerCase();
+            const val = parseFloat(v);
+            if (key === 'temp' || key === 'temperature') data.temp = val;
+            else if (key === 'moisture') data.moisture = val;
+            else if (key === 'ph') data.ph = val;
+            else if (key === 'n' || key === 'nitrogen') data.n = val;
+            else if (key === 'p' || key === 'phosphorus') data.p = val;
+            else if (key === 'k' || key === 'potassium') data.k = val;
+          }
+        });
+      }
+      // Key=Value format (temp=22.5,moist=65)
+      else if (msg.includes("=")) {
         msg.split(",").forEach(pair => {
           const [k, v] = pair.split("=");
-          if (k && v) obj[k.trim()] = parseFloat(v);
+          if (k && v) {
+            const key = k.trim().toLowerCase();
+            const val = parseFloat(v);
+            if (key === 'temp' || key === 'temperature') data.temp = val;
+            else if (key === 'moist' || key === 'moisture') data.moisture = val;
+            else if (key === 'ph') data.ph = val;
+            else if (key === 'n') data.n = val;
+            else if (key === 'p') data.p = val;
+            else if (key === 'k') data.k = val;
+          }
         });
-
-        // ملء الحقول تلقائياً إذا وجدت
-        if (obj.temp) document.getElementById("temp").value = obj.temp;
-        if (obj.moist) document.getElementById("moisture").value = obj.moist;
-        if (obj.pH) document.getElementById("ph").value = obj.pH;
-        if (obj.N) document.getElementById("n").value = obj.N;
-        if (obj.P) document.getElementById("p").value = obj.P;
-        if (obj.K) document.getElementById("k").value = obj.K;
       }
+
+      // Update both auto and manual form fields
+      if (data.temp !== undefined && !isNaN(data.temp)) {
+        const t1 = document.getElementById("temp");
+        const t2 = document.getElementById("manualTemp");
+        if (t1) t1.value = data.temp;
+        if (t2) t2.value = data.temp;
+      }
+      if (data.moisture !== undefined && !isNaN(data.moisture)) {
+        const m1 = document.getElementById("moisture");
+        const m2 = document.getElementById("manualMoisture");
+        if (m1) m1.value = data.moisture;
+        if (m2) m2.value = data.moisture;
+      }
+      if (data.ph !== undefined && !isNaN(data.ph)) {
+        const ph1 = document.getElementById("ph");
+        const ph2 = document.getElementById("manualPh");
+        if (ph1) ph1.value = data.ph;
+        if (ph2) ph2.value = data.ph;
+      }
+      if (data.n !== undefined && !isNaN(data.n)) {
+        const n1 = document.getElementById("n");
+        const n2 = document.getElementById("manualN");
+        if (n1) n1.value = data.n;
+        if (n2) n2.value = data.n;
+      }
+      if (data.p !== undefined && !isNaN(data.p)) {
+        const p1 = document.getElementById("p");
+        const p2 = document.getElementById("manualP");
+        if (p1) p1.value = data.p;
+        if (p2) p2.value = data.p;
+      }
+      if (data.k !== undefined && !isNaN(data.k)) {
+        const k1 = document.getElementById("k");
+        const k2 = document.getElementById("manualK");
+        if (k1) k1.value = data.k;
+        if (k2) k2.value = data.k;
+      }
+      
+      console.log("✅ Form fields updated with:", data);
     };
 
     btSocket.onerror = (err) => {
@@ -53,6 +126,8 @@ function startBluetoothBridge() {
     btSocket.onclose = () => {
       console.log("⚪ Bluetooth bridge disconnected");
       isBtConnected = false;
+      // Try to reconnect after 5 seconds
+      setTimeout(startBluetoothBridge, 5000);
     };
 
   } catch (e) {
@@ -65,7 +140,7 @@ window.addEventListener("load", () => {
   startBluetoothBridge();
 });
 
-// قاعدة بيانات شاملة للنباتات مع 1000+ نبات
+// قاعدة بيانات شاملة للنباتات مع 2000+ نبات
 let plants = [];
 
 // بيانات النباتات الأساسية
@@ -120,7 +195,7 @@ const basePlantsData = [
   { nameAr: "الفلفل الأسود", nameEn: "Black Pepper", icon: "⚫", category: "spices" },
 ];
 
-// دالة لإنشاء 1000+ نبات ديناميكياً بدون تكرار
+// دالة لإنشاء 2000+ نبات ديناميكياً بدون تكرار
 function generateLargePlantsDatabase() {
   plants = [];
   const icons = ["🍅", "🥔", "🌾", "🫘", "🥕", "🥬", "🌶️", "🌿", "🧅", "🥒", "🌽", "🍓", "🍎", "🍊", "🍋", "🍌", "🍇"];
@@ -148,11 +223,16 @@ function generateLargePlantsDatabase() {
     { arSuffix: " (مبكر جداً)", enSuffix: " (Very Early)" },
     { arSuffix: " (متوسط المدة)", enSuffix: " (Mid Season)" },
     { arSuffix: " (محسّن اللون)", enSuffix: " (Color Enhanced)" },
+    { arSuffix: " (مقاوم للحشرات)", enSuffix: " (Pest Resistant)" },
+    { arSuffix: " (صنف ممتاز)", enSuffix: " (Premium)" },
+    { arSuffix: " (مقاوم للبرودة)", enSuffix: " (Cold Resistant)" },
+    { arSuffix: " (مقاوم للحرارة)", enSuffix: " (Heat Tolerant)" },
+    { arSuffix: " (صنف استوائي)", enSuffix: " (Tropical)" },
   ];
   
-  // توليد 1000+ نبات بدون تكرار
+  // توليد 2000+ نبات بدون تكرار
   const usedCombinations = new Set();
-  let targetCount = 1050;
+  let targetCount = 2050;
   
   // استراتيجية 1: مزج الأصناف مع النباتات الأساسية
   basePlantsData.forEach((base) => {
@@ -174,36 +254,104 @@ function generateLargePlantsDatabase() {
   
   // استراتيجية 2: إضافة نباتات إضافية حقيقية إذا لزم الأمر
   const additionalPlants = [
+    // الخضروات
     { nameAr: "اليقطين", nameEn: "Pumpkin", icon: "🎃", category: "vegetables" },
-    { nameAr: "الشمس (عباد الشمس)", nameEn: "Sunflower", icon: "🌻", category: "flowers" },
-    { nameAr: "الزهور", nameEn: "Flowers", icon: "🌸", category: "flowers" },
-    { nameAr: "الورود", nameEn: "Roses", icon: "🌹", category: "flowers" },
-    { nameAr: "الكركديه", nameEn: "Hibiscus", icon: "🌺", category: "flowers" },
+    { nameAr: "القرع", nameEn: "Squash", icon: "🟨", category: "vegetables" },
+    { nameAr: "الفلفل البوابيا", nameEn: "Bell Pepper", icon: "🫑", category: "vegetables" },
+    { nameAr: "القرنبيط", nameEn: "Cauliflower", icon: "🥬", category: "vegetables" },
+    { nameAr: "البطاطا الحلوة", nameEn: "Sweet Potato", icon: "🍠", category: "vegetables" },
+    { nameAr: "الفجل الأبيض", nameEn: "White Radish", icon: "⚪", category: "vegetables" },
+    { nameAr: "الكرفس", nameEn: "Celery", icon: "🥬", category: "vegetables" },
+    { nameAr: "الخرشوف", nameEn: "Artichoke", icon: "🌿", category: "vegetables" },
+    { nameAr: "الهليون", nameEn: "Asparagus", icon: "🌱", category: "vegetables" },
+    { nameAr: "الراوند", nameEn: "Rhubarb", icon: "🌿", category: "vegetables" },
+    { nameAr: "البامية", nameEn: "Okra", icon: "🟢", category: "vegetables" },
+    { nameAr: "الخردل", nameEn: "Mustard Greens", icon: "🥬", category: "vegetables" },
+    { nameAr: "السلق", nameEn: "Swiss Chard", icon: "🥬", category: "vegetables" },
+    { nameAr: "اللوبيا", nameEn: "Cowpea", icon: "🟤", category: "vegetables" },
+    
+    // الفواكه
     { nameAr: "التمر", nameEn: "Date", icon: "🔗", category: "fruits" },
     { nameAr: "التوت", nameEn: "Mulberry", icon: "🫐", category: "fruits" },
     { nameAr: "الرمان", nameEn: "Pomegranate", icon: "🥭", category: "fruits" },
     { nameAr: "الجوافة", nameEn: "Guava", icon: "🥝", category: "fruits" },
     { nameAr: "جوز الهند", nameEn: "Coconut", icon: "🥥", category: "fruits" },
     { nameAr: "الأفوكادو", nameEn: "Avocado", icon: "🥑", category: "fruits" },
+    { nameAr: "الكرز", nameEn: "Cherry", icon: "🍒", category: "fruits" },
+    { nameAr: "الخوخ", nameEn: "Peach", icon: "🍑", category: "fruits" },
+    { nameAr: "المشمش", nameEn: "Apricot", icon: "🍑", category: "fruits" },
+    { nameAr: "البرقوق", nameEn: "Plum", icon: "🫐", category: "fruits" },
+    { nameAr: "الكمثرى", nameEn: "Pear", icon: "🍐", category: "fruits" },
+    { nameAr: "التين", nameEn: "Fig", icon: "🟣", category: "fruits" },
+    { nameAr: "الباباي", nameEn: "Papaya", icon: "🥭", category: "fruits" },
+    { nameAr: "الليتشي", nameEn: "Lychee", icon: "🔴", category: "fruits" },
+    { nameAr: "الباشن فروت", nameEn: "Passion Fruit", icon: "🟡", category: "fruits" },
+    { nameAr: "التوت البري", nameEn: "Blueberry", icon: "🫐", category: "fruits" },
+    { nameAr: "توت العليق", nameEn: "Raspberry", icon: "🔴", category: "fruits" },
+    { nameAr: "التوت الأسود", nameEn: "Blackberry", icon: "⚫", category: "fruits" },
+    
+    // الحبوب
     { nameAr: "الرز البري", nameEn: "Wild Rice", icon: "🍚", category: "grains" },
-    { nameAr: "العدس الأحمر", nameEn: "Red Lentils", icon: "🟤", category: "legumes" },
-    { nameAr: "العدس الأسود", nameEn: "Black Lentils", icon: "⚫", category: "legumes" },
-    { nameAr: "الفول السوداني", nameEn: "Peanut", icon: "🥜", category: "legumes" },
-    { nameAr: "الحبة السوداء", nameEn: "Black Seed", icon: "⚫", category: "spices" },
-    { nameAr: "الشمر البري", nameEn: "Wild Fennel", icon: "🌿", category: "herbs" },
-    { nameAr: "عرق السوس", nameEn: "Licorice", icon: "🌿", category: "herbs" },
-    { nameAr: "الأقحوان", nameEn: "Marigold", icon: "🌼", category: "flowers" },
-    { nameAr: "البابونج", nameEn: "Chamomile", icon: "🌼", category: "herbs" },
-    { nameAr: "الفلفل البوابيا", nameEn: "Bell Pepper", icon: "🫑", category: "vegetables" },
-    { nameAr: "القرع", nameEn: "Squash", icon: "🟨", category: "vegetables" },
-    { nameAr: "الحمص الأسود", nameEn: "Black Chickpea", icon: "🟤", category: "legumes" },
-    { nameAr: "الشوفان البري", nameEn: "Wild Oats", icon: "🌾", category: "grains" },
-    { nameAr: "السمسم", nameEn: "Sesame", icon: "🤎", category: "spices" },
-    { nameAr: "بذور الكتان", nameEn: "Flax Seeds", icon: "🟤", category: "spices" },
     { nameAr: "القمح الأسمر", nameEn: "Buckwheat", icon: "🌾", category: "grains" },
     { nameAr: "الشعير الأسود", nameEn: "Black Barley", icon: "🌾", category: "grains" },
     { nameAr: "الذرة السوداء", nameEn: "Black Corn", icon: "🌽", category: "grains" },
     { nameAr: "الأرز البني", nameEn: "Brown Rice", icon: "🍚", category: "grains" },
+    { nameAr: "الشوفان البري", nameEn: "Wild Oats", icon: "🌾", category: "grains" },
+    { nameAr: "الكينوا", nameEn: "Quinoa", icon: "🌾", category: "grains" },
+    { nameAr: "الأمارانث", nameEn: "Amaranth", icon: "🌾", category: "grains" },
+    { nameAr: "الحنطة السوداء", nameEn: "Bulgur", icon: "🌾", category: "grains" },
+    { nameAr: "الفريك", nameEn: "Freekeh", icon: "🌾", category: "grains" },
+    
+    // البقوليات
+    { nameAr: "العدس الأحمر", nameEn: "Red Lentils", icon: "🟤", category: "legumes" },
+    { nameAr: "العدس الأسود", nameEn: "Black Lentils", icon: "⚫", category: "legumes" },
+    { nameAr: "الفول السوداني", nameEn: "Peanut", icon: "🥜", category: "legumes" },
+    { nameAr: "الحمص الأسود", nameEn: "Black Chickpea", icon: "🟤", category: "legumes" },
+    { nameAr: "الفول المدمس", nameEn: "Fava Beans", icon: "🫘", category: "legumes" },
+    { nameAr: "الترمس", nameEn: "Lupini Beans", icon: "🟡", category: "legumes" },
+    { nameAr: "الفاصوليا السوداء", nameEn: "Black Beans", icon: "⚫", category: "legumes" },
+    { nameAr: "الفاصوليا البيضاء", nameEn: "White Beans", icon: "⚪", category: "legumes" },
+    { nameAr: "الفاصوليا الحمراء", nameEn: "Red Kidney Beans", icon: "🔴", category: "legumes" },
+    
+    // الأعشاب
+    { nameAr: "الشمر البري", nameEn: "Wild Fennel", icon: "🌿", category: "herbs" },
+    { nameAr: "عرق السوس", nameEn: "Licorice", icon: "🌿", category: "herbs" },
+    { nameAr: "البابونج", nameEn: "Chamomile", icon: "🌼", category: "herbs" },
+    { nameAr: "اللافندر", nameEn: "Lavender", icon: "💜", category: "herbs" },
+    { nameAr: "المريمية", nameEn: "Sage", icon: "🌿", category: "herbs" },
+    { nameAr: "الأوريجانو", nameEn: "Oregano", icon: "🌿", category: "herbs" },
+    { nameAr: "الكزبرة", nameEn: "Coriander", icon: "🌿", category: "herbs" },
+    { nameAr: "الطرخون", nameEn: "Tarragon", icon: "🌿", category: "herbs" },
+    { nameAr: "البردقوش", nameEn: "Marjoram", icon: "🌿", category: "herbs" },
+    { nameAr: "الكراوية", nameEn: "Caraway", icon: "🌿", category: "herbs" },
+    { nameAr: "اليانسون", nameEn: "Anise", icon: "🌿", category: "herbs" },
+    { nameAr: "الحلبة", nameEn: "Fenugreek", icon: "🌿", category: "herbs" },
+    
+    // التوابل
+    { nameAr: "الحبة السوداء", nameEn: "Black Seed", icon: "⚫", category: "spices" },
+    { nameAr: "السمسم", nameEn: "Sesame", icon: "🤎", category: "spices" },
+    { nameAr: "بذور الكتان", nameEn: "Flax Seeds", icon: "🟤", category: "spices" },
+    { nameAr: "الزعفران", nameEn: "Saffron", icon: "🟡", category: "spices" },
+    { nameAr: "القرنفل", nameEn: "Cloves", icon: "🟤", category: "spices" },
+    { nameAr: "الهيل", nameEn: "Cardamom", icon: "🟢", category: "spices" },
+    { nameAr: "جوزة الطيب", nameEn: "Nutmeg", icon: "🟤", category: "spices" },
+    { nameAr: "الكمون", nameEn: "Cumin", icon: "🟤", category: "spices" },
+    { nameAr: "الكركم", nameEn: "Turmeric", icon: "🟠", category: "spices" },
+    { nameAr: "الفانيليا", nameEn: "Vanilla", icon: "🟤", category: "spices" },
+    
+    // الزهور
+    { nameAr: "الشمس (عباد الشمس)", nameEn: "Sunflower", icon: "🌻", category: "flowers" },
+    { nameAr: "الزهور", nameEn: "Flowers", icon: "🌸", category: "flowers" },
+    { nameAr: "الورود", nameEn: "Roses", icon: "🌹", category: "flowers" },
+    { nameAr: "الكركديه", nameEn: "Hibiscus", icon: "🌺", category: "flowers" },
+    { nameAr: "الأقحوان", nameEn: "Marigold", icon: "🌼", category: "flowers" },
+    { nameAr: "الياسمين", nameEn: "Jasmine", icon: "⚪", category: "flowers" },
+    { nameAr: "الأوركيد", nameEn: "Orchid", icon: "💜", category: "flowers" },
+    { nameAr: "الزنبق", nameEn: "Lily", icon: "🌸", category: "flowers" },
+    { nameAr: "التيوليب", nameEn: "Tulip", icon: "🌷", category: "flowers" },
+    { nameAr: "النرجس", nameEn: "Daffodil", icon: "🌼", category: "flowers" },
+    { nameAr: "البنفسج", nameEn: "Violet", icon: "💜", category: "flowers" },
+    { nameAr: "الجاردينيا", nameEn: "Gardenia", icon: "⚪", category: "flowers" },
   ];
   
   // إضافة النباتات الإضافية
@@ -213,7 +361,7 @@ function generateLargePlantsDatabase() {
     plants.push(createPlantObject(id++, plant.nameAr, plant.nameEn, plant.icon, plant.category));
     
     // إضافة أصناف للنباتات الإضافية
-    varieties.slice(0, 5).forEach((variety) => {
+    varieties.forEach((variety) => {
       if (plants.length >= targetCount) return;
       
       const nameAr = plant.nameAr + variety.arSuffix;
@@ -224,7 +372,7 @@ function generateLargePlantsDatabase() {
   });
   
   // استراتيجية 3: إضافة نباتات عشوائية متنوعة
-  const randomVariations = ["(مستورد)", "(محلي)", "(بري)", "(مستزرع)", "(قديم)", "(جديد)", "(ذهبي)", "(فضي)"];
+  const randomVariations = ["(مستورد)", "(محلي)", "(بري)", "(مستزرع)", "(قديم)", "(جديد)", "(ذهبي)", "(فضي)", "(أحمر)", "(أخضر)", "(أصفر)", "(متميز)"];
   const randomCategories = ["vegetables", "fruits", "grains", "legumes", "herbs", "spices", "flowers"];
   
   while (plants.length < targetCount) {
@@ -743,9 +891,32 @@ function renderPlantSelector() {
         <span class="plant-category">${plant.category}</span>
       `;
       btn.addEventListener("click", () => {
+        // Check if manual soil form has values
+        const manualTemp = document.getElementById("manualTemp")?.value;
+        const manualMoisture = document.getElementById("manualMoisture")?.value;
+        const manualPh = document.getElementById("manualPh")?.value;
+        const manualN = document.getElementById("manualN")?.value;
+        const manualP = document.getElementById("manualP")?.value;
+        const manualK = document.getElementById("manualK")?.value;
+        
+        if (!manualTemp || !manualMoisture || !manualPh || !manualN || !manualP || !manualK) {
+          const lang = i18n.currentLang;
+          alert(lang === 'ar' ? '❌ يرجى ملء جميع حقول التربة أولاً' : '❌ Please fill all soil fields first');
+          return;
+        }
+        
         appState.selectedPlant = plant;
-        hideAllScreens();
-        document.getElementById("autoModeScreen").classList.remove("hidden");
+        appState.soilData = {
+          temp: parseFloat(manualTemp),
+          moisture: parseFloat(manualMoisture),
+          ph: parseFloat(manualPh),
+          n: parseFloat(manualN),
+          p: parseFloat(manualP),
+          k: parseFloat(manualK)
+        };
+        
+        // Analyze the selected plant with the soil data
+        analyzeManualMode();
       });
       plantsContainer.appendChild(btn);
     });

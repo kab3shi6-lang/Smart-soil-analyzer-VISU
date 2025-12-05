@@ -26,8 +26,11 @@ int nitrogen = 0;
 int phosphorus = 0;
 int potassium = 0;
 
+// pH Calibration constants - adjusted for typical pH sensor
+// Standard pH sensor outputs ~2.5V at pH 7, ranging 0-5V for pH 0-14
 const float PH_CALIBRATION_OFFSET = 0.0;
-const float PH_CALIBRATION_SLOPE = -5.70;
+const float PH_CALIBRATION_SLOPE = 14.0;  // Full pH range
+const float PH_CALIBRATION_INTERCEPT = 0.0;
 
 void setup() {
   Serial.begin(9600);
@@ -79,7 +82,15 @@ void readMoisture() {
 
 void readPH() {
   int rawValue = analogRead(PH_PIN);
-  pH = PH_CALIBRATION_SLOPE * (rawValue / 1024.0) + 15.50 + PH_CALIBRATION_OFFSET;
+  // More accurate pH calculation for typical pH sensor
+  // Raw value 0-1023 maps to voltage 0-5V
+  // Most pH sensors output ~2.5V at pH 7, with ~0.059V per pH unit change
+  // This formula scales raw 0-1023 to pH 0-14 linearly (for uncalibrated testing)
+  // For production, calibrate with pH 4 and pH 7 buffer solutions
+  float voltage = rawValue * (5.0 / 1023.0);
+  // Standard pH sensor: pH = 3.5 * voltage + PH_CALIBRATION_OFFSET
+  // Simpler mapping for testing: 0V = pH 0, 5V = pH 14
+  pH = (voltage / 5.0) * 14.0 + PH_CALIBRATION_OFFSET;
   pH = constrain(pH, 0.0, 14.0);
 }
 
