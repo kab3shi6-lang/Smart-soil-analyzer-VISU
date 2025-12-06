@@ -77,8 +77,24 @@ function processSensorData(rawData) {
     // محاولة تحليل البيانات بصيغ مختلفة
     let data = {};
 
-    // الصيغة 1: TEMP:22.5,MOISTURE:65,PH:6.5,N:75,P:60,K:70
-    if (rawData.includes(':') && rawData.includes(',')) {
+    // الصيغة 1: JSON format from Arduino
+    if (rawData.trim().startsWith('{')) {
+      try {
+        const jsonData = JSON.parse(rawData.trim());
+        // Map Arduino JSON keys to standard keys
+        data.TEMP = jsonData.temperature || jsonData.TEMP || jsonData.temp;
+        data.MOISTURE = jsonData.moisture || jsonData.MOISTURE;
+        data.PH = jsonData.pH || jsonData.PH || jsonData.ph;
+        data.N = jsonData.nitrogen || jsonData.N || jsonData.n;
+        data.P = jsonData.phosphorus || jsonData.P || jsonData.p;
+        data.K = jsonData.potassium || jsonData.K || jsonData.k;
+        data.HUMIDITY = jsonData.humidity || jsonData.HUMIDITY;
+      } catch (e) {
+        console.log('JSON parse error, trying other formats');
+      }
+    }
+    // الصيغة 2: TEMP:22.5,MOISTURE:65,PH:6.5,N:75,P:60,K:70
+    else if (rawData.includes(':') && rawData.includes(',')) {
       const pairs = rawData.split(',');
       pairs.forEach(pair => {
         const [key, value] = pair.split(':').map(s => s.trim());
