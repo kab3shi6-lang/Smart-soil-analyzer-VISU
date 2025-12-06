@@ -31,6 +31,21 @@ int potassium = 0;
 const float PH_CALIBRATION_OFFSET = 0.0;  // Offset adjustment for fine-tuning
 const float PH_CALIBRATION_SLOPE = 14.0;  // Full pH range (0-14)
 
+// ==========================================
+// Smoothing/Averaging Configuration
+// تكوين التنعيم والمتوسط لثبات القراءات
+// ==========================================
+const int NUM_SAMPLES = 10;  // Number of samples to average (عدد العينات للمتوسط)
+const float SMOOTHING_FACTOR = 0.2;  // Exponential smoothing factor (0.1 = more stable, 0.5 = more responsive)
+
+// Previous values for exponential smoothing
+float prevMoisture = 0.0;
+float prevPH = 0.0;
+float prevNitrogen = 0.0;
+float prevPhosphorus = 0.0;
+float prevPotassium = 0.0;
+bool firstReading = true;
+
 void setup() {
   Serial.begin(9600);
   delay(100);
@@ -56,7 +71,7 @@ void loop() {
   printSerialData();
   sendBluetoothData();
   
-  delay(1000);
+  delay(2000);  // Increased delay for more stable readings (زيادة التأخير للقراءات الأكثر ثباتاً)
 }
 
 void readDHT11() {
@@ -71,16 +86,41 @@ void readDHT11() {
 }
 
 void readMoisture() {
-  int rawValue = analogRead(MOISTURE_PIN);
+  // Take multiple samples and average for stability
+  // أخذ عينات متعددة وحساب المتوسط للثبات
+  long total = 0;
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    total += analogRead(MOISTURE_PIN);
+    delay(2);  // Small delay between readings
+  }
+  int rawValue = total / NUM_SAMPLES;
+  
   int minValue = 200;
   int maxValue = 1023;
   
-  moisture = map(rawValue, maxValue, minValue, 0, 100);
-  moisture = constrain(moisture, 0, 100);
+  float newMoisture = map(rawValue, maxValue, minValue, 0, 100);
+  newMoisture = constrain(newMoisture, 0, 100);
+  
+  // Apply exponential smoothing for stability
+  // تطبيق التنعيم الأسي للثبات
+  if (firstReading) {
+    moisture = newMoisture;
+  } else {
+    moisture = (SMOOTHING_FACTOR * newMoisture) + ((1 - SMOOTHING_FACTOR) * prevMoisture);
+  }
+  prevMoisture = moisture;
 }
 
 void readPH() {
-  int rawValue = analogRead(PH_PIN);
+  // Take multiple samples and average for stability
+  // أخذ عينات متعددة وحساب المتوسط للثبات
+  long total = 0;
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    total += analogRead(PH_PIN);
+    delay(2);  // Small delay between readings
+  }
+  int rawValue = total / NUM_SAMPLES;
+  
   // More accurate pH calculation for typical pH sensor
   // Raw value 0-1023 maps to voltage 0-5V
   // Most pH sensors output ~2.5V at pH 7, with ~0.059V per pH unit change
@@ -89,18 +129,52 @@ void readPH() {
   float voltage = rawValue * (5.0 / 1023.0);
   // Standard pH sensor: pH = 3.5 * voltage + PH_CALIBRATION_OFFSET
   // Simpler mapping for testing: 0V = pH 0, 5V = pH 14
-  pH = (voltage / 5.0) * 14.0 + PH_CALIBRATION_OFFSET;
-  pH = constrain(pH, 0.0, 14.0);
+  float newPH = (voltage / 5.0) * 14.0 + PH_CALIBRATION_OFFSET;
+  newPH = constrain(newPH, 0.0, 14.0);
+  
+  // Apply exponential smoothing for stability
+  // تطبيق التنعيم الأسي للثبات
+  if (firstReading) {
+    pH = newPH;
+  } else {
+    pH = (SMOOTHING_FACTOR * newPH) + ((1 - SMOOTHING_FACTOR) * prevPH);
+  }
+  prevPH = pH;
 }
 
 void readNPK() {
-  int nRaw = analogRead(NPK_N_PIN);
-  int pRaw = analogRead(NPK_P_PIN);
-  int kRaw = analogRead(NPK_K_PIN);
+  // Take multiple samples and average for stability
+  // أخذ عينات متعددة وحساب المتوسط للثبات
+  long nTotal = 0, pTotal = 0, kTotal = 0;
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    nTotal += analogRead(NPK_N_PIN);
+    pTotal += analogRead(NPK_P_PIN);
+    kTotal += analogRead(NPK_K_PIN);
+    delay(2);  // Small delay between readings
+  }
+  int nRaw = nTotal / NUM_SAMPLES;
+  int pRaw = pTotal / NUM_SAMPLES;
+  int kRaw = kTotal / NUM_SAMPLES;
   
-  nitrogen = map(nRaw, 0, 1023, 0, 200);
-  phosphorus = map(pRaw, 0, 1023, 0, 200);
-  potassium = map(kRaw, 0, 1023, 0, 200);
+  float newN = map(nRaw, 0, 1023, 0, 200);
+  float newP = map(pRaw, 0, 1023, 0, 200);
+  float newK = map(kRaw, 0, 1023, 0, 200);
+  
+  // Apply exponential smoothing for stability
+  // تطبيق التنعيم الأسي للثبات
+  if (firstReading) {
+    nitrogen = newN;
+    phosphorus = newP;
+    potassium = newK;
+    firstReading = false;  // Mark first reading complete
+  } else {
+    nitrogen = (SMOOTHING_FACTOR * newN) + ((1 - SMOOTHING_FACTOR) * prevNitrogen);
+    phosphorus = (SMOOTHING_FACTOR * newP) + ((1 - SMOOTHING_FACTOR) * prevPhosphorus);
+    potassium = (SMOOTHING_FACTOR * newK) + ((1 - SMOOTHING_FACTOR) * prevPotassium);
+  }
+  prevNitrogen = nitrogen;
+  prevPhosphorus = phosphorus;
+  prevPotassium = potassium;
 }
 
 void printSerialData() {
