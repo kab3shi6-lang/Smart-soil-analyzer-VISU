@@ -902,26 +902,11 @@ function analyzeAutoMode() {
   });
 
   renderAutoResults(suitable, unsuitable);
-  renderImprovementTips(reading);
   renderStatusBox(suitable.length, unsuitable.length);
   renderGeneralTips(Array.from(generalIssues));
   
-  // تحليل ذكي من AI للوضع التلقائي (مع التحقق من توفر aiAnalyzer)
-  if (typeof aiAnalyzer !== 'undefined' && aiAnalyzer && plants.length > 0) {
-    try {
-      // استخدام أول نبات مناسب أو أول نبات في القائمة للتحليل العام
-      const referenceP = suitable.length > 0 ? suitable[0].plant : plants[0];
-      if (referenceP) {
-        const aiAnalysis = aiAnalyzer.analyzeAndRecommend(reading, referenceP);
-        const soilQuality = aiAnalyzer.assessSoilQuality(reading, referenceP);
-        const implementationPlan = aiAnalyzer.calculateImplementationPlan(aiAnalysis, i18n.currentLang);
-        
-        renderAutoAIRecommendations(aiAnalysis, soilQuality, implementationPlan);
-      }
-    } catch (aiError) {
-      console.warn('AI Analyzer error in auto mode:', aiError);
-    }
-  }
+  // الوضع التلقائي يعرض فقط النباتات المناسبة بدون توصيات إصلاح التربة
+  // AI recommendations removed from auto mode - shows only suitable plants
 
   document.getElementById("manualResultContainer").classList.add("hidden");
   document.getElementById("autoResultContainer").classList.remove("hidden");

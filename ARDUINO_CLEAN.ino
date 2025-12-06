@@ -35,8 +35,8 @@ const float PH_CALIBRATION_SLOPE = 14.0;  // Full pH range (0-14)
 // Smoothing/Averaging Configuration
 // تكوين التنعيم والمتوسط لثبات القراءات
 // ==========================================
-const int NUM_SAMPLES = 10;  // Number of samples to average (عدد العينات للمتوسط)
-const float SMOOTHING_FACTOR = 0.2;  // Exponential smoothing factor (0.1 = more stable, 0.5 = more responsive)
+const int NUM_SAMPLES = 20;  // Number of samples to average (عدد العينات للمتوسط - زيادة للثبات)
+const float SMOOTHING_FACTOR = 0.1;  // Exponential smoothing factor (0.1 = أكثر ثباتاً - more stable)
 
 // Previous values for exponential smoothing
 float prevMoisture = 0.0;
@@ -71,7 +71,7 @@ void loop() {
   printSerialData();
   sendBluetoothData();
   
-  delay(2000);  // Increased delay for more stable readings (زيادة التأخير للقراءات الأكثر ثباتاً)
+  delay(3000);  // 3 ثواني بين القراءات للثبات الأفضل (3 seconds for better stability)
 }
 
 void readDHT11() {
