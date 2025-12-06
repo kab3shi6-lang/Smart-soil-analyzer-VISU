@@ -2060,3 +2060,670 @@ function renderAutoAIRecommendations(analysis, soilQuality, implementationPlan) 
     }
   }
 }
+
+// ===================================================
+// 🤖 AI Assistant for Soil Problems
+// ===================================================
+
+/**
+ * AI Problem Solver - Knowledge Base
+ * قاعدة معارف AI لحل مشاكل التربة
+ */
+const aiProblemSolver = {
+  problems: {
+    yellow_leaves: {
+      nameAr: 'أوراق صفراء',
+      nameEn: 'Yellow leaves',
+      causeAr: 'نقص النيتروجين في التربة - النيتروجين ضروري لإنتاج الكلوروفيل',
+      causeEn: 'Nitrogen deficiency - Nitrogen is essential for chlorophyll production',
+      solutions: [
+        {
+          nameAr: 'سماد الدجاج',
+          nameEn: 'Chicken manure',
+          amountAr: '300-500 جرام لكل متر مربع',
+          amountEn: '300-500 grams per square meter',
+          applicationAr: 'يُخلط مع التربة ويُسقى جيداً',
+          applicationEn: 'Mix with soil and water well',
+          priority: 1
+        },
+        {
+          nameAr: 'سماد البقر',
+          nameEn: 'Cow manure',
+          amountAr: '500-800 جرام لكل متر مربع',
+          amountEn: '500-800 grams per square meter',
+          applicationAr: 'يُضاف للتربة قبل الزراعة بأسبوع',
+          applicationEn: 'Add to soil a week before planting',
+          priority: 2
+        },
+        {
+          nameAr: 'بقايا القهوة',
+          nameEn: 'Coffee grounds',
+          amountAr: '200-300 جرام لكل متر مربع',
+          amountEn: '200-300 grams per square meter',
+          applicationAr: 'يُرش على سطح التربة ويُخلط خفيفاً',
+          applicationEn: 'Spread on soil surface and mix lightly',
+          priority: 3
+        }
+      ],
+      stepsAr: [
+        'أزل الأوراق الصفراء التالفة',
+        'أضف السماد العضوي الموصى به',
+        'اسقِ التربة جيداً',
+        'كرر كل أسبوعين حتى تتحسن الأوراق'
+      ],
+      stepsEn: [
+        'Remove damaged yellow leaves',
+        'Add recommended organic fertilizer',
+        'Water soil thoroughly',
+        'Repeat every 2 weeks until leaves improve'
+      ],
+      timelineAr: '7-14 يوم للتحسن الملحوظ',
+      timelineEn: '7-14 days for noticeable improvement'
+    },
+    slow_growth: {
+      nameAr: 'نمو بطيء',
+      nameEn: 'Slow growth',
+      causeAr: 'نقص الفسفور - الفسفور ضروري لنمو الجذور والطاقة',
+      causeEn: 'Phosphorus deficiency - Phosphorus is essential for root development and energy',
+      solutions: [
+        {
+          nameAr: 'دقيق العظام',
+          nameEn: 'Bone meal',
+          amountAr: '200-400 جرام لكل متر مربع',
+          amountEn: '200-400 grams per square meter',
+          applicationAr: 'يُخلط مع التربة حول منطقة الجذور',
+          applicationEn: 'Mix with soil around root zone',
+          priority: 1
+        },
+        {
+          nameAr: 'سماد السمك',
+          nameEn: 'Fish meal',
+          amountAr: '150-250 جرام لكل متر مربع',
+          amountEn: '150-250 grams per square meter',
+          applicationAr: 'يُضاف للتربة ويُغطى بطبقة رقيقة',
+          applicationEn: 'Add to soil and cover with thin layer',
+          priority: 2
+        },
+        {
+          nameAr: 'قشر البيض المطحون',
+          nameEn: 'Crushed eggshells',
+          amountAr: '100-200 جرام لكل متر مربع',
+          amountEn: '100-200 grams per square meter',
+          applicationAr: 'يُطحن ناعماً ويُخلط مع التربة',
+          applicationEn: 'Grind finely and mix with soil',
+          priority: 3
+        }
+      ],
+      stepsAr: [
+        'تأكد من عدم وجود مشاكل في الري',
+        'أضف مصدر الفسفور الطبيعي',
+        'خفف التربة حول الجذور',
+        'راقب النمو لمدة 2-3 أسابيع'
+      ],
+      stepsEn: [
+        'Ensure no watering issues',
+        'Add natural phosphorus source',
+        'Loosen soil around roots',
+        'Monitor growth for 2-3 weeks'
+      ],
+      timelineAr: '14-21 يوم للتحسن',
+      timelineEn: '14-21 days for improvement'
+    },
+    weak_plants: {
+      nameAr: 'نباتات ضعيفة',
+      nameEn: 'Weak plants',
+      causeAr: 'نقص البوتاسيوم - البوتاسيوم يقوي جدران الخلايا ويزيد مقاومة الأمراض',
+      causeEn: 'Potassium deficiency - Potassium strengthens cell walls and disease resistance',
+      solutions: [
+        {
+          nameAr: 'رماد الخشب',
+          nameEn: 'Wood ash',
+          amountAr: '150-250 جرام لكل متر مربع',
+          amountEn: '150-250 grams per square meter',
+          applicationAr: 'يُرش على التربة ويُخلط خفيفاً مع الري',
+          applicationEn: 'Spread on soil and mix lightly with watering',
+          priority: 1
+        },
+        {
+          nameAr: 'قشور الموز المجففة',
+          nameEn: 'Dried banana peels',
+          amountAr: '200-300 جرام لكل متر مربع',
+          amountEn: '200-300 grams per square meter',
+          applicationAr: 'تُجفف وتُقطع ثم تُدفن في التربة',
+          applicationEn: 'Dry, chop, and bury in soil',
+          priority: 2
+        },
+        {
+          nameAr: 'الكمبوست',
+          nameEn: 'Compost',
+          amountAr: '500-1000 جرام لكل متر مربع',
+          amountEn: '500-1000 grams per square meter',
+          applicationAr: 'يُخلط مع التربة جيداً',
+          applicationEn: 'Mix thoroughly with soil',
+          priority: 3
+        }
+      ],
+      stepsAr: [
+        'ادعم النباتات الضعيفة بأعواد',
+        'أضف مصدر البوتاسيوم الطبيعي',
+        'تجنب الإفراط في الري',
+        'تأكد من التهوية الجيدة'
+      ],
+      stepsEn: [
+        'Support weak plants with stakes',
+        'Add natural potassium source',
+        'Avoid overwatering',
+        'Ensure good ventilation'
+      ],
+      timelineAr: '14-21 يوم لتقوية النبات',
+      timelineEn: '14-21 days to strengthen plants'
+    },
+    no_fruits: {
+      nameAr: 'لا تثمر',
+      nameEn: 'No fruiting',
+      causeAr: 'نقص الفسفور والبوتاسيوم معاً - هذان العنصران ضروريان للإزهار والإثمار',
+      causeEn: 'Combined phosphorus and potassium deficiency - Both essential for flowering and fruiting',
+      solutions: [
+        {
+          nameAr: 'دقيق العظام + رماد الخشب',
+          nameEn: 'Bone meal + Wood ash',
+          amountAr: '200 جرام عظام + 100 جرام رماد لكل متر',
+          amountEn: '200g bone meal + 100g ash per square meter',
+          applicationAr: 'يُخلطان معاً ويُضافان للتربة',
+          applicationEn: 'Mix together and add to soil',
+          priority: 1
+        },
+        {
+          nameAr: 'سماد عضوي مخمر',
+          nameEn: 'Fermented organic fertilizer',
+          amountAr: '400-600 جرام لكل متر مربع',
+          amountEn: '400-600 grams per square meter',
+          applicationAr: 'يُضاف أسبوعياً خلال فترة الإزهار',
+          applicationEn: 'Add weekly during flowering period',
+          priority: 2
+        }
+      ],
+      stepsAr: [
+        'تأكد من أن النبات في عمر الإثمار',
+        'أضف السماد المركب الموصى به',
+        'تأكد من التلقيح (للنباتات التي تحتاجه)',
+        'وفر إضاءة كافية (6-8 ساعات يومياً)'
+      ],
+      stepsEn: [
+        'Ensure plant is at fruiting age',
+        'Add recommended compound fertilizer',
+        'Ensure pollination (for plants that need it)',
+        'Provide adequate light (6-8 hours daily)'
+      ],
+      timelineAr: '21-30 يوم لبدء الإثمار',
+      timelineEn: '21-30 days to start fruiting'
+    },
+    wilting: {
+      nameAr: 'ذبول النبات',
+      nameEn: 'Wilting',
+      causeAr: 'مشكلة في الري أو تلف الجذور - قد يكون الري الزائد أو الناقص',
+      causeEn: 'Watering issue or root damage - Could be over or under watering',
+      solutions: [
+        {
+          nameAr: 'تنظيم الري',
+          nameEn: 'Regulate watering',
+          amountAr: 'حسب حاجة النبات',
+          amountEn: 'According to plant needs',
+          applicationAr: 'اختبر رطوبة التربة قبل كل ري',
+          applicationEn: 'Test soil moisture before each watering',
+          priority: 1
+        },
+        {
+          nameAr: 'تحسين التصريف',
+          nameEn: 'Improve drainage',
+          amountAr: 'إضافة رمل أو بيرلايت',
+          amountEn: 'Add sand or perlite',
+          applicationAr: 'يُخلط 20% رمل مع التربة',
+          applicationEn: 'Mix 20% sand with soil',
+          priority: 2
+        },
+        {
+          nameAr: 'الكمبوست',
+          nameEn: 'Compost',
+          amountAr: '500 جرام لكل متر مربع',
+          amountEn: '500 grams per square meter',
+          applicationAr: 'يُحسن بنية التربة واحتفاظها بالماء',
+          applicationEn: 'Improves soil structure and water retention',
+          priority: 3
+        }
+      ],
+      stepsAr: [
+        'افحص التربة - هل هي جافة جداً أم رطبة جداً؟',
+        'إذا جافة: اسقِ ببطء وعمق',
+        'إذا رطبة جداً: توقف عن الري وحسّن التصريف',
+        'انقل النبات للظل مؤقتاً'
+      ],
+      stepsEn: [
+        'Check soil - is it too dry or too wet?',
+        'If dry: water slowly and deeply',
+        'If too wet: stop watering and improve drainage',
+        'Move plant to shade temporarily'
+      ],
+      timelineAr: '3-7 أيام للتعافي',
+      timelineEn: '3-7 days for recovery'
+    },
+    acidic_soil: {
+      nameAr: 'تربة حمضية',
+      nameEn: 'Acidic soil',
+      causeAr: 'انخفاض pH التربة تحت 6.0 - يؤثر على امتصاص العناصر الغذائية',
+      causeEn: 'Soil pH below 6.0 - Affects nutrient absorption',
+      solutions: [
+        {
+          nameAr: 'الجير الزراعي',
+          nameEn: 'Agricultural lime',
+          amountAr: '100-200 جرام لكل متر مربع',
+          amountEn: '100-200 grams per square meter',
+          applicationAr: 'يُرش على التربة ويُخلط جيداً ثم يُسقى',
+          applicationEn: 'Spread on soil, mix well, then water',
+          priority: 1
+        },
+        {
+          nameAr: 'رماد الخشب',
+          nameEn: 'Wood ash',
+          amountAr: '150-250 جرام لكل متر مربع',
+          amountEn: '150-250 grams per square meter',
+          applicationAr: 'يُرش ويُخلط مع التربة',
+          applicationEn: 'Spread and mix with soil',
+          priority: 2
+        },
+        {
+          nameAr: 'قشر البيض المطحون',
+          nameEn: 'Crushed eggshells',
+          amountAr: '100-150 جرام لكل متر مربع',
+          amountEn: '100-150 grams per square meter',
+          applicationAr: 'يُطحن ناعماً جداً ويُخلط مع التربة',
+          applicationEn: 'Grind very finely and mix with soil',
+          priority: 3
+        }
+      ],
+      stepsAr: [
+        'قس pH التربة الحالي',
+        'أضف المادة القلوية تدريجياً',
+        'انتظر أسبوعين وأعد القياس',
+        'كرر إذا لزم الأمر'
+      ],
+      stepsEn: [
+        'Measure current soil pH',
+        'Add alkaline material gradually',
+        'Wait 2 weeks and re-measure',
+        'Repeat if necessary'
+      ],
+      timelineAr: '14-28 يوم لتعديل pH',
+      timelineEn: '14-28 days to adjust pH'
+    },
+    alkaline_soil: {
+      nameAr: 'تربة قلوية',
+      nameEn: 'Alkaline soil',
+      causeAr: 'ارتفاع pH التربة فوق 7.5 - يمنع امتصاص الحديد والمنغنيز',
+      causeEn: 'Soil pH above 7.5 - Prevents iron and manganese absorption',
+      solutions: [
+        {
+          nameAr: 'الكبريت الزراعي',
+          nameEn: 'Agricultural sulfur',
+          amountAr: '50-100 جرام لكل متر مربع',
+          amountEn: '50-100 grams per square meter',
+          applicationAr: 'يُضاف تدريجياً مع مراقبة pH',
+          applicationEn: 'Add gradually while monitoring pH',
+          priority: 1
+        },
+        {
+          nameAr: 'الخث (البيتموس)',
+          nameEn: 'Peat moss',
+          amountAr: '1-2 كيلو لكل متر مربع',
+          amountEn: '1-2 kg per square meter',
+          applicationAr: 'يُخلط مع التربة جيداً',
+          applicationEn: 'Mix thoroughly with soil',
+          priority: 2
+        },
+        {
+          nameAr: 'إبر الصنوبر',
+          nameEn: 'Pine needles',
+          amountAr: 'طبقة 5 سم',
+          amountEn: '5 cm layer',
+          applicationAr: 'تُفرش كغطاء للتربة',
+          applicationEn: 'Spread as soil mulch',
+          priority: 3
+        }
+      ],
+      stepsAr: [
+        'قس pH التربة الحالي',
+        'أضف المادة الحمضية بحذر',
+        'راقب النباتات لعلامات التحسن',
+        'أعد القياس بعد 3 أسابيع'
+      ],
+      stepsEn: [
+        'Measure current soil pH',
+        'Add acidic material carefully',
+        'Monitor plants for improvement signs',
+        'Re-measure after 3 weeks'
+      ],
+      timelineAr: '21-35 يوم لتعديل pH',
+      timelineEn: '21-35 days to adjust pH'
+    },
+    poor_drainage: {
+      nameAr: 'تصريف سيء',
+      nameEn: 'Poor drainage',
+      causeAr: 'التربة مضغوطة أو طينية - تحتفظ بالماء الزائد وتخنق الجذور',
+      causeEn: 'Compacted or clay soil - Retains excess water and suffocates roots',
+      solutions: [
+        {
+          nameAr: 'الرمل الخشن',
+          nameEn: 'Coarse sand',
+          amountAr: '2-3 كيلو لكل متر مربع',
+          amountEn: '2-3 kg per square meter',
+          applicationAr: 'يُخلط مع التربة بعمق 20 سم',
+          applicationEn: 'Mix with soil to 20 cm depth',
+          priority: 1
+        },
+        {
+          nameAr: 'البيرلايت',
+          nameEn: 'Perlite',
+          amountAr: '1-2 كيلو لكل متر مربع',
+          amountEn: '1-2 kg per square meter',
+          applicationAr: 'يُخلط مع التربة',
+          applicationEn: 'Mix with soil',
+          priority: 2
+        },
+        {
+          nameAr: 'الكمبوست الناضج',
+          nameEn: 'Mature compost',
+          amountAr: '3-5 كيلو لكل متر مربع',
+          amountEn: '3-5 kg per square meter',
+          applicationAr: 'يُحسن بنية التربة ويزيد المسامية',
+          applicationEn: 'Improves soil structure and porosity',
+          priority: 3
+        }
+      ],
+      stepsAr: [
+        'ارفع الأحواض أو أنشئ أخاديد تصريف',
+        'أضف مواد تحسين التصريف',
+        'تجنب الري الزائد',
+        'فكر في استخدام أحواض مرتفعة'
+      ],
+      stepsEn: [
+        'Raise beds or create drainage channels',
+        'Add drainage improvement materials',
+        'Avoid overwatering',
+        'Consider using raised beds'
+      ],
+      timelineAr: 'فوري بعد التعديل',
+      timelineEn: 'Immediate after modification'
+    }
+  },
+
+  /**
+   * تحليل مشكلة التربة وتقديم الحل
+   */
+  analyzeProblem: function(problemKey, customDescription = '') {
+    const lang = i18n.currentLang;
+    const problem = this.problems[problemKey];
+    
+    if (!problem) {
+      // تحليل الوصف المخصص
+      return this.analyzeCustomProblem(customDescription);
+    }
+    
+    return {
+      problem: lang === 'ar' ? problem.nameAr : problem.nameEn,
+      cause: lang === 'ar' ? problem.causeAr : problem.causeEn,
+      solutions: problem.solutions.map(s => ({
+        name: lang === 'ar' ? s.nameAr : s.nameEn,
+        amount: lang === 'ar' ? s.amountAr : s.amountEn,
+        application: lang === 'ar' ? s.applicationAr : s.applicationEn,
+        priority: s.priority
+      })),
+      steps: lang === 'ar' ? problem.stepsAr : problem.stepsEn,
+      timeline: lang === 'ar' ? problem.timelineAr : problem.timelineEn
+    };
+  },
+
+  /**
+   * تحليل مشكلة مخصصة بناءً على الوصف
+   */
+  analyzeCustomProblem: function(description) {
+    const lang = i18n.currentLang;
+    const desc = description.toLowerCase();
+    
+    // البحث عن كلمات مفتاحية
+    const keywords = {
+      yellow_leaves: ['صفر', 'أصفر', 'yellow', 'yellowing', 'chlorosis'],
+      slow_growth: ['بطيء', 'نمو', 'slow', 'growth', 'stunted'],
+      weak_plants: ['ضعيف', 'هش', 'weak', 'fragile', 'thin'],
+      no_fruits: ['ثمر', 'إثمار', 'زهر', 'fruit', 'flower', 'bloom'],
+      wilting: ['ذبول', 'ذابل', 'wilt', 'drooping', 'limp'],
+      acidic_soil: ['حمضي', 'حموض', 'acid', 'ph low'],
+      alkaline_soil: ['قلوي', 'قاعدي', 'alkaline', 'basic', 'ph high'],
+      poor_drainage: ['تصريف', 'ماء', 'غرق', 'drainage', 'waterlogged', 'soggy']
+    };
+    
+    for (const [key, words] of Object.entries(keywords)) {
+      for (const word of words) {
+        if (desc.includes(word)) {
+          return this.analyzeProblem(key, description);
+        }
+      }
+    }
+    
+    // إذا لم يتم التعرف على المشكلة
+    return {
+      problem: lang === 'ar' ? 'مشكلة غير محددة' : 'Unidentified problem',
+      cause: lang === 'ar' 
+        ? 'لم نتمكن من تحديد المشكلة بدقة. يرجى اختيار مشكلة من القائمة أو وصف المشكلة بشكل أوضح.'
+        : 'Could not identify the problem precisely. Please select a problem from the list or describe it more clearly.',
+      solutions: [
+        {
+          name: lang === 'ar' ? 'فحص شامل للتربة' : 'Complete soil test',
+          amount: lang === 'ar' ? 'قياس pH, N, P, K' : 'Measure pH, N, P, K',
+          application: lang === 'ar' ? 'استخدم أداة قياس التربة' : 'Use soil testing kit',
+          priority: 1
+        },
+        {
+          name: lang === 'ar' ? 'الكمبوست العضوي' : 'Organic compost',
+          amount: lang === 'ar' ? '500 جرام لكل متر مربع' : '500 grams per square meter',
+          application: lang === 'ar' ? 'حل عام يحسن معظم مشاكل التربة' : 'General solution that improves most soil issues',
+          priority: 2
+        }
+      ],
+      steps: lang === 'ar' 
+        ? ['قم بفحص التربة', 'حدد المشكلة بدقة', 'اتبع التوصيات المحددة']
+        : ['Test the soil', 'Identify the exact problem', 'Follow specific recommendations'],
+      timeline: lang === 'ar' ? 'يعتمد على نوع المشكلة' : 'Depends on problem type'
+    };
+  }
+};
+
+/**
+ * Initialize AI Assistant Modal
+ */
+let aiAssistantInitialized = false;
+
+function initAIAssistant() {
+  // Prevent double initialization
+  if (aiAssistantInitialized) return;
+  
+  const fabBtn = document.getElementById('aiAssistantBtn');
+  const modal = document.getElementById('aiAssistantModal');
+  const closeBtn = document.getElementById('closeAiModal');
+  const solveBtn = document.getElementById('aiSolveBtn');
+  const problemInput = document.getElementById('aiProblemInput');
+  const quickProblemBtns = document.querySelectorAll('.quick-problem-btn');
+  const solutionArea = document.getElementById('aiSolutionArea');
+  
+  // Check all required elements exist
+  if (!fabBtn || !modal || !closeBtn || !solveBtn || !problemInput) return;
+  
+  aiAssistantInitialized = true;
+  
+  // Open modal
+  fabBtn.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  });
+  
+  // Close modal
+  closeBtn.addEventListener('click', closeAIModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeAIModal();
+  });
+  
+  function closeAIModal() {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  
+  // Quick problem buttons
+  let selectedProblem = null;
+  quickProblemBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Remove active class from all
+      quickProblemBtns.forEach(b => b.classList.remove('active'));
+      // Add to clicked
+      btn.classList.add('active');
+      selectedProblem = btn.dataset.problem;
+      
+      // Update textarea with problem name
+      const lang = i18n.currentLang;
+      const problemData = aiProblemSolver.problems[selectedProblem];
+      if (problemData && problemInput) {
+        problemInput.value = lang === 'ar' ? problemData.nameAr : problemData.nameEn;
+      }
+    });
+  });
+  
+  // Solve button
+  solveBtn.addEventListener('click', () => {
+    const customDesc = problemInput.value.trim();
+    
+    if (!selectedProblem && !customDesc) {
+      // Show inline validation message instead of alert
+      showValidationMessage(problemInput, i18n.currentLang === 'ar' 
+        ? 'يرجى اختيار مشكلة أو كتابة وصف لها'
+        : 'Please select a problem or describe it');
+      return;
+    }
+    
+    // Analyze and show solution
+    const result = selectedProblem 
+      ? aiProblemSolver.analyzeProblem(selectedProblem, customDesc)
+      : aiProblemSolver.analyzeCustomProblem(customDesc);
+    
+    renderAISolution(result);
+  });
+  
+  // Update placeholders based on language
+  updateAIAssistantLanguage();
+}
+
+/**
+ * Update AI Assistant language
+ */
+function updateAIAssistantLanguage() {
+  const lang = i18n.currentLang;
+  const problemInput = document.getElementById('aiProblemInput');
+  
+  if (problemInput) {
+    problemInput.placeholder = lang === 'ar' 
+      ? 'اكتب مشكلتك هنا...'
+      : 'Describe your problem here...';
+  }
+  
+  // Update quick problem buttons
+  const quickBtns = document.querySelectorAll('.quick-problem-btn');
+  quickBtns.forEach(btn => {
+    const problem = btn.dataset.problem;
+    const problemData = aiProblemSolver.problems[problem];
+    if (problemData) {
+      btn.textContent = lang === 'ar' ? problemData.nameAr : problemData.nameEn;
+    }
+  });
+}
+
+/**
+ * Render AI Solution
+ */
+function renderAISolution(result) {
+  const lang = i18n.currentLang;
+  const solutionArea = document.getElementById('aiSolutionArea');
+  
+  if (!solutionArea) return;
+  
+  solutionArea.classList.remove('hidden');
+  
+  solutionArea.innerHTML = `
+    <div class="ai-solution-header">
+      <h4>🤖 ${lang === 'ar' ? 'تحليل AI' : 'AI Analysis'}</h4>
+    </div>
+    
+    <div class="ai-problem-identified">
+      <h5>⚠️ ${lang === 'ar' ? 'المشكلة:' : 'Problem:'} ${result.problem}</h5>
+      <p>${result.cause}</p>
+    </div>
+    
+    <div class="ai-solution-recommendations">
+      <h5>💡 ${lang === 'ar' ? 'الحلول الموصى بها:' : 'Recommended Solutions:'}</h5>
+      ${result.solutions.map(sol => `
+        <div class="ai-recommendation-card">
+          <div class="ai-rec-header">
+            <span class="ai-rec-name">${sol.name}</span>
+            <span class="ai-rec-priority ${sol.priority === 1 ? '' : 'secondary'}">
+              ${sol.priority === 1 
+                ? (lang === 'ar' ? '⭐ الأفضل' : '⭐ Best')
+                : (lang === 'ar' ? 'بديل' : 'Alternative')}
+            </span>
+          </div>
+          <div class="ai-rec-details">
+            <p><strong>📦 ${lang === 'ar' ? 'الكمية:' : 'Amount:'}</strong> <span class="ai-rec-amount">${sol.amount}</span></p>
+            <p><strong>📝 ${lang === 'ar' ? 'التطبيق:' : 'Application:'}</strong> ${sol.application}</p>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div class="ai-application-steps">
+      <h5>📋 ${lang === 'ar' ? 'خطوات التنفيذ:' : 'Implementation Steps:'}</h5>
+      <ol>
+        ${result.steps.map(step => `<li>${step}</li>`).join('')}
+      </ol>
+    </div>
+    
+    <div class="ai-expected-results">
+      <h5>⏱️ ${lang === 'ar' ? 'الوقت المتوقع للتحسن:' : 'Expected Improvement Time:'}</h5>
+      <p>${result.timeline}</p>
+    </div>
+  `;
+  
+  // Scroll to solution
+  solutionArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/**
+ * Show inline validation message
+ */
+function showValidationMessage(element, message) {
+  // Remove any existing validation message
+  const existingMsg = element.parentElement.querySelector('.validation-message');
+  if (existingMsg) existingMsg.remove();
+  
+  // Create and insert validation message
+  const msgEl = document.createElement('div');
+  msgEl.className = 'validation-message';
+  msgEl.style.cssText = 'color: #ef4444; font-size: 0.9rem; margin-top: 8px; padding: 8px 12px; background: #fef2f2; border-radius: 8px; border-left: 3px solid #ef4444;';
+  msgEl.textContent = message;
+  element.parentElement.appendChild(msgEl);
+  
+  // Focus on the element
+  element.focus();
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    if (msgEl.parentElement) msgEl.remove();
+  }, 3000);
+}
+
+// Initialize AI Assistant when DOM is ready
+document.addEventListener('DOMContentLoaded', initAIAssistant);
